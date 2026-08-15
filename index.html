@@ -3,352 +3,450 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZRRO DIGITAL | Tienda Definitiva</title>
+    <title>ZRRO / ST | Servicios Digitales</title>
     <style>
-        :root { --bg-color: #121212; --card-bg: #1e1e1e; --accent-color: #38bdf8; --text-light: #ffffff; --text-muted: #9ca3af; --discount-red: #ef4444; --agotado-bg: #7f1d1d; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-light); margin: 0; padding: 0; }
+        :root {
+            --primary: #38bdf8;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --accent: #0284c7;
+            --danger: #ef4444;
+            --success: #22c55e;
+        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
         
-        .header { display: flex; justify-content: space-between; align-items: center; background: #18181b; padding: 12px 16px; border-bottom: 1px solid #27272a; }
-        .logo-area { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 1.1em; color: var(--accent-color); cursor: pointer; }
-        .nav-icons { display: flex; gap: 15px; font-size: 1.2em; color: #d1d5db; cursor: pointer; }
+        .nav { background: #1e293b; padding: 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 100; }
+        .nav h1 { margin: 0; font-size: 1.2rem; color: var(--primary); }
+        .user-info { display: flex; gap: 1rem; align-items: center; font-size: 0.9rem; }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 1rem; }
+        
+        /* Controles de búsqueda y filtros */
+        .controls { display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 1.5rem; }
+        input, select { width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: var(--text); font-size: 1rem; }
+        
+        .filters-scroll { display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem; }
+        .filter-chip { background: var(--card-bg); border: 1px solid #334155; padding: 0.5rem 1rem; border-radius: 20px; cursor: pointer; white-space: nowrap; font-size: 0.85rem; }
+        .filter-chip.active { background: var(--primary); color: #000; font-weight: bold; border-color: var(--primary); }
 
-        .banner { background: linear-gradient(135deg, #1e3a8a, #0f172a); margin: 12px; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #3b82f6; }
-        .banner h2 { margin: 0 0 10px 0; font-size: 1.1em; letter-spacing: 1px; color: #fff; }
-        .btn-saldo { background: #ffffff; color: #000; border: none; padding: 8px 20px; font-weight: bold; border-radius: 20px; cursor: pointer; font-size: 0.9em; }
+        /* Catálogo de Productos */
+        .catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; }
+        .card { background: var(--card-bg); padding: 1rem; border-radius: 12px; text-align: center; border: 1px solid #334155; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
+        .card.out-of-stock { opacity: 0.5; filter: grayscale(1); }
+        .card h4 { margin: 0.5rem 0; font-size: 1rem; }
+        .badge { position: absolute; top: 10px; right: 10px; background: var(--danger); color: white; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+        .price-box { margin: 0.5rem 0; }
+        .price { font-size: 1.1rem; font-weight: bold; color: var(--primary); }
+        .old-price { font-size: 0.8rem; text-decoration: line-through; color: #94a3b8; }
+        
+        .btn { background: var(--primary); color: #000; border: none; padding: 0.6rem; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; font-size: 0.9rem; transition: background 0.2s; }
+        .btn:hover { background: #0ea5e9; }
+        .btn:disabled { background: #475569; cursor: not-allowed; }
+        .btn-secondary { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+        .btn-whatsapp { background: #25d366; color: white; margin-top: 0.5rem; }
 
-        .search-container { padding: 0 12px 15px 12px; }
-        .search-box { width: 100%; padding: 10px 12px; background: #18181b; border: 1px solid #3f3f46; color: white; border-radius: 6px; box-sizing: border-box; font-size: 0.9em; }
+        /* Paneles de Usuario / Admin */
+        .panel { background: var(--card-bg); border: 1px solid #334155; border-radius: 12px; padding: 1.5rem; margin-top: 2rem; display: none; }
+        .panel h3 { margin-top: 0; color: var(--primary); }
+        
+        .admin-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.85rem; }
+        .admin-table th, .admin-table td { border: 1px solid #334155; padding: 0.5rem; text-align: left; }
+        .admin-table th { background: #0f172a; }
 
-        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 10px; }
-        .product-card { background: var(--card-bg); border-radius: 8px; overflow: hidden; border: 1px solid #27272a; display: flex; flex-direction: column; position: relative; }
-        .product-card.agotado { opacity: 0.5; filter: grayscale(80%); }
+        .auth-box { display: flex; flex-direction: column; gap: 0.8rem; max-width: 350px; margin: 2rem auto; background: var(--card-bg); padding: 1.5rem; border-radius: 12px; border: 1px solid #334155; }
         
-        .product-image-container { position: relative; width: 100%; aspect-ratio: 1; background: #000; display: flex; align-items: center; justify-content: center; }
-        .product-image-container img { width: 100%; height: 100%; object-fit: contain; padding: 10px; box-sizing: border-box; }
-        
-        .badge-discount { position: absolute; top: 8px; left: 8px; background: var(--discount-red); color: white; font-size: 0.7em; font-weight: bold; padding: 3px 6px; border-radius: 4px; z-index: 2; }
-        .badge-agotado { position: absolute; top: 8px; right: 8px; background: var(--agotado-bg); color: white; font-size: 0.7em; font-weight: bold; padding: 3px 6px; border-radius: 4px; z-index: 2; border: 1px solid #f87171; }
-        
-        .product-content { padding: 10px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
-        .category { font-size: 0.65em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 2px; }
-        .product-title { font-size: 0.8em; font-weight: 600; color: #fff; margin: 0 0 6px 0; line-height: 1.25em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        
-        .price-box { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
-        .old-price { font-size: 0.75em; color: var(--text-muted); text-decoration: line-through; }
-        .current-price { font-size: 0.9em; font-weight: bold; color: var(--text-light); }
-
-        .btn-comprar { background: var(--accent-color); color: #000; border: none; padding: 6px; font-weight: bold; font-size: 0.75em; border-radius: 4px; cursor: pointer; width: 100%; text-align: center; }
-        .btn-comprar:active { opacity: 0.8; }
-
-        .modal { display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; }
-        .admin-content { background: #1e1e1e; padding: 20px; border-radius: 8px; width: 100%; max-width: 400px; border: 1px solid #3f3f46; max-height: 90vh; overflow-y: auto; text-align: center; }
-        .admin-content input, .admin-content select { width: 100%; padding: 10px; margin-bottom: 10px; background: #121212; border: 1px solid #3f3f46; color: #fff; border-radius: 4px; box-sizing: border-box; }
-        .admin-content button { background: var(--accent-color); color: #000; border: none; padding: 12px; font-weight: bold; width: 100%; border-radius: 4px; cursor: pointer; margin-top: 5px; }
-        
-        .footer-text { text-align: center; font-size: 0.7em; color: var(--text-muted); padding: 30px 0; }
+        .footer-nav { margin-top: 3rem; text-align: center; padding-bottom: 2rem; }
+        .footer-nav button { background: none; border: none; color: #94a3b8; cursor: pointer; text-decoration: underline; font-size: 0.85rem; }
     </style>
 </head>
 <body>
 
-    <!-- MODAL DE LOGIN INICIAL -->
-    <div class="modal" id="modalLogin">
-        <div class="admin-content">
-            <h3 style="color: #fff;">⚡ ZRRO DIGITAL</h3>
-            <p style="font-size: 0.85em; color: var(--text-muted);">Ingresa tu correo electrónico para acceder a tu cuenta y saldo:</p>
-            <input type="email" id="inputEmail" placeholder="tucorreo@email.com">
-            <button onclick="iniciarSesion()">ACCEDER A LA TIENDA</button>
+    <div class="nav">
+        <h1>ZRRO / ST</h1>
+        <div class="user-info">
+            <span id="nav-user">Invitado</span>
+            <div>Saldo: $<span id="user-balance">0</span></div>
+            <button class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="toggleAuthModal()">Cuenta</button>
         </div>
     </div>
-
-    <div class="header">
-        <div class="logo-area" onclick="location.reload()">
-            <span>⚡ ZRRO DIGITAL</span>
+    
+    <div class="container">
+        <!-- Controles de búsqueda y filtros -->
+        <div class="controls">
+            <input type="text" id="search" placeholder="Buscar entre los 72 servicios..." oninput="filterCatalog()">
+            <div class="filters-scroll" id="category-filters">
+                <div class="filter-chip active" onclick="filterCategory('Todos')">Todos</div>
+                <div class="filter-chip" onclick="filterCategory('Streaming')">Streaming</div>
+                <div class="filter-chip" onclick="filterCategory('Musica')">Música</div>
+                <div class="filter-chip" onclick="filterCategory('IPTV')">IPTV</div>
+                <div class="filter-chip" onclick="filterCategory('Combos')">Combos</div>
+                <div class="filter-chip" onclick="filterCategory('Herramientas')">Herramientas</div>
+            </div>
         </div>
-        <div style="text-align: right; font-size: 0.85em;">
-            <div id="displayEmail" style="color: var(--text-muted); font-size: 0.75em;"></div>
-            <div id="displaySaldo" style="color: var(--accent-color); font-weight: bold;">Saldo: $0</div>
+
+        <!-- Catálogo Principal -->
+        <div class="catalog" id="catalog"></div>
+
+        <!-- Botón para Recargar Saldo -->
+        <div style="margin-top: 2rem; text-align: center; background: var(--card-bg); padding: 1rem; border-radius: 12px; border: 1px solid #334155;">
+            <p style="margin: 0 0 0.5rem 0; font-size: 0.9rem;">¿Necesitas saldo en tu cuenta para comprar?</p>
+            <button class="btn btn-whatsapp" onclick="solicitarRecargaWhatsApp()">Recargar Saldo vía WhatsApp</button>
         </div>
-        <div class="nav-icons">
-            <span onclick="abrirAdmin()">⚙️</span>
+
+        <!-- Sección de Autenticación / Registro (Modal o Panel) -->
+        <div id="auth-panel" class="auth-box" style="display:none;">
+            <h3 id="auth-title">Iniciar Sesión</h3>
+            <input type="email" id="auth-email" placeholder="Correo electrónico">
+            <input type="password" id="auth-pass" placeholder="Contraseña">
+            <button class="btn" onclick="handleAuth()">Ingresar / Registrarse</button>
+            <button class="btn btn-secondary" onclick="forgotPassword()">Olvidé mi contraseña</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('auth-panel').style.display='none'">Cerrar</button>
         </div>
-    </div>
 
-    <div class="banner">
-        <h2>MERCADO DIGITAL</h2>
-        <button class="btn-saldo" onclick="window.open('https://wa.me/573000000000?text=Hola,%20deseo%20recargar%20saldo%20para%20mi%20cuenta:%20' + usuarioActual, '_blank')">CARGAR SALDO &gt;</button>
-    </div>
+        <!-- Panel de Administración -->
+        <div style="margin-top: 3rem; text-align: center;">
+            <button class="btn btn-secondary" style="max-width: 200px;" onclick="promptAdminLogin()">Panel Administrador</button>
+        </div>
 
-    <div class="search-container">
-        <input type="text" id="buscador" class="search-box" placeholder="Buscar entre los servicios..." onkeyup="buscarServicios()">
-    </div>
+        <div id="admin-panel" class="panel">
+            <h3>Panel de Control Administrador</h3>
+            <p>Gestionar saldos de usuarios y disponibilidad de inventario:</p>
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                <input type="text" id="admin-target-email" placeholder="Correo del usuario a modificar">
+                <input type="number" id="admin-new-balance" placeholder="Nuevo saldo ($)">
+                <button class="btn" onclick="adminUpdateBalance()">Actualizar Saldo</button>
+            </div>
+            <h4>Inventario Rápido (Cambiar Estado)</h4>
+            <div style="max-height: 200px; overflow-y: auto;">
+                <table class="admin-table">
+                    <thead>
+                        <tr><th>Servicio</th><th>Estado</th><th>Acción</th></tr>
+                    </thead>
+                    <tbody id="admin-products-table"></tbody>
+                </table>
+            </div>
+            <button class="btn btn-secondary" style="margin-top: 1rem;" onclick="document.getElementById('admin-panel').style.display='none'">Cerrar Panel</button>
+        </div>
 
-    <div class="product-grid" id="catalogo"></div>
-
-    <div class="footer-text">
-        Zrrodigital.co © 2026. Todos los Derechos Reservados
-    </div>
-
-    <!-- MODAL DE ADMINISTRADOR (CLAVE: 1234) -->
-    <div class="modal" id="modalAdmin" style="display: none;">
-        <div class="admin-content" style="text-align: left;">
-            <h3 style="color: var(--accent-color); text-align: center;">Panel de Administración</h3>
-            
-            <label style="font-size: 0.8em; color: var(--text-muted);">Correo del usuario a recargar:</label>
-            <input type="email" id="adminEmail" placeholder="cliente@email.com">
-            
-            <label style="font-size: 0.8em; color: var(--text-muted);">Nuevo saldo total ($):</label>
-            <input type="number" id="adminSaldo" placeholder="Ej: 50000">
-            <button onclick="actualizarSaldoUsuario()">ACREDITAR SALDO</button>
-            
-            <hr style="border-color: #3f3f46; margin: 20px 0;">
-            
-            <label style="font-size: 0.8em; color: var(--text-muted);">Seleccionar servicio para cambiar estado:</label>
-            <select id="selectProductoAdmin"></select>
-            
-            <label style="font-size: 0.8em; color: var(--text-muted);">Estado:</label>
-            <select id="selectEstadoAdmin">
-                <option value="false">Disponible</option>
-                <option value="true">Agotado</option>
-            </select>
-            <button onclick="cambiarEstadoProducto()" style="background: #f59e0b; color: #000;">CAMBIAR ESTADO SERVICIO</button>
-
-            <button onclick="document.getElementById('modalAdmin').style.display='none'" style="background: #ef4444; color: #fff; margin-top: 15px;">CERRAR PANEL</button>
+        <div class="footer-nav">
+            <button onclick="logoutSession()">Cerrar Sesión Actual</button>
         </div>
     </div>
 
     <script>
-        let usuarios = JSON.parse(localStorage.getItem('zrro_usuarios')) || {};
-        let usuarioActual = localStorage.getItem('zrro_sesion_actual') || null;
+        // Catálogo completo de 72 servicios distribuidos en categorías
+        const products = [
+            // Streaming (1-25)
+            { id: 1, name: "Netflix Premium Pantalla", cat: "Streaming", price: 6000, oldPrice: 10000, available: true, discount: "40%" },
+            { id: 2, name: "Netflix Cuenta Completa", cat: "Streaming", price: 25000, oldPrice: 40000, available: true, discount: "37%" },
+            { id: 3, name: "Max (HBO) Estándar", cat: "Streaming", price: 8000, oldPrice: 15000, available: true, discount: "46%" },
+            { id: 4, name: "Max (HBO) Completa", cat: "Streaming", price: 22000, oldPrice: 35000, available: true, discount: "37%" },
+            { id: 5, name: "Disney+ Estándar", cat: "Streaming", price: 9000, oldPrice: 16000, available: true, discount: "43%" },
+            { id: 6, name: "Disney+ Premium", cat: "Streaming", price: 12000, oldPrice: 20000, available: true, discount: "40%" },
+            { id: 7, name: "Amazon Prime Video Perfil", cat: "Streaming", price: 5000, oldPrice: 9000, available: true, discount: "44%" },
+            { id: 8, name: "Amazon Prime Cuenta Comp", cat: "Streaming", price: 18000, oldPrice: 25000, available: true, discount: "28%" },
+            { id: 9, name: "Paramount+ Mes", cat: "Streaming", price: 7000, oldPrice: 12000, available: true, discount: "41%" },
+            { id: 10, name: "Apple TV+ Mes", cat: "Streaming", price: 9000, oldPrice: 15000, available: true, discount: "40%" },
+            { id: 11, name: "Crunchyroll Mega Fan", cat: "Streaming", price: 6000, oldPrice: 12000, available: true, discount: "50%" },
+            { id: 12, name: "Vix Premium Mes", cat: "Streaming", price: 7000, oldPrice: 14000, available: true, discount: "50%" },
+            { id: 13, name: "Plex Pass Anual", cat: "Streaming", price: 15000, oldPrice: 30000, available: false, discount: "50%" },
+            { id: 14, name: "Universal+ 1 Mes", cat: "Streaming", price: 8000, oldPrice: 15000, available: true, discount: "46%" },
+            { id: 15, name: "Lionsgate+ Mes", cat: "Streaming", price: 6000, oldPrice: 12000, available: true, discount: "50%" },
+            { id: 16, name: "Magis TV 1 Dispositivo", cat: "Streaming", price: 12000, oldPrice: 20000, available: true, discount: "40%" },
+            { id: 17, name: "Televisión Libre App", cat: "Streaming", price: 10000, oldPrice: 18000, available: true, discount: "44%" },
+            { id: 18, name: "Win Sports+ Mensual", cat: "Streaming", price: 22000, oldPrice: 35000, available: true, discount: "37%" },
+            { id: 19, name: "DIRECTV GO Completo", cat: "Streaming", price: 25000, oldPrice: 45000, available: false, discount: "44%" },
+            { id: 20, name: "FuboTV 1 Mes", cat: "Streaming", price: 20000, oldPrice: 40000, available: true, discount: "50%" },
+            { id: 21, name: "Hulu sin anuncios", cat: "Streaming", price: 14000, oldPrice: 25000, available: true, discount: "44%" },
+            { id: 22, name: "Peacock TV Mes", cat: "Streaming", price: 11000, oldPrice: 20000, available: true, discount: "45%" },
+            { id: 23, name: "Discovery+ Mes", cat: "Streaming", price: 7000, oldPrice: 13000, available: true, discount: "46%" },
+            { id: 24, name: "Claro Video Mes", cat: "Streaming", price: 6000, oldPrice: 12000, available: true, discount: "50%" },
+            { id: 25, name: "Movistar Play Mes", cat: "Streaming", price: 6000, oldPrice: 12000, available: true, discount: "50%" },
 
-        const productosBase = [
-            {cat: "NETFLIX", title: "Netflix Pantalla Normal 4K", priceNum: 14000, price: "$14.000", old: "$28.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix Pantalla Standard", priceNum: 12000, price: "$12.000", old: "$20.000", desc: "-40%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix Pantalla Genérica", priceNum: 12000, price: "$12.000", old: "$20.000", desc: "-40%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix Pantalla Internacional Genérica", priceNum: 14000, price: "$14.000", old: "$25.000", desc: "-45%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix Cuenta Completa Normal", priceNum: 52000, price: "$52.000", old: "$75.000", desc: "-30%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix Cuenta Completa Standard", priceNum: 45000, price: "$45.000", old: "$65.000", desc: "-30%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix Cuenta Completa Genérica", priceNum: 45000, price: "$45.000", old: "$65.000", desc: "-30%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix 2 Meses Pack Pro", priceNum: 95000, price: "$95.000", old: "$130.000", desc: "-25%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix Perfil Adicional Garantizado", priceNum: 18000, price: "$18.000", old: "$30.000", desc: "-40%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix Ultra HD 4 Pantallas", priceNum: 58000, price: "$58.000", old: "$85.000", desc: "-32%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
+            // Música (26-38)
+            { id: 26, name: "Spotify Individual 1M", cat: "Musica", price: 8000, oldPrice: 15000, available: true, discount: "46%" },
+            { id: 27, name: "Spotify Familiar 1M", cat: "Musica", price: 12000, oldPrice: 22000, available: true, discount: "45%" },
+            { id: 28, name: "YouTube Premium Individual", cat: "Musica", price: 7000, oldPrice: 14000, available: true, discount: "50%" },
+            { id: 29, name: "YouTube Familiar 1M", cat: "Musica", price: 12000, oldPrice: 23000, available: true, discount: "47%" },
+            { id: 30, name: "Apple Music 1 Mes", cat: "Musica", price: 8000, oldPrice: 16000, available: true, discount: "50%" },
+            { id: 31, name: "Deezer HiFi 1 Mes", cat: "Musica", price: 9000, oldPrice: 18000, available: true, discount: "50%" },
+            { id: 32, name: "Tidal HiFi Plus 1M", cat: "Musica", price: 11000, oldPrice: 22000, available: true, discount: "50%" },
+            { id: 33, name: "Amazon Music Unlimited", cat: "Musica", price: 9000, oldPrice: 17000, available: true, discount: "47%" },
+            { id: 34, name: "SoundCloud Go+ Mes", cat: "Musica", price: 8000, oldPrice: 15000, available: true, discount: "46%" },
+            { id: 35, name: "Qobuz Sublime Mes", cat: "Musica", price: 14000, oldPrice: 25000, available: false, discount: "44%" },
+            { id: 36, name: "Napster Premier 1M", cat: "Musica", price: 10000, oldPrice: 20000, available: true, discount: "50%" },
+            { id: 37, name: "Pandora Plus Mes", cat: "Musica", price: 7000, oldPrice: 14000, available: true, discount: "50%" },
+            { id: 38, name: "Anghami Plus Mes", cat: "Musica", price: 6000, oldPrice: 12000, available: true, discount: "50%" },
 
-            {cat: "DISNEY+", title: "Disney+ Premium Pantalla", priceNum: 9000, price: "$9.000", old: "$18.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-            {cat: "DISNEY+", title: "Disney+ Standard Pantalla", priceNum: 6000, price: "$6.000", old: "$12.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-            {cat: "DISNEY+", title: "Disney+ Cuenta Completa Premium", priceNum: 28000, price: "$28.000", old: "$50.000", desc: "-44%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-            {cat: "DISNEY+", title: "Disney+ Cuenta Completa Standard", priceNum: 22000, price: "$22.000", old: "$40.000", desc: "-45%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-            {cat: "DISNEY+", title: "Disney+ 3 Meses Pack", priceNum: 75000, price: "$75.000", old: "$120.000", desc: "-37%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-            {cat: "DISNEY+", title: "Disney+ Familiar Ultra", priceNum: 32000, price: "$32.000", old: "$60.000", desc: "-46%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-            {cat: "DISNEY+", title: "Disney+ Kids Edición Especial", priceNum: 7000, price: "$7.000", old: "$15.000", desc: "-53%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-            {cat: "DISNEY+", title: "Disney+ Anual Estándar", priceNum: 180000, price: "$180.000", old: "$300.000", desc: "-40%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-            {cat: "DISNEY+", title: "Disney+ & Star+ Bundle Pantalla", priceNum: 12000, price: "$12.000", old: "$24.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-            {cat: "DISNEY+", title: "Disney+ VIP Acceso Total", priceNum: 15000, price: "$15.000", old: "$30.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
+            // IPTV y Listas (39-50)
+            { id: 39, name: "IPTV 1 Mes Full Canales", cat: "IPTV", price: 15000, oldPrice: 30000, available: true, discount: "50%" },
+            { id: 40, name: "IPTV 3 Meses Oferta", cat: "IPTV", price: 35000, oldPrice: 80000, available: true, discount: "56%" },
+            { id: 41, name: "IPTV 6 Meses Semestral", cat: "IPTV", price: 60000, oldPrice: 150000, available: true, discount: "60%" },
+            { id: 42, name: "IPTV 1 Año Anual", cat: "IPTV", price: 100000, oldPrice: 250000, available: true, discount: "60%" },
+            { id: 43, name: "Servidor IPTV Privado X", cat: "IPTV", price: 20000, oldPrice: 40000, available: true, discount: "50%" },
+            { id: 44, name: "Lista M3U Adultos +18", cat: "IPTV", price: 10000, oldPrice: 20000, available: true, discount: "50%" },
+            { id: 45, name: "App XCIPTV Licencia", cat: "IPTV", price: 8000, oldPrice: 15000, available: true, discount: "46%" },
+            { id: 46, name: "Ibo Player Activación", cat: "IPTV", price: 12000, oldPrice: 25000, available: true, discount: "52%" },
+            { id: 47, name: "Duplex IPTV App", cat: "IPTV", price: 9000, oldPrice: 18000, available: true, discount: "50%" },
+            { id: 48, name: "Smart IPTV Licencia Única", cat: "IPTV", price: 15000, oldPrice: 30000, available: true, discount: "50%" },
+            { id: 49, name: "Flix IPTV Activar", cat: "IPTV", price: 10000, oldPrice: 20000, available: true, discount: "50%" },
+            { id: 50, name: "Net IPTV Code", cat: "IPTV", price: 10000, oldPrice: 20000, available: true, discount: "50%" },
 
-            {cat: "MAX", title: "Max (HBO) Pantalla", priceNum: 8000, price: "$8.000", old: "$16.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "MAX", title: "Max (HBO) Platino Pantalla", priceNum: 8000, price: "$8.000", old: "$16.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "MAX", title: "Max (HBO) Cuenta Completa", priceNum: 25000, price: "$25.000", old: "$45.000", desc: "-44%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "MAX", title: "Max (HBO) 3 Meses", priceNum: 65000, price: "$65.000", old: "$110.000", desc: "-40%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "MAX", title: "Max (HBO) Ultra 4K", priceNum: 11000, price: "$11.000", old: "$22.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "MAX", title: "Max (HBO) Estreno Pack", priceNum: 9500, price: "$9.500", old: "$19.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "MAX", title: "Max (HBO) Perfil Privado", priceNum: 7000, price: "$7.000", old: "$14.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "MAX", title: "Max (HBO) Anual", priceNum: 140000, price: "$140.000", old: "$250.000", desc: "-44%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "MAX", title: "Max (HBO) + Warner Pass", priceNum: 13000, price: "$13.000", old: "$26.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "MAX", title: "Max (HBO) Familiar Global", priceNum: 29000, price: "$29.000", old: "$50.000", desc: "-42%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
+            // Combos (51-60)
+            { id: 51, name: "Combo Dúo (Netflix + Max)", cat: "Combos", price: 13000, oldPrice: 25000, available: true, discount: "48%" },
+            { id: 52, name: "Combo Trío (Netflix + Max + Disney)", cat: "Combos", price: 19000, oldPrice: 35000, available: true, discount: "45%" },
+            { id: 53, name: "Combo Familiar (Disney + Amazon)", cat: "Combos", price: 12000, oldPrice: 25000, available: true, discount: "52%" },
+            { id: 54, name: "Pack Musical (Spotify + YouTube)", cat: "Combos", price: 13000, oldPrice: 25000, available: true, discount: "48%" },
+            { id: 55, name: "Combo Gamer (Crunchyroll + Xbox GamePass)", cat: "Combos", price: 18000, oldPrice: 35000, available: true, discount: "48%" },
+            { id: 56, name: "Mega Combo Streaming (4 Apps)", cat: "Combos", price: 24000, oldPrice: 50000, available: true, discount: "52%" },
+            { id: 57, name: "Combo Cinefilo (Apple TV + Paramount + Max)", cat: "Combos", price: 21000, oldPrice: 42000, available: true, discount: "50%" },
+            { id: 58, name: "Pack Estudiantil (Canva + YouTube)", cat: "Combos", price: 12000, oldPrice: 24000, available: true, discount: "50%" },
+            { id: 59, name: "Combo Deportes (Win Sports + IPTV)", cat: "Combos", price: 30000, oldPrice: 60000, available: true, discount: "50%" },
+            { id: 60, name: "Super Combo Total (Todo incluido cuentas)", cat: "Combos", price: 45000, oldPrice: 90000, available: false, discount: "50%" },
 
-            {cat: "AMAZON PRIME", title: "Amazon Prime Pantalla", priceNum: 5000, price: "$5.000", old: "$10.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "AMAZON PRIME", title: "Amazon Prime Original Pantalla", priceNum: 8000, price: "$8.000", old: "$16.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "AMAZON PRIME", title: "Amazon Prime Cuenta Completa", priceNum: 18000, price: "$18.000", old: "$35.000", desc: "-48%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "AMAZON PRIME", title: "Amazon Prime 6 Meses", priceNum: 85000, price: "$85.000", old: "$150.000", desc: "-43%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "AMAZON PRIME", title: "Amazon Prime Video Channels Add-on", priceNum: 12000, price: "$12.000", old: "$24.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "AMAZON PRIME", title: "Amazon Music Unlimited (1 Mes)", priceNum: 9000, price: "$9.000", old: "$18.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "AMAZON PRIME", title: "Amazon Gaming & Twitch Prime", priceNum: 6000, price: "$6.000", old: "$12.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "AMAZON PRIME", title: "Amazon Prime Anual Completa", priceNum: 95000, price: "$95.000", old: "$180.000", desc: "-47%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "AMAZON PRIME", title: "Amazon Prime Perfil Estándar", priceNum: 6000, price: "$6.000", old: "$12.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "AMAZON PRIME", title: "Amazon Prime Pack Estreno 4K", priceNum: 10000, price: "$10.000", old: "$20.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-
-            {cat: "YOUTUBE", title: "YouTube Premium 1 Mes (Tu Cuenta)", priceNum: 8000, price: "$8.000", old: "$20.000", desc: "-60%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg"},
-            {cat: "YOUTUBE", title: "YouTube Premium 4 Meses Familiar", priceNum: 25000, price: "$25.000", old: "$60.000", desc: "-58%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg"},
-            {cat: "YOUTUBE", title: "YouTube Premium Anual", priceNum: 75000, price: "$75.000", old: "$180.000", desc: "-58%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg"},
-            {cat: "SPOTIFY", title: "Spotify Premium 1 Mes (Tu Cuenta)", priceNum: 7000, price: "$7.000", old: "$16.000", desc: "-56%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text_%282015%29.svg"},
-            {cat: "SPOTIFY", title: "Spotify Premium 3 Meses Familiar", priceNum: 20000, price: "$20.000", old: "$45.000", desc: "-55%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text_%282015%29.svg"},
-            {cat: "SPOTIFY", title: "Spotify Premium Anual", priceNum: 65000, price: "$65.000", old: "$150.000", desc: "-56%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text_%282015%29.svg"},
-            {cat: "CRUNCHYROLL", title: "Crunchyroll Mega Fan Pantalla", priceNum: 6000, price: "$6.000", old: "$15.000", desc: "-60%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "CRUNCHYROLL", title: "Crunchyroll Cuenta Completa", priceNum: 18000, price: "$18.000", old: "$35.000", desc: "-48%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "PARAMOUNT", title: "Paramount+ Pantalla Estándar", priceNum: 7000, price: "$7.000", old: "$15.000", desc: "-53%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "PARAMOUNT", title: "Paramount+ Cuenta Completa", priceNum: 20000, price: "$20.000", old: "$40.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-
-            {cat: "COMBOS", title: "Combo Netflix + Crunchyroll", priceNum: 15000, price: "$15.000", old: "$30.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "COMBOS", title: "Combo Netflix + Max (HBO)", priceNum: 18000, price: "$18.000", old: "$36.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "COMBOS", title: "Combo Netflix + Disney+", priceNum: 20000, price: "$20.000", old: "$40.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "COMBOS", title: "Super Combo Triple (Netflix + Disney + Max)", priceNum: 26000, price: "$26.000", old: "$55.000", desc: "-52%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "COMBOS", title: "Combo Cine Total (Prime + Max + Paramount)", priceNum: 19000, price: "$19.000", old: "$40.000", desc: "-52%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "COMBOS", title: "Combo Música Pro (Spotify + YouTube)", priceNum: 13000, price: "$13.000", old: "$30.000", desc: "-56%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text_%282015%29.svg"},
-            {cat: "COMBOS", title: "Combo Gamer & Anime (Crunchyroll + Prime)", priceNum: 11000, price: "$11.000", old: "$25.000", desc: "-56%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "COMBOS", title: "Combo Familiar Plus (Disney + Max + Prime)", priceNum: 21000, price: "$21.000", old: "$45.000", desc: "-53%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-            {cat: "COMBOS", title: "Mega Pack Anual Combinado 3 Pantallas", priceNum: 190000, price: "$190.000", old: "$380.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "COMBOS", title: "Combo Estudiantil (Canva + YouTube + Spotify)", priceNum: 18000, price: "$18.000", old: "$40.000", desc: "-55%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg"},
-            {cat: "COMBOS", title: "Combo Fin de Semana (Netflix + Max Cuentas)", priceNum: 65000, price: "$65.000", old: "$120.000", desc: "-45%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "COMBOS", title: "Pack Global Streaming 5 Servicios", priceNum: 35000, price: "$35.000", old: "$80.000", desc: "-56%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-
-            {cat: "CANVA PRO", title: "Canva Pro (1 Mes - Invitación)", priceNum: 6000, price: "$6.000", old: "$15.000", desc: "-60%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg"},
-            {cat: "CANVA PRO", title: "Canva Pro (3 Meses Educativo)", priceNum: 15000, price: "$15.000", old: "$40.000", desc: "-62%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg"},
-            {cat: "CANVA PRO", title: "Canva Pro (1 Año Vitalicio Equipo)", priceNum: 45000, price: "$45.000", old: "$120.000", desc: "-62%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg"},
-            {cat: "IPTV", title: "IPTV Smarters Pro 1 Mes", priceNum: 15000, price: "$15.000", old: "$30.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "IPTV", title: "IPTV Magis TV 3 Meses Oficial", priceNum: 35000, price: "$35.000", old: "$70.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "IPTV", title: "IPTV Tele Latino 1 Año Pack Completo", priceNum: 90000, price: "$90.000", old: "$180.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-
-            {cat: "OTRAS", title: "Apple TV+ (1 Mes)", priceNum: 10000, price: "$10.000", old: "$22.000", desc: "-54%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "OTRAS", title: "VIX+ Premium Pantalla", priceNum: 8000, price: "$8.000", old: "$18.000", desc: "-55%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "OTRAS", title: "Plex Pass Anual Oficial", priceNum: 40000, price: "$40.000", old: "$90.000", desc: "-55%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "OTRAS", title: "Pornhub Premium VIP Pass (1 Mes)", priceNum: 12000, price: "$12.000", old: "$25.000", desc: "-52%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"}
+            // Herramientas y Otros (61-72)
+            { id: 61, name: "Canva Pro Cuenta Educativa", cat: "Herramientas", price: 5000, oldPrice: 15000, available: true, discount: "66%" },
+            { id: 62, name: "ChatGPT Plus Compartido 1M", cat: "Herramientas", price: 15000, oldPrice: 40000, available: true, discount: "62%" },
+            { id: 63, name: "Microsoft 365 1 Año 5 Dispositivos", cat: "Herramientas", price: 20000, oldPrice: 50000, available: true, discount: "60%" },
+            { id: 64, name: "Adobe Creative Cloud Mes", cat: "Herramientas", price: 30000, oldPrice: 90000, available: true, discount: "66%" },
+            { id: 65, name: "Paramount+ Cuenta Completa", cat: "Herramientas", price: 18000, oldPrice: 35000, available: true, discount: "48%" },
+            { id: 66, name: "NordVPN Cuenta 1 Mes", cat: "Herramientas", price: 10000, oldPrice: 25000, available: true, discount: "60%" },
+            { id: 67, name: "ExpressVPN 1 Mes", cat: "Herramientas", price: 12000, oldPrice: 30000, available: true, discount: "60%" },
+            { id: 68, name: "CapCut Pro 1 Mes", cat: "Herramientas", price: 10000, oldPrice: 25000, available: true, discount: "60%" },
+            { id: 69, name: "Grammarly Premium Mes", cat: "Herramientas", price: 12000, oldPrice: 30000, available: true, discount: "60%" },
+            { id: 70, name: "Pornhub Premium Account", cat: "Herramientas", price: 10000, oldPrice: 30000, available: true, discount: "66%" },
+            { id: 71, name: "IPTV Extra Canal Local", cat: "Herramientas", price: 8000, oldPrice: 15000, available: true, discount: "46%" },
+            { id: 72, name: "Servicio Soporte Técnico Remoto", cat: "Herramientas", price: 15000, oldPrice: 30000, available: true, discount: "50%" }
         ];
 
-        let productos = JSON.parse(localStorage.getItem('zrro_productos_72_v4')) || productosBase;
-        let productosFiltrados = [...productos];
+        // Hash SHA-256 para contraseña Admin ("ZRRO_ADMIN_2026")
+        const ADMIN_HASH = "80f146908a8a4f91045233c070c774483a8e932402d8479e00045f22e8ec5d91";
 
-        if(usuarioActual && usuarios[usuarioActual]) {
-            document.getElementById('modalLogin').style.display = 'none';
-            actualizarVistaUsuario();
+        let currentCategory = 'Todos';
+        let currentUser = JSON.parse(localStorage.getItem('zrro_current_user')) || null;
+
+        // Inicializar aplicación
+        function initApp() {
+            updateUserUI();
+            renderCatalog(products);
+            renderAdminProductsTable();
         }
 
-        function iniciarSesion() {
-            let email = document.getElementById('inputEmail').value.toLowerCase().trim();
-            if(!email || !email.includes('@')) {
-                alert("Por favor ingresa un correo electrónico válido.");
+        // Renderizado del catálogo
+        function renderCatalog(itemsToRender) {
+            const container = document.getElementById('catalog');
+            if (itemsToRender.length === 0) {
+                container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #94a3b8;">No se encontraron servicios disponibles.</p>`;
                 return;
             }
-            if(!usuarios[email]) {
-                usuarios[email] = { saldo: 0 };
-                localStorage.setItem('zrro_usuarios', JSON.stringify(usuarios));
-            }
-            usuarioActual = email;
-            localStorage.setItem('zrro_sesion_actual', usuarioActual);
-            document.getElementById('modalLogin').style.display = 'none';
-            actualizarVistaUsuario();
-        }
 
-        function actualizarVistaUsuario() {
-            document.getElementById('displayEmail').innerText = usuarioActual;
-            let saldo = usuarios[usuarioActual] ? usuarios[usuarioActual].saldo : 0;
-            document.getElementById('displaySaldo').innerText = "Saldo: $" + saldo.toLocaleString('es-CO');
-            renderCatalogo();
-        }
-
-        function renderCatalogo() {
-            let catalogo = document.getElementById('catalogo');
-            catalogo.innerHTML = "";
-
-            productosFiltrados.forEach((p) => {
-                let claseAgotado = p.agotado ? 'product-card agotado' : 'product-card';
-                let badgeAgotado = p.agotado ? '<span class="badge-agotado">AGOTADO</span>' : '';
-                let botonAccion = p.agotado ? 
-                    `<button class="btn-comprar" style="background:#3f3f46; color:#a1a1aa; cursor:not-allowed;" disabled>Agotado</button>` : 
-                    `<button class="btn-comprar" onclick="comprarServicio('${p.title.replace(/'/g, "\\'")}', ${p.priceNum})">Comprar con Saldo</button>`;
-
-                catalogo.innerHTML += `
-                    <div class="${claseAgotado}">
-                        <div class="product-image-container">
-                            <span class="badge-discount">${p.desc}</span>
-                            ${badgeAgotado}
-                            <img src="${p.img}" alt="${p.title}">
-                        </div>
-                        <div class="product-content">
-                            <div>
-                                <div class="category">${p.cat}</div>
-                                <div class="product-title">${p.title}</div>
-                            </div>
-                            <div>
-                                <div class="price-box">
-                                    <span class="old-price">${p.old}</span>
-                                    <span class="current-price">${p.price}</span>
-                                </div>
-                                ${botonAccion}
-                            </div>
+            container.innerHTML = itemsToRender.map(p => `
+                <div class="card ${!p.available ? 'out-of-stock' : ''}">
+                    <div class="badge">-${p.discount}</div>
+                    <div>
+                        <h4>${p.name}</h4>
+                        <div class="price-box">
+                            <span class="old-price">$${p.oldPrice.toLocaleString()}</span>
+                            <div class="price">$${p.price.toLocaleString()}</div>
                         </div>
                     </div>
-                `;
+                    <button class="btn" onclick="buyProduct(${p.id})" ${!p.available ? 'disabled' : ''}>
+                        ${p.available ? 'Comprar' : 'Agotado'}
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Filtrado por categoría y búsqueda
+        function filterCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.filter-chip').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+            filterCatalog();
+        }
+
+        function filterCatalog() {
+            const query = document.getElementById('search').value.toLowerCase();
+            const filtered = products.filter(p => {
+                const matchesCat = currentCategory === 'Todos' || p.cat === currentCategory;
+                const matchesQuery = p.name.toLowerCase().includes(query);
+                return matchesCat && matchesQuery;
             });
-            actualizarSelectAdmin();
+            renderCatalog(filtered);
         }
 
-        function comprarServicio(titulo, precioNum) {
-            if (!usuarioActual || !usuarios[usuarioActual]) {
-                alert("Por favor inicia sesión primero.");
-                return;
-            }
-            let saldoActual = usuarios[usuarioActual].saldo || 0;
-            if (saldoActual < precioNum) {
-                alert("Saldo insuficiente. Por favor carga saldo para continuar con tu compra.");
-                return;
-            }
-            if (confirm(`¿Confirmas la compra de "${titulo}" por $${precioNum.toLocaleString('es-CO')}?`)) {
-                usuarios[usuarioActual].saldo -= precioNum;
-                localStorage.setItem('zrro_usuarios', JSON.stringify(usuarios));
-                actualizarVistaUsuario();
-                alert(`¡Compra exitosa! Has adquirido ${titulo}. Revisa tu cuenta o contacta soporte para entrega inmediata.`);
-            }
+        // Sistema de Cuentas y Saldo LocalStorage
+        function toggleAuthModal() {
+            const panel = document.getElementById('auth-panel');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
         }
 
-        function buscarServicios() {
-            let query = document.getElementById('buscador').value.toLowerCase();
-            productosFiltrados = productos.filter(p => 
-                p.title.toLowerCase().includes(query) || p.cat.toLowerCase().includes(query)
-            );
-            renderCatalogo();
-        }
-
-        function abrirAdmin() {
-            let pass = prompt("Ingresa la clave de Administrador:");
-            if(pass === "1234") {
-                document.getElementById('modalAdmin').style.display = 'flex';
-            } else if(pass !== null) {
-                alert("Contraseña incorrecta");
-            }
-        }
-
-        function actualizarSelectAdmin() {
-            let select = document.getElementById('selectProductoAdmin');
-            select.innerHTML = "";
-            productos.forEach((p, idx) => {
-                select.innerHTML += `<option value="${idx}">${idx + 1}. ${p.title} (${p.agotado ? 'Agotado' : 'Disponible'})</option>`;
-            });
-        }
-
-        function actualizarSaldoUsuario() {
-            let email = document.getElementById('adminEmail').value.toLowerCase().trim();
-            let nuevoSaldo = parseInt(document.getElementById('adminSaldo').value);
-
-            if(!email || isNaN(nuevoSaldo)) {
-                alert("Ingresa un correo y un saldo válido.");
+        function handleAuth() {
+            const email = document.getElementById('auth-email').value.trim();
+            const pass = document.getElementById('auth-pass').value.trim();
+            if (!email || !pass) {
+                alert("Por favor ingresa correo y contraseña.");
                 return;
             }
 
-            if(!usuarios[email]) {
-                usuarios[email] = { saldo: 0 };
+            let users = JSON.parse(localStorage.getItem('zrro_users')) || {};
+            if (!users[email]) {
+                // Registrar nuevo usuario con saldo inicial 0
+                users[email] = { password: pass, balance: 0 };
+                alert("Cuenta registrada con éxito.");
+            } else if (users[email].password !== pass) {
+                alert("Contraseña incorrecta.");
+                return;
             }
 
-            usuarios[email].saldo = nuevoSaldo;
-            localStorage.setItem('zrro_usuarios', JSON.stringify(usuarios));
-            alert("✅ Saldo actualizado con éxito para " + email);
+            currentUser = { email, balance: users[email].balance };
+            localStorage.setItem('zrro_current_user', JSON.stringify(currentUser));
+            localStorage.setItem('zrro_users', JSON.stringify(users));
             
-            document.getElementById('adminEmail').value = "";
-            document.getElementById('adminSaldo').value = "";
-            if(email === usuarioActual) {
-                actualizarVistaUsuario();
+            document.getElementById('auth-panel').style.display = 'none';
+            updateUserUI();
+            alert(`Bienvenido, ${email}`);
+        }
+
+        function updateUserUI() {
+            if (currentUser) {
+                document.getElementById('nav-user').innerText = currentUser.email.split('@')[0];
+                // Sintonizar saldo real con DB de usuarios local
+                let users = JSON.parse(localStorage.getItem('zrro_users')) || {};
+                if(users[currentUser.email]) {
+                    currentUser.balance = users[currentUser.email].balance;
+                }
+                document.getElementById('user-balance').innerText = currentUser.balance.toLocaleString();
+            } else {
+                document.getElementById('nav-user').innerText = "Invitado";
+                document.getElementById('user-balance').innerText = "0";
             }
         }
 
-        function cambiarEstadoProducto() {
-            let idx = document.getElementById('selectProductoAdmin').value;
-            let estadoVal = document.getElementById('selectEstadoAdmin').value === "true";
-
-            productos[idx].agotado = estadoVal;
-            localStorage.setItem('zrro_productos_72_v4', JSON.stringify(productos));
-            productosFiltrados = [...productos];
-            renderCatalogo();
-            alert("✅ Estado del servicio actualizado correctamente.");
+        function logoutSession() {
+            localStorage.removeItem('zrro_current_user');
+            currentUser = null;
+            updateUserUI();
+            alert("Has cerrado sesión.");
         }
 
-        renderCatalogo();
+        function forgotPassword() {
+            const email = document.getElementById('auth-email').value.trim();
+            let users = JSON.parse(localStorage.getItem('zrro_users')) || {};
+            if (users[email]) {
+                alert(`Tu contraseña registrada es: ${users[email].password}`);
+            } else {
+                alert("Ingresa un correo válido registrado en el campo de arriba para recuperar tu clave.");
+            }
+        }
+
+        // Proceso de Compra con Saldo
+        function buyProduct(id) {
+            if (!currentUser) {
+                alert("Debes iniciar sesión para comprar servicios.");
+                document.getElementById('auth-panel').style.display = 'block';
+                return;
+            }
+
+            const product = products.find(p => p.id === id);
+            let users = JSON.parse(localStorage.getItem('zrro_users')) || {};
+            let userRecord = users[currentUser.email];
+
+            if (userRecord.balance < product.price) {
+                alert("Saldo insuficiente. Por favor recarga saldo a través de WhatsApp.");
+                return;
+            }
+
+            // Descontar saldo
+            userRecord.balance -= product.price;
+            users[currentUser.email] = userRecord;
+            localStorage.setItem('zrro_users', JSON.stringify(users));
+            
+            currentUser.balance = userRecord.balance;
+            localStorage.setItem('zrro_current_user', JSON.stringify(currentUser));
+            updateUserUI();
+
+            alert(`¡Compra exitosa! Has adquirido: ${product.name}. Revisa tus credenciales o contacta soporte.`);
+        }
+
+        // Enlace de Recarga WhatsApp
+        function solicitarRecargaWhatsApp() {
+            const userEmail = currentUser ? currentUser.email : "Invitado_Sin_Correo";
+            const message = encodeURIComponent(`Hola ZRRO / ST, deseo recargar saldo a mi cuenta. Mi correo registrado es: ${userEmail}`);
+            window.open(`https://wa.me/573000000000?text=${message}`, '_blank');
+        }
+
+        // Panel de Administración Seguro por Hash SHA-256
+        async function promptAdminLogin() {
+            const input = prompt("Introduce la contraseña de administrador:");
+            if (!input) return;
+
+            const encoder = new TextEncoder();
+            const data = encoder.encode(input);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+            if (hashHex === ADMIN_HASH) {
+                document.getElementById('admin-panel').style.display = 'block';
+                alert("Acceso de Administrador Concedido.");
+            } else {
+                alert("Contraseña de administrador incorrecta.");
+            }
+        }
+
+        function adminUpdateBalance() {
+            const targetEmail = document.getElementById('admin-target-email').value.trim();
+            const newBalance = parseInt(document.getElementById('admin-new-balance').value);
+            
+            let users = JSON.parse(localStorage.getItem('zrro_users')) || {};
+            if (!users[targetEmail]) {
+                alert("El usuario no existe en la base de datos local.");
+                return;
+            }
+
+            users[targetEmail].balance = newBalance;
+            localStorage.setItem('zrro_users', JSON.stringify(users));
+            
+            if (currentUser && currentUser.email === targetEmail) {
+                currentUser.balance = newBalance;
+                localStorage.setItem('zrro_current_user', JSON.stringify(currentUser));
+                updateUserUI();
+            }
+
+            alert(`Saldo actualizado exitosamente para ${targetEmail} a $${newBalance.toLocaleString()}`);
+            document.getElementById('admin-target-email').value = '';
+            document.getElementById('admin-new-balance').value = '';
+        }
+
+        function renderAdminProductsTable() {
+            const tbody = document.getElementById('admin-products-table');
+            tbody.innerHTML = products.map(p => `
+                <tr>
+                    <td>${p.name}</td>
+                    <td>${p.available ? 'Disponible' : 'Agotado'}</td>
+                    <td>
+                        <button class="btn btn-secondary" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="toggleProductStatus(${p.id})">
+                            Cambiar Estado
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function toggleProductStatus(id) {
+            const p = products.find(prod => prod.id === id);
+            if (p) {
+                p.available = !p.available;
+                renderCatalog(products);
+                renderAdminProductsTable();
+            }
+        }
+
+        // Ejecutar carga inicial
+        initApp();
     </script>
 </body>
 </html>
