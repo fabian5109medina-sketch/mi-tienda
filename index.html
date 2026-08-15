@@ -4,56 +4,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZRRO DIGITAL</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Librerías de compatibilidad necesarias para evitar el error de apiKey -->
+    <!-- Firebase SDKs versión COMPAT (Estables para GitHub Pages) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body class="bg-slate-950 text-white min-h-screen flex items-center justify-center p-4">
 
-    <div id="app" class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl">
+    <div id="app" class="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl">
         
-        <!-- SECCIÓN DE AUTENTICACIÓN -->
+        <!-- VISTA DE LOGIN Y REGISTRO -->
         <div id="auth-section">
             <div class="text-center mb-6">
-                <h1 class="text-2xl font-bold text-cyan-400">ZRRO DIGITAL</h1>
-                <p class="text-slate-400 text-sm mt-1">Inicia sesión para acceder</p>
+                <div class="w-16 h-16 bg-gradient-to-tr from-cyan-500 to-blue-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-cyan-500/30 mb-3">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-bold tracking-wide text-cyan-400">ZRRO DIGITAL</h1>
+                <p class="text-slate-400 text-sm mt-1">Inicia sesión para acceder a tu monedero y catálogo completo</p>
             </div>
-            <input type="email" id="email" placeholder="Correo electrónico" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 mb-3 text-white">
-            <input type="password" id="password" placeholder="Contraseña" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 mb-4 text-white">
-            <button onclick="handleLogin()" class="w-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold py-3 rounded-xl mb-2 transition">Iniciar Sesión</button>
-            <button onclick="handleRegister()" class="w-full border border-cyan-500/50 text-cyan-400 font-semibold py-3 rounded-xl transition">Crear Cuenta Nueva</button>
-            <div id="auth-error" class="hidden mt-4 bg-red-950/50 border border-red-800 text-red-300 text-xs p-3 rounded-xl text-center"></div>
+
+            <div class="space-y-4">
+                <input type="email" id="email" placeholder="Correo electrónico" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition">
+                <input type="password" id="password" placeholder="Contraseña" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition">
+                
+                <button onclick="handleLogin()" class="w-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-semibold py-3 rounded-xl transition shadow-lg shadow-cyan-400/20">
+                    Iniciar Sesión
+                </button>
+                
+                <button onclick="handleRegister()" class="w-full bg-transparent hover:bg-slate-800 border border-cyan-500/50 text-cyan-400 font-semibold py-3 rounded-xl transition">
+                    Crear Cuenta Nueva
+                </button>
+
+                <div id="auth-error" class="hidden bg-red-950/50 border border-red-800 text-red-300 text-xs p-3 rounded-xl text-center"></div>
+            </div>
         </div>
 
-        <!-- SECCIÓN DE DASHBOARD -->
+        <!-- VISTA DEL PANEL Y CATÁLOGO -->
         <div id="dashboard-section" class="hidden space-y-6">
             <div class="flex justify-between items-center border-b border-slate-800 pb-4">
-                <h2 class="text-lg font-bold text-cyan-400">ZRRO DIGITAL</h2>
-                <button onclick="handleLogout()" class="text-xs bg-slate-800 text-red-400 px-3 py-1.5 rounded-lg border border-red-900/50">Cerrar Sesión</button>
+                <div>
+                    <h2 class="text-lg font-bold text-cyan-400">ZRRO DIGITAL</h2>
+                    <p id="user-email-display" class="text-xs text-slate-400"></p>
+                </div>
+                <button onclick="handleLogout()" class="text-xs bg-slate-800 hover:bg-red-900/40 text-red-400 px-3 py-1.5 rounded-lg border border-red-900/50 transition">
+                    Cerrar Sesión
+                </button>
             </div>
 
-            <div class="bg-gradient-to-r from-slate-800 to-slate-900 border border-slate-700/50 rounded-2xl p-6 text-center">
-                <p class="text-xs text-slate-400 uppercase tracking-wider">Saldo Disponible</p>
-                <h3 id="user-balance" class="text-4xl font-extrabold text-white mt-1">$0.00</h3>
+            <!-- MONEDERO / SALDO -->
+            <div class="bg-gradient-to-r from-slate-800 to-slate-900 border border-slate-700/50 rounded-2xl p-4 text-center">
+                <p class="text-xs text-slate-400 uppercase tracking-wider font-medium">Saldo Disponible</p>
+                <h3 id="user-balance" class="text-3xl font-extrabold text-white mt-1">$0.00</h3>
             </div>
 
-            <div class="bg-slate-800/50 border border-slate-800 p-4 rounded-xl">
-                <p class="text-sm font-medium">Streaming / Recargas</p>
-                <p class="text-xs text-slate-400">Activación inmediata</p>
+            <!-- LISTADO DE LOS 72 SERVICIOS -->
+            <div class="space-y-3">
+                <h3 class="text-sm font-semibold text-slate-300">Catálogo de Servicios Digitales (72 ítems)</h3>
+                <div id="services-container" class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 space-y-2 max-h-56 overflow-y-auto pr-1">
+                    <!-- Se generan dinámicamente los 72 servicios -->
+                </div>
             </div>
 
-            <!-- PANEL DE ADMINISTRADOR -->
+            <!-- PANEL DE ADMINISTRACIÓN -->
             <div id="admin-panel" class="hidden border border-amber-500/30 bg-amber-950/10 rounded-2xl p-4 space-y-3">
-                <h3 class="text-sm font-bold text-amber-400">⚡ Panel de Administración</h3>
-                <input type="email" id="admin-target-email" placeholder="Correo del usuario" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm">
-                <input type="number" id="admin-amount" placeholder="Monto a recargar" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm">
-                <button onclick="adminAddBalance()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2 rounded-lg transition">Recargar Saldo</button>
+                <h3 class="text-sm font-bold text-amber-400 flex items-center gap-2">
+                    <span>⚡ Panel de Administración</span>
+                </h3>
+                <div class="space-y-2">
+                    <input type="email" id="admin-target-email" placeholder="Correo del usuario a recargar" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+                    <input type="number" id="admin-amount" placeholder="Monto a sumar en el saldo" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+                    <button onclick="adminAddBalance()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold py-2 rounded-lg transition">
+                        Recargar Saldo a Usuario
+                    </button>
+                </div>
             </div>
         </div>
+
     </div>
 
+    <!-- LÓGICA DE FIREBASE Y APLICACIÓN -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyDRLE96tJIJrRSihMy6w0mOT3p_E8J1N0",
@@ -64,18 +97,104 @@
             appId: "1:716772431219:web:03f3a4312f2c8d234a5d7c"
         };
 
+        // Inicializar Firebase con el entorno COMPAT
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
+
         const adminEmails = ["fabian1590medina@gmail.com"];
 
-        auth.onAuthStateChanged(user => {
+        // Generar los 72 servicios dinámicamente en pantalla
+        const servicesContainer = document.getElementById('services-container');
+        for (let i = 1; i <= 72; i++) {
+            const item = document.createElement('div');
+            item.className = "bg-slate-800/50 border border-slate-800/80 p-2.5 rounded-lg flex justify-between items-center";
+            item.innerHTML = `
+                <div>
+                    <p class="text-xs font-medium text-slate-200">Servicio / Recarga Digital #${i}</p>
+                    <p class="text-[10px] text-slate-400">Entrega y activación automatizada</p>
+                </div>
+                <span class="text-[10px] bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded border border-cyan-500/20 font-medium">Disponible</span>
+            `;
+            servicesContainer.appendChild(item);
+        }
+
+        // Funciones de Autenticación
+        window.handleLogin = function() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            hideError();
+            auth.signInWithEmailAndPassword(email, password)
+                .catch(error => showError(error.message));
+        };
+
+        window.handleRegister = function() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            hideError();
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(userCredential => {
+                    return db.collection('users').doc(userCredential.user.uid).set({
+                        email: email,
+                        balance: 0
+                    });
+                })
+                .catch(error => showError(error.message));
+        };
+
+        window.handleLogout = function() {
+            auth.signOut();
+        };
+
+        // Función de Recarga de Administrador
+        window.adminAddBalance = async function() {
+            const targetEmail = document.getElementById('admin-target-email').value;
+            const amount = parseFloat(document.getElementById('admin-amount').value);
+
+            if (!targetEmail || isNaN(amount)) {
+                alert("Por favor completa los campos correctamente.");
+                return;
+            }
+
+            try {
+                const snapshot = await db.collection('users').where("email", "==", targetEmail).get();
+                if (snapshot.empty) {
+                    alert("No se encontró ningún usuario registrado con ese correo.");
+                    return;
+                }
+                
+                snapshot.forEach(async (userDoc) => {
+                    const currentBalance = userDoc.data().balance || 0;
+                    await db.collection('users').doc(userDoc.id).update({
+                        balance: currentBalance + amount
+                    });
+                    alert("¡Saldo recargado con éxito al usuario!");
+                    document.getElementById('admin-target-email').value = '';
+                    document.getElementById('admin-amount').value = '';
+                });
+            } catch (error) {
+                alert("Error al procesar la recarga: " + error.message);
+            }
+        };
+
+        // Escucha de estado de sesión en tiempo real
+        auth.onAuthStateChanged((user) => {
             if (user) {
                 document.getElementById('auth-section').classList.add('hidden');
                 document.getElementById('dashboard-section').classList.remove('hidden');
-                if (adminEmails.includes(user.email)) document.getElementById('admin-panel').classList.remove('hidden');
-                db.collection('users').doc(user.uid).onSnapshot(doc => {
-                    if (doc.exists) document.getElementById('user-balance').innerText = `$${(doc.data().balance || 0).toLocaleString()}`;
+                document.getElementById('user-email-display').innerText = user.email;
+
+                if (adminEmails.includes(user.email)) {
+                    document.getElementById('admin-panel').classList.remove('hidden');
+                } else {
+                    document.getElementById('admin-panel').classList.add('hidden');
+                }
+
+                db.collection('users').doc(user.uid).onSnapshot((docSnap) => {
+                    if (docSnap.exists) {
+                        const data = docSnap.data();
+                        document.getElementById('user-balance').innerText = `$${(data.balance || 0).toLocaleString()}`;
+                    }
                 });
             } else {
                 document.getElementById('auth-section').classList.remove('hidden');
@@ -84,27 +203,15 @@
             }
         });
 
-        function handleLogin() {
-            auth.signInWithEmailAndPassword(document.getElementById('email').value, document.getElementById('password').value)
-                .catch(e => { document.getElementById('auth-error').innerText = e.message; document.getElementById('auth-error').classList.remove('hidden'); });
+        function showError(message) {
+            const errorDiv = document.getElementById('auth-error');
+            errorDiv.innerText = "Error: " + message;
+            errorDiv.classList.remove('hidden');
         }
 
-        function handleRegister() {
-            auth.createUserWithEmailAndPassword(document.getElementById('email').value, document.getElementById('password').value)
-                .then(u => db.collection('users').doc(u.user.uid).set({email: u.user.email, balance: 0}))
-                .catch(e => { document.getElementById('auth-error').innerText = e.message; document.getElementById('auth-error').classList.remove('hidden'); });
-        }
-
-        function handleLogout() { auth.signOut(); }
-
-        function adminAddBalance() {
-            const email = document.getElementById('admin-target-email').value;
-            const amt = parseFloat(document.getElementById('admin-amount').value);
-            db.collection('users').where("email", "==", email).get().then(snap => {
-                if (snap.empty) { alert("Usuario no encontrado"); return; }
-                snap.forEach(d => db.collection('users').doc(d.id).update({balance: (d.data().balance || 0) + amt}));
-                alert("¡Saldo recargado!");
-            });
+        function hideError() {
+            const errorDiv = document.getElementById('auth-error');
+            errorDiv.classList.add('hidden');
         }
     </script>
 </body>
