@@ -4,458 +4,214 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZRRO DIGITAL</title>
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind CSS para el diseño -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <style>
-        body {
-            background-color: #0b0f19;
-            color: #ffffff;
-            font-family: system-ui, -apple-system, sans-serif;
-        }
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
-    </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between">
+<body class="bg-slate-950 text-white min-h-screen flex items-center justify-center p-4">
 
-    <!-- CONTENEDOR DE AUTENTICACIÓN (LOGIN / REGISTRO) -->
-    <div id="auth-container" class="flex items-center justify-center min-h-screen p-4">
-        <div class="bg-[#131b2e] border border-cyan-500/30 p-8 rounded-2xl shadow-2xl w-full max-w-md text-center">
-            <div class="w-16 h-16 bg-gradient-to-tr from-cyan-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyan-500/50">
-                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+    <!-- CONTENEDOR PRINCIPAL -->
+    <div id="app" class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl">
+        
+        <!-- VISTA DE AUTENTICACIÓN (LOGIN / REGISTRO) -->
+        <div id="auth-section">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-gradient-to-tr from-cyan-500 to-blue-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-cyan-500/30 mb-3">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-bold tracking-wide">ZRRO DIGITAL</h1>
+                <p class="text-slate-400 text-sm mt-1">Inicia sesión para acceder a tu monedero y catálogo</p>
             </div>
-            <h1 class="text-2xl font-bold tracking-wide">ZRRO DIGITAL</h1>
-            <p class="text-gray-400 text-sm mb-6">Inicia sesión para acceder a tu monedero y catálogo</p>
-            
-            <input type="email" id="email" placeholder="Correo electrónico" class="w-full bg-[#0b0f19] border border-gray-700 rounded-xl px-4 py-3 mb-4 text-white focus:outline-none focus:border-cyan-500">
-            <input type="password" id="password" placeholder="Contraseña" class="w-full bg-[#0b0f19] border border-gray-700 rounded-xl px-4 py-3 mb-6 text-white focus:outline-none focus:border-cyan-500">
-            
-            <button onclick="iniciarSesion()" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-3 rounded-xl transition duration-200 mb-3 shadow-lg shadow-cyan-500/20">Iniciar Sesión</button>
-            <button onclick="crearCuenta()" class="w-full border border-cyan-500/50 hover:bg-cyan-500/10 text-cyan-400 font-semibold py-3 rounded-xl transition duration-200">Crear Cuenta Nueva</button>
-            
-            <div id="auth-error" class="mt-4 text-red-400 text-xs bg-red-950/40 p-3 rounded-xl border border-red-900/50 hidden"></div>
+
+            <div class="space-y-4">
+                <div>
+                    <input type="email" id="email" placeholder="Correo electrónico" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition">
+                </div>
+                <div>
+                    <input type="password" id="password" placeholder="Contraseña" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition">
+                </div>
+                
+                <button onclick="handleLogin()" class="w-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-semibold py-3 rounded-xl transition shadow-lg shadow-cyan-400/20">
+                    Iniciar Sesión
+                </button>
+                
+                <button onclick="handleRegister()" class="w-full bg-transparent hover:bg-slate-800 border border-cyan-500/50 text-cyan-400 font-semibold py-3 rounded-xl transition">
+                    Crear Cuenta Nueva
+                </button>
+
+                <div id="auth-error" class="hidden bg-red-950/50 border border-red-800 text-red-300 text-xs p-3 rounded-xl text-center"></div>
+            </div>
         </div>
-    </div>
 
-    <!-- PANEL PRINCIPAL DE LA APLICACIÓN -->
-    <div id="app-container" class="hidden flex-col min-h-screen justify-between">
-        <div>
-            <!-- Header -->
-            <header class="bg-[#131b2e] border-b border-gray-800 p-4 flex justify-between items-center sticky top-0 z-50">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-cyan-500 rounded-xl flex items-center justify-center shadow-md shadow-cyan-500/30">
-                        <svg class="w-6 h-6 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    </div>
-                    <div>
-                        <h1 class="font-bold text-sm tracking-wide">ZRRO DIGITAL</h1>
-                        <span id="rol-badge" class="text-xs text-cyan-400 font-medium">Panel Automatizado</span>
-                    </div>
+        <!-- VISTA DEL PANEL / MONEDERO (Oculto al inicio) -->
+        <div id="dashboard-section" class="hidden space-y-6">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                <div>
+                    <h2 class="text-lg font-bold text-cyan-400">ZRRO DIGITAL</h2>
+                    <p id="user-email-display" class="text-xs text-slate-400"></p>
                 </div>
-                <div class="flex items-center space-x-3">
-                    <div class="bg-[#0b0f19] border border-gray-800 px-3 py-1.5 rounded-full flex items-center space-x-2">
-                        <span class="text-xs text-gray-400">Saldo:</span>
-                        <span id="user-saldo" class="text-green-400 font-bold text-sm">$0</span>
-                    </div>
-                    <button onclick="cerrarSesion()" class="bg-red-500/10 border border-red-500/30 text-red-400 px-3 py-1.5 rounded-xl text-xs font-semibold hover:bg-red-500/20 transition">Salir</button>
-                </div>
-            </header>
-
-            <!-- Menú de Navegación interno -->
-            <div class="p-4 max-w-2xl mx-auto flex gap-2 overflow-x-auto">
-                <button onclick="cambiarSeccion('catalogo')" id="btn-catalogo" class="bg-cyan-500 text-slate-950 px-4 py-2 rounded-xl font-bold text-xs shadow-md">🛍️ Catálogo</button>
-                <button onclick="cambiarSeccion('pedidos')" id="btn-pedidos" class="bg-[#131b2e] border border-gray-800 text-gray-300 px-4 py-2 rounded-xl font-semibold text-xs">📦 Mis Pedidos</button>
-                <button onclick="cambiarSeccion('recargas')" id="btn-recargas" class="bg-[#131b2e] border border-gray-800 text-gray-300 px-4 py-2 rounded-xl font-semibold text-xs">💳 Cargar Saldo</button>
-                <!-- Botón de Admin -->
-                <button onclick="cambiarSeccion('admin')" id="btn-admin" class="hidden bg-amber-500/20 border border-amber-500/50 text-amber-300 px-4 py-2 rounded-xl font-bold text-xs">⚙️ Panel Admin</button>
-            </div>
-
-            <!-- SECCIÓN: CATÁLOGO -->
-            <div id="seccion-catalogo" class="p-4 max-w-2xl mx-auto space-y-4">
-                <div class="relative">
-                    <input type="text" id="buscador" oninput="aplicarFiltros()" placeholder="Buscar servicio (ej: Netflix, Disney)..." class="w-full bg-[#131b2e] border border-gray-800 rounded-2xl px-4 py-3 pl-10 text-sm focus:outline-none focus:border-cyan-500">
-                    <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </div>
-
-                <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-hide text-xs">
-                    <button onclick="filtrarCategoria('Todos')" class="btn-filtro bg-cyan-500 text-slate-950 px-3.5 py-1.5 rounded-full font-bold whitespace-nowrap shadow-sm">Todos</button>
-                    <button onclick="filtrarCategoria('Netflix')" class="btn-filtro bg-[#131b2e] border border-gray-800 text-gray-300 px-3.5 py-1.5 rounded-full whitespace-nowrap">Netflix</button>
-                    <button onclick="filtrarCategoria('Streaming')" class="btn-filtro bg-[#131b2e] border border-gray-800 text-gray-300 px-3.5 py-1.5 rounded-full whitespace-nowrap">Streaming</button>
-                    <button onclick="filtrarCategoria('Cuentas')" class="btn-filtro bg-[#131b2e] border border-gray-800 text-gray-300 px-3.5 py-1.5 rounded-full whitespace-nowrap">Cuentas</button>
-                    <button onclick="filtrarCategoria('IPTV')" class="btn-filtro bg-[#131b2e] border border-gray-800 text-gray-300 px-3.5 py-1.5 rounded-full whitespace-nowrap">IPTV</button>
-                    <button onclick="filtrarCategoria('Música')" class="btn-filtro bg-[#131b2e] border border-gray-800 text-gray-300 px-3.5 py-1.5 rounded-full whitespace-nowrap">Música</button>
-                    <button onclick="filtrarCategoria('Productividad')" class="btn-filtro bg-[#131b2e] border border-gray-800 text-gray-300 px-3.5 py-1.5 rounded-full whitespace-nowrap">Productividad</button>
-                    <button onclick="filtrarCategoria('Adultos')" class="btn-filtro bg-[#131b2e] border border-gray-800 text-gray-300 px-3.5 py-1.5 rounded-full whitespace-nowrap">Adultos</button>
-                    <button onclick="filtrarCategoria('Paneles')" class="btn-filtro bg-[#131b2e] border border-gray-800 text-gray-300 px-3.5 py-1.5 rounded-full whitespace-nowrap">Paneles</button>
-                    <button onclick="filtrarCategoria('Combos')" class="btn-filtro bg-[#131b2e] border border-gray-800 text-gray-300 px-3.5 py-1.5 rounded-full whitespace-nowrap">Combos</button>
-                </div>
-
-                <div id="lista-servicios" class="grid grid-cols-2 gap-3 pb-10"></div>
-            </div>
-
-            <!-- SECCIÓN: MIS PEDIDOS -->
-            <div id="seccion-pedidos" class="p-4 max-w-2xl mx-auto hidden">
-                <h2 class="font-bold text-lg mb-3">Historial de Compras</h2>
-                <div id="lista-pedidos" class="space-y-3">
-                    <p class="text-gray-400 text-xs">No tienes compras recientes.</p>
-                </div>
-            </div>
-
-            <!-- SECCIÓN: RECARGAS (CLIENTE) -->
-            <div id="seccion-recargas" class="p-4 max-w-2xl mx-auto space-y-4 hidden">
-                <div class="bg-[#131b2e] border border-cyan-500/30 p-5 rounded-2xl shadow-xl">
-                    <h2 class="font-bold text-base text-white mb-2">💳 Pasos para Cargar Saldo</h2>
-                    <ol class="text-xs text-gray-300 space-y-2 list-decimal list-inside leading-relaxed">
-                        <li>Realiza el pago o transferencia por el monto deseado a través de <strong>Nequi</strong> o <strong>Daviplata</strong>.</li>
-                        <li>Guarda o toma captura del <strong>comprobante de pago</strong>.</li>
-                        <li>Haz clic en el botón verde de abajo para reportarlo por WhatsApp adjuntando tu comprobante y el correo de tu cuenta.</li>
-                    </ol>
-                </div>
-
-                <div class="bg-[#131b2e] border border-gray-800 p-5 rounded-2xl space-y-2 shadow-xl">
-                    <p class="text-xs text-cyan-400 font-semibold uppercase tracking-wider">Datos de Destino:</p>
-                    <p class="text-sm"><strong>Nequi / Daviplata:</strong> <span class="text-white font-mono font-bold">312 252 1685</span></p>
-                    <p class="text-sm"><strong>Titular:</strong> <span class="text-white font-bold">Jaminson Medina</span></p>
-                </div>
-
-                <button onclick="reportarWhatsAppMejorado()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-3.5 rounded-xl text-xs transition flex items-center justify-center space-x-2 shadow-lg shadow-emerald-500/20">
-                    <span>📲 Enviar Comprobante y Correo por WhatsApp</span>
+                <button onclick="handleLogout()" class="text-xs bg-slate-800 hover:bg-red-900/40 text-red-400 px-3 py-1.5 rounded-lg border border-red-900/50 transition">
+                    Cerrar Sesión
                 </button>
             </div>
 
-            <!-- SECCIÓN: PANEL DE ADMINISTRACIÓN -->
-            <div id="seccion-admin" class="p-4 max-w-2xl mx-auto space-y-4 hidden">
-                <div class="bg-[#131b2e] border border-amber-500/40 p-5 rounded-2xl shadow-xl space-y-4">
-                    <h2 class="font-bold text-base text-amber-400 flex items-center gap-2"><span>⚙️</span> Panel de Recargas (Administrador)</h2>
-                    <p class="text-xs text-gray-300">Asigna saldo directamente a la cuenta de tus clientes tras verificar el comprobante de pago.</p>
-                    
-                    <div class="space-y-3">
-                        <div>
-                            <label class="block text-xs text-gray-400 mb-1">Correo electrónico del cliente:</label>
-                            <input type="email" id="admin-correo-cliente" placeholder="cliente@correo.com" class="w-full bg-[#0b0f19] border border-gray-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-gray-400 mb-1">Monto a recargar (Ej: 15000):</label>
-                            <input type="number" id="admin-monto" placeholder="Ej: 15000" class="w-full bg-[#0b0f19] border border-gray-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500">
-                        </div>
-                        <button onclick="ejecutarRecargaAdmin()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3.5 rounded-xl text-xs transition shadow-lg shadow-amber-500/20">
-                            Acreditar Saldo a Cuenta
-                        </button>
+            <!-- Monedero -->
+            <div class="bg-gradient-to-r from-slate-800 to-slate-900 border border-slate-700/50 rounded-2xl p-4 text-center">
+                <p class="text-xs text-slate-400 uppercase tracking-wider font-medium">Saldo Disponible</p>
+                <h3 id="user-balance" class="text-3xl font-extrabold text-white mt-1">$0.00</h3>
+            </div>
+
+            <!-- Catálogo / Acciones -->
+            <div class="space-y-3">
+                <h3 class="text-sm font-semibold text-slate-300">Servicios Disponibles</h3>
+                <div class="bg-slate-800/50 border border-slate-800 p-3 rounded-xl flex justify-between items-center">
+                    <div>
+                        <p class="text-sm font-medium">Streaming / Recargas</p>
+                        <p class="text-xs text-slate-400">Activación inmediata</p>
                     </div>
+                    <span class="text-xs bg-cyan-500/10 text-cyan-400 px-2 py-1 rounded border border-cyan-500/20">Disponible</span>
+                </div>
+            </div>
+
+            <!-- Panel de Administración (Visible solo si eres admin) -->
+            <div id="admin-panel" class="hidden border border-amber-500/30 bg-amber-950/10 rounded-2xl p-4 space-y-3">
+                <h3 class="text-sm font-bold text-amber-400 flex items-center gap-2">
+                    <span>⚡ Panel de Administración</span>
+                </h3>
+                <div class="space-y-2">
+                    <input type="email" id="admin-target-email" placeholder="Correo del usuario" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+                    <input type="number" id="admin-amount" placeholder="Monto a recargar" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+                    <button onclick="adminAddBalance()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold py-2 rounded-lg transition">
+                        Recargar Saldo a Usuario
+                    </button>
                 </div>
             </div>
         </div>
+
     </div>
 
-    <!-- CONFIGURACIÓN Y LÓGICA -->
+    <!-- SCRIPT DE CONFIGURACIÓN Y LÓGICA -->
     <script>
+        // TUS CREDENCIALES REALES DE FIREBASE
         const firebaseConfig = {
-            apiKey: "AIzaSy...", 
-            authDomain: "tu-proyecto.firebaseapp.com",
-            projectId: "tu-proyecto",
-            storageBucket: "tu-proyecto.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123456789:web:abcde..."
+            apiKey: "AIzaSyDRLE96tJIJrRSihMy6w0...", 
+            authDomain: "mi-tienda-56ef5.firebaseapp.com",
+            projectId: "mi-tienda-56ef5",
+            storageBucket: "mi-tienda-56ef5.appspot.com",
+            messagingSenderId: "716772431219",
+            appId: "1:716772431219:web:03f3a431..."
         };
 
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        let saldoActual = 0;
-        let usuarioActual = null;
-        let categoriaActual = "Todos";
+        // Lista de correos administradores (puedes poner el tuyo aquí)
+        const adminEmails = ["Fabian1590medina@gmail.com"];
 
-        const CORREOS_ADMIN = [
-            "fabian5109medina@gmail.com",
-            "fabian1590medina@gmail.com"
-        ];
-
-        const productos = [
-            { nombre: "Netflix Pantalla Normal", precio: 14000, cat: "Netflix" },
-            { nombre: "Netflix Pantalla Standard", precio: 12000, cat: "Netflix" },
-            { nombre: "Netflix Pantalla Genérica", precio: 12000, cat: "Netflix" },
-            { nombre: "Netflix Pantalla Internacional Genérica", precio: 14000, cat: "Netflix" },
-            { nombre: "Netflix Cuenta Completa Normal", precio: 52000, cat: "Netflix" },
-            { nombre: "Netflix Cuenta Completa Standard", precio: 45000, cat: "Netflix" },
-            { nombre: "Netflix Cuenta Completa Genérica", precio: 45000, cat: "Netflix" },
-            { nombre: "Disney+ Premium Pantalla", precio: 9000, cat: "Streaming" },
-            { nombre: "Disney+ Standard Pantalla", precio: 6000, cat: "Streaming" },
-            { nombre: "Max (HBO) Pantalla", precio: 8000, cat: "Streaming" },
-            { nombre: "Max (HBO) Platino Pantalla", precio: 8000, cat: "Streaming" },
-            { nombre: "Amazon Prime Pantalla", precio: 5000, cat: "Streaming" },
-            { nombre: "Amazon Prime Original Pantalla", precio: 8000, cat: "Streaming" },
-            { nombre: "Crunchyroll Pantalla", precio: 5000, cat: "Streaming" },
-            { nombre: "Crunchyroll Pantalla Original", precio: 8500, cat: "Streaming" },
-            { nombre: "Paramount+ Pantalla", precio: 6000, cat: "Streaming" },
-            { nombre: "Paramount+ Pantalla Original", precio: 10000, cat: "Streaming" },
-            { nombre: "ViX+", precio: 5000, cat: "Streaming" },
-            { nombre: "Universal+ Pantalla", precio: 7000, cat: "Streaming" },
-            { nombre: "Plex Pantalla Original", precio: 6000, cat: "Streaming" },
-            { nombre: "MUBI Pantalla", precio: 6000, cat: "Streaming" },
-            { nombre: "Viki Rakuten Pantalla", precio: 6000, cat: "Streaming" },
-            { nombre: "DirecTV GO Plan Oro (1 Disp.)", precio: 14000, cat: "Streaming" },
-            { nombre: "Disney+ Premium Completa", precio: 38000, cat: "Cuentas" },
-            { nombre: "Disney+ Standard Completa", precio: 18000, cat: "Cuentas" },
-            { nombre: "Max (HBO) Completa", precio: 18000, cat: "Cuentas" },
-            { nombre: "Max (HBO) Platino Completa", precio: 16000, cat: "Cuentas" },
-            { nombre: "Amazon Prime Completa", precio: 10000, cat: "Cuentas" },
-            { nombre: "Amazon Prime Original Completa", precio: 20000, cat: "Cuentas" },
-            { nombre: "Crunchyroll Completa", precio: 14000, cat: "Cuentas" },
-            { nombre: "Paramount+ Completa", precio: 18000, cat: "Cuentas" },
-            { nombre: "Universal+ Completa", precio: 16000, cat: "Cuentas" },
-            { nombre: "ViX+ Completa", precio: 8000, cat: "Cuentas" },
-            { nombre: "Plex Completa", precio: 13000, cat: "Cuentas" },
-            { nombre: "MUBI Completa", precio: 10000, cat: "Cuentas" },
-            { nombre: "Viki Rakuten Completa", precio: 13000, cat: "Cuentas" },
-            { nombre: "Hot Go Premium Completa (+18)", precio: 18000, cat: "Cuentas" },
-            { nombre: "DirecTV GO Plan Oro Completa", precio: 22000, cat: "Cuentas" },
-            { nombre: "IPTV Pantalla Original", precio: 10000, cat: "IPTV" },
-            { nombre: "IPTV Premium Completa (3 Disp.)", precio: 12000, cat: "IPTV" },
-            { nombre: "IPTV Plan 3 Meses Completa", precio: 25000, cat: "IPTV" },
-            { nombre: "IPTV Plan 6 Meses Completa", precio: 45000, cat: "IPTV" },
-            { nombre: "IPTV Plan 1 Año Completo", precio: 80000, cat: "IPTV" },
-            { nombre: "Flujo TV / Magis (3 Meses)", precio: 55000, cat: "IPTV" },
-            { nombre: "Flujo TV / Magis (7 Meses)", precio: 95000, cat: "IPTV" },
-            { nombre: "Flujo TV / Magis (14 Meses)", precio: 170000, cat: "IPTV" },
-            { nombre: "Spotify Premium (1 Mes)", precio: 12000, cat: "Música" },
-            { nombre: "Spotify Premium (2 Meses)", precio: 18000, cat: "Música" },
-            { nombre: "YouTube Premium", precio: 12000, cat: "Música" },
-            { nombre: "Deezer Original", precio: 5000, cat: "Música" },
-            { nombre: "Tidal Premium", precio: 6000, cat: "Música" },
-            { nombre: "Canva Pro (1 Mes)", precio: 6000, cat: "Productividad" },
-            { nombre: "Canva Pro Dominio (1 Mes)", precio: 6000, cat: "Productividad" },
-            { nombre: "Canva Pro (1 Año)", precio: 25000, cat: "Productividad" },
-            { nombre: "Canva Pro Dominio (1 Año)", precio: 22000, cat: "Productividad" },
-            { nombre: "CapCut Pro (1 Mes)", precio: 18000, cat: "Productividad" },
-            { nombre: "CapCut Pro Completa (1 Mes)", precio: 32000, cat: "Productividad" },
-            { nombre: "Office 365 (1 PC)", precio: 25000, cat: "Productividad" },
-            { nombre: "Office 365 (5 Disp.)", precio: 65000, cat: "Productividad" },
-            { nombre: "Duolingo Pro (1 Mes)", precio: 5000, cat: "Productividad" },
-            { nombre: "Duolingo Pro (1 Año)", precio: 20000, cat: "Productividad" },
-            { nombre: "Hot Go Premium Pantalla", precio: 7000, cat: "Adultos" },
-            { nombre: "Pornhub Pantalla (1 Año)", precio: 12000, cat: "Adultos" },
-            { nombre: "Pornhub Completa (1 Año)", precio: 22000, cat: "Adultos" },
-            { nombre: "Panel IPTV (10 Créditos)", precio: 65000, cat: "Paneles" },
-            { nombre: "Panel IPTV (50 Créditos)", precio: 150000, cat: "Paneles" },
-            { nombre: "Panel IPTV (100 Créditos)", precio: 230000, cat: "Paneles" },
-            { nombre: "Combo Netflix + Crunchyroll", precio: 15000, cat: "Combos" },
-            { nombre: "Combo Netflix + Max", precio: 18000, cat: "Combos" },
-            { nombre: "Combo Netflix + IPTV", precio: 18000, cat: "Combos" },
-            { nombre: "Combo Netflix + Disney+", precio: 20000, cat: "Combos" },
-            { nombre: "Combo Netflix + Plex", precio: 16000, cat: "Combos" }
-        ];
-
-        auth.onAuthStateChanged((user) => {
+        // Observador de estado de sesión
+        auth.onAuthStateChanged(user => {
             if (user) {
-                usuarioActual = user;
-                document.getElementById('auth-container').classList.add('hidden');
-                document.getElementById('app-container').classList.remove('hidden');
-                
-                if (CORREOS_ADMIN.includes(user.email)) {
-                    document.getElementById('btn-admin').classList.remove('hidden');
-                    document.getElementById('rol-badge').innerText = "Panel de Administrador";
-                    document.getElementById('rol-badge').className = "text-xs text-amber-400 font-bold";
-                } else {
-                    document.getElementById('btn-admin').classList.add('hidden');
-                    document.getElementById('rol-badge').innerText = "Panel Automatizado";
-                    document.getElementById('rol-badge').className = "text-xs text-cyan-400 font-medium";
+                document.getElementById('auth-section').classList.add('hidden');
+                document.getElementById('dashboard-section').classList.remove('hidden');
+                document.getElementById('user-email-display').innerText = user.email;
+
+                // Verificar si es admin
+                if (adminEmails.includes(user.email)) {
+                    document.getElementById('admin-panel').classList.remove('hidden');
                 }
 
-                cargarDatosUsuario(user.uid);
-                cargarPedidos(user.uid);
+                loadUserData(user.uid);
             } else {
-                document.getElementById('auth-container').classList.remove('hidden');
-                document.getElementById('app-container').classList.add('hidden');
+                document.getElementById('auth-section').classList.remove('hidden');
+                document.getElementById('dashboard-section').classList.add('hidden');
+                document.getElementById('admin-panel').classList.add('hidden');
             }
         });
 
-        function mostrarError(mensaje) {
-            const errDiv = document.getElementById('auth-error');
-            errDiv.innerText = mensaje;
-            errDiv.classList.remove('hidden');
+        function handleLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            hideError();
+
+            auth.signInWithEmailAndPassword(email, password)
+                .catch(error => showError(error.message));
         }
 
-        function iniciarSesion() {
-            const email = document.getElementById('email').value.trim();
-            const pass = document.getElementById('password').value.trim();
-            auth.signInWithEmailAndPassword(email, pass).catch(err => mostrarError("Error: " + err.message));
-        }
+        function handleRegister() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            hideError();
 
-        function crearCuenta() {
-            const email = document.getElementById('email').value.trim();
-            const pass = document.getElementById('password').value.trim();
-            auth.createUserWithEmailAndPassword(email, pass)
-                .then((res) => {
-                    db.collection('usuarios').doc(res.user.uid).set({ saldo: 0, email: email, rol: "cliente" });
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(userCredential => {
+                    // Crear documento inicial en Firestore con saldo 0
+                    db.collection('users').doc(userCredential.user.uid).set({
+                        email: email,
+                        balance: 0
+                    });
                 })
-                .catch(err => mostrarError("Error: " + err.message));
+                .catch(error => showError(error.message));
         }
 
-        function cerrarSesion() {
+        function handleLogout() {
             auth.signOut();
         }
 
-        function cargarDatosUsuario(uid) {
-            db.collection('usuarios').doc(uid).onSnapshot((doc) => {
+        function loadUserData(uid) {
+            db.collection('users').doc(uid).onSnapshot(doc => {
                 if (doc.exists) {
-                    saldoActual = doc.data().saldo || 0;
-                    document.getElementById('user-saldo').innerText = "$" + saldoActual.toLocaleString();
+                    const data = doc.data();
+                    document.getElementById('user-balance').innerText = `$${(data.balance || 0).toLocaleString()}`;
                 }
             });
         }
 
-        function cargarPedidos(uid) {
-            db.collection('usuarios').doc(uid).collection('pedidos').onSnapshot((snapshot) => {
-                let contenedor = document.getElementById('lista-pedidos');
-                contenedor.innerHTML = "";
-                if (snapshot.empty) {
-                    contenedor.innerHTML = '<p class="text-gray-400 text-xs">No tienes compras recientes.</p>';
-                    return;
-                }
-                snapshot.forEach((doc) => {
-                    let data = doc.data();
-                    contenedor.innerHTML += `
-                        <div class="bg-[#131b2e] border border-gray-800 p-4 rounded-xl flex justify-between items-center">
-                            <div>
-                                <p class="font-bold text-sm text-white">${data.servicio}</p>
-                                <p class="text-[10px] text-gray-400">${data.fecha}</p>
-                            </div>
-                            <span class="text-cyan-400 font-bold text-sm">$${data.precio.toLocaleString()}</span>
-                        </div>
-                    `;
-                });
-            });
-        }
+        function adminAddBalance() {
+            const targetEmail = document.getElementById('admin-target-email').value;
+            const amount = parseFloat(document.getElementById('admin-amount').value);
 
-        function cambiarSeccion(seccion) {
-            document.getElementById('seccion-catalogo').classList.add('hidden');
-            document.getElementById('seccion-pedidos').classList.add('hidden');
-            document.getElementById('seccion-recargas').classList.add('hidden');
-            document.getElementById('seccion-admin').classList.add('hidden');
-            
-            document.getElementById('btn-catalogo').className = "bg-[#131b2e] border border-gray-800 text-gray-300 px-4 py-2 rounded-xl font-semibold text-xs";
-            document.getElementById('btn-pedidos').className = "bg-[#131b2e] border border-gray-800 text-gray-300 px-4 py-2 rounded-xl font-semibold text-xs";
-            document.getElementById('btn-recargas').className = "bg-[#131b2e] border border-gray-800 text-gray-300 px-4 py-2 rounded-xl font-semibold text-xs";
-            let btnAdmin = document.getElementById('btn-admin');
-            if(btnAdmin) {
-                btnAdmin.className = "bg-[#131b2e] border border-gray-800 text-gray-300 px-4 py-2 rounded-xl font-semibold text-xs";
-            }
-
-            document.getElementById('seccion-' + seccion).classList.remove('hidden');
-            
-            if(seccion === 'admin') {
-                btnAdmin.className = "bg-amber-500 text-slate-950 px-4 py-2 rounded-xl font-bold text-xs shadow-md";
-            } else {
-                document.getElementById('btn-' + seccion).className = "bg-cyan-500 text-slate-950 px-4 py-2 rounded-xl font-bold text-xs shadow-md";
-            }
-        }
-
-        function renderProductos(lista) {
-            const contenedor = document.getElementById('lista-servicios');
-            contenedor.innerHTML = "";
-            lista.forEach(p => {
-                contenedor.innerHTML += `
-                    <div class="bg-[#131b2e] border border-gray-800/80 rounded-xl p-3 flex flex-col justify-between shadow-lg">
-                        <span class="text-[9px] text-cyan-400 font-bold uppercase mb-1">${p.cat}</span>
-                        <h3 class="font-bold text-[12px] text-white mb-2 leading-tight">${p.nombre}</h3>
-                        <span class="text-emerald-400 font-extrabold text-sm mb-2">$${p.precio.toLocaleString()}</span>
-                        <button onclick="comprar('${p.nombre}', ${p.precio})" class="bg-gray-800 hover:bg-emerald-500 hover:text-slate-950 text-white font-bold py-2 rounded-lg text-[10px] transition">Comprar</button>
-                    </div>
-                `;
-            });
-        }
-
-        function aplicarFiltros() {
-            const busqueda = document.getElementById('buscador').value.toLowerCase();
-            const filtrados = productos.filter(p => {
-                const coincideNombre = p.nombre.toLowerCase().includes(busqueda);
-                const coincideCat = (categoriaActual === "Todos" || p.cat === categoriaActual);
-                return coincideNombre && coincideCat;
-            });
-            renderProductos(filtrados);
-        }
-
-        function filtrarCategoria(cat) {
-            categoriaActual = cat;
-            document.querySelectorAll('.btn-filtro').forEach(btn => {
-                if (btn.innerText === cat) {
-                    btn.className = "btn-filtro bg-cyan-500 text-slate-950 px-3.5 py-1.5 rounded-full font-bold whitespace-nowrap shadow-sm";
-                } else {
-                    btn.className = "btn-filtro bg-[#131b2e] border border-gray-800 text-gray-300 px-3.5 py-1.5 rounded-full whitespace-nowrap";
-                }
-            });
-            aplicarFiltros();
-        }
-
-        function comprar(nombreServicio, precio) {
-            if (saldoActual < precio) {
-                alert("Saldo insuficiente. Por favor recarga saldo en la sección correspondiente.");
-                cambiarSeccion('recargas');
+            if (!targetEmail || isNaN(amount)) {
+                alert("Completa los campos correctamente");
                 return;
             }
-            if (confirm(`¿Deseas comprar ${nombreServicio} por $${precio.toLocaleString()}?`)) {
-                let nuevoSaldo = saldoActual - precio;
-                db.collection('usuarios').doc(usuarioActual.uid).update({ saldo: nuevoSaldo })
-                    .then(() => {
-                        db.collection('usuarios').doc(usuarioActual.uid).collection('pedidos').add({
-                            servicio: nombreServicio,
-                            precio: precio,
-                            fecha: new Date().toLocaleString()
+
+            db.collection('users').where("email", "==", targetEmail).get()
+                .then(querySnapshot => {
+                    if (querySnapshot.empty) {
+                        alert("Usuario no encontrado");
+                        return;
+                    }
+                    querySnapshot.forEach(userDoc => {
+                        const currentBalance = userDoc.data().balance || 0;
+                        db.collection('users').doc(userDoc.id).update({
+                            balance: currentBalance + amount
+                        }).then(() => {
+                            alert("¡Saldo recargado con éxito!");
+                            document.getElementById('admin-target-email').value = '';
+                            document.getElementById('admin-amount').value = '';
                         });
-                        alert("¡Compra realizada con éxito!");
                     });
-            }
+                })
+                .catch(error => alert("Error: " + error.message));
         }
 
-        function reportarWhatsAppMejorado() {
-            let correoUsuario = usuarioActual ? usuarioActual.email : "No registrado";
-            let mensaje = `Hola, cordial saludo Jaminson. Deseo reportar una recarga para ZRRO Digital.%0A%0A📧 *Correo de mi cuenta:* ${correoUsuario}%0A%0AAdjunto mi comprobante de pago para acreditar el saldo. ¡Quedo atento!`;
-            window.open(`https://wa.me/573122521685?text=${mensaje}`, "_blank");
+        function showError(message) {
+            const errorDiv = document.getElementById('auth-error');
+            errorDiv.innerText = "Error: " + message;
+            errorDiv.classList.remove('hidden');
         }
 
-        async function ejecutarRecargaAdmin() {
-            let correoCliente = document.getElementById('admin-correo-cliente').value.trim();
-            let montoARecargar = Number(document.getElementById('admin-monto').value);
-
-            if (!correoCliente || !montoARecargar) {
-                alert("Por favor ingresa el correo del cliente y el monto.");
-                return;
-            }
-
-            try {
-                const usuariosRef = db.collection('usuarios');
-                const snapshot = await usuariosRef.where('email', '==', correoCliente).get();
-
-                if (snapshot.empty) {
-                    alert("No se encontró ningún usuario registrado con ese correo.");
-                    return;
-                }
-
-                let userDoc = snapshot.docs[0];
-                let userId = userDoc.id;
-                let saldoActualCliente = userDoc.data().saldo || 0;
-                let nuevoSaldo = saldoActualCliente + montoARecargar;
-
-                await usuariosRef.doc(userId).update({ saldo: nuevoSaldo });
-                
-                alert(`¡Recarga exitosa! Se sumaron $${montoARecargar.toLocaleString()} al usuario ${correoCliente}. Nuevo saldo: $${nuevoSaldo.toLocaleString()}`);
-                
-                document.getElementById('admin-correo-cliente').value = "";
-                document.getElementById('admin-monto').value = "";
-            } catch (error) {
-                console.error("Error al recargar saldo:", error);
-                alert("Hubo un error al procesar la recarga.");
-            }
+        function hideError() {
+            const errorDiv = document.getElementById('auth-error');
+            errorDiv.classList.add('hidden');
         }
-
-        renderProductos(productos);
     </script>
 </body>
 </html>
