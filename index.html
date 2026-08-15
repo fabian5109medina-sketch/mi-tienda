@@ -3,93 +3,227 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ZRRO Digital Media | Premium Streaming</title>
+  <title>ZRRO Digital Media | Streaming Premium</title>
   <style>
-    :root { --primary: #38bdf8; --bg: #0d1117; --card: #161b22; --text: #f0f6fc; }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding: 20px; padding-bottom: 120px; }
-    
-    header { text-align: center; margin-bottom: 30px; }
-    h1 { color: var(--primary); font-size: 24px; text-transform: uppercase; letter-spacing: 2px; }
-    
+    :root { 
+      --primary: #38bdf8; 
+      --bg: #0d1117; 
+      --card: #161b22; 
+      --border: #30363d; 
+      --text: #f0f6fc; 
+      --accent: #2ea043; 
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding: 20px; padding-bottom: 160px; }
+
+    header { text-align: center; margin-bottom: 20px; }
+    h1 { color: var(--primary); font-size: 24px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; }
+    .subtitle { font-size: 13px; color: #8b949e; }
+
+    /* Métodos de Pago */
+    .payment-methods {
+      max-width: 500px; margin: 15px auto; padding: 10px; background: #161b22; 
+      border: 1px solid var(--border); border-radius: 8px; text-align: center; font-size: 12px; color: #8b949e;
+    }
+    .payment-tags { display: flex; justify-content: center; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+    .pay-badge { background: #21262d; padding: 4px 8px; border-radius: 4px; color: var(--text); font-weight: 500; }
+
+    /* Búsqueda */
+    .search-container { max-width: 500px; margin: 0 auto 15px auto; display: flex; gap: 10px; }
+    #searchInput { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: #21262d; color: white; outline: none; }
+    .search-btn { padding: 10px 16px; border-radius: 8px; border: none; background: var(--primary); color: #0d1117; font-weight: bold; cursor: pointer; }
+
+    /* Filtros / Categorías */
+    .categories { max-width: 500px; margin: 0 auto 15px auto; display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; }
+    .cat-btn { background: #21262d; color: var(--text); border: 1px solid var(--border); padding: 6px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; white-space: nowrap; }
+    .cat-btn.active { background: var(--primary); color: #0d1117; font-weight: bold; border-color: var(--primary); }
+
+    /* Grid de Servicios */
     .grid { display: grid; gap: 15px; max-width: 500px; margin: 0 auto; }
-    .card { background: var(--card); border: 1px solid #30363d; border-radius: 12px; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
-    
-    .info h3 { font-size: 16px; margin-bottom: 4px; }
-    .price { font-weight: bold; color: #fff; }
-    
-    .btn-add { background: var(--primary); border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-    
-    /* Cart Bar */
-    #cart-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #1f2937; padding: 15px; border-top: 2px solid var(--primary); text-align: center; }
-    
-    /* Payments */
-    .payments { margin-top: 40px; padding-top: 20px; border-top: 1px solid #30363d; text-align: center; }
-    .payment-item { background: #21262d; padding: 12px; margin: 8px 0; border-radius: 8px; font-size: 14px; border: 1px solid #30363d; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; transition: transform 0.2s; }
+    .card:hover { transform: translateY(-2px); }
+    .card-top { display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px; }
+    .info h3 { font-size: 16px; color: #fff; }
+    .price-badge { font-weight: bold; color: var(--primary); font-size: 14px; background: #21262d; padding: 4px 8px; border-radius: 6px; }
+    .service-desc { font-size: 12px; color: #8b949e; margin-bottom: 12px; }
+    .btn-add { background: var(--primary); color: #0d1117; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
+
+    /* FAQ */
+    .faq-section { max-width: 500px; margin: 30px auto 10px auto; }
+    .faq-title { font-size: 14px; color: var(--primary); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+    .faq-item { background: #161b22; padding: 10px 12px; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border); font-size: 13px; }
+    .faq-q { color: #fff; font-weight: bold; margin-bottom: 4px; }
+    .faq-a { color: #8b949e; font-size: 12px; }
+
+    /* Carrito Flotante Inferior */
+    #cart-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #161b22; padding: 15px; border-top: 2px solid var(--primary); display: none; z-index: 100; }
+    .clear-btn { background: #ef4444; color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; }
+    .checkout-btn { margin-top: 10px; padding: 12px; width: 100%; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; }
+
+    /* Botón Flotante de WhatsApp Directo */
+    .wa-float {
+      position: fixed; bottom: 90px; right: 20px; background: #25d366; color: white;
+      width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 24px; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 99;
+    }
   </style>
 </head>
 <body>
 
   <header>
     <h1>ZRRO DIGITAL MEDIA</h1>
-    <p>Selecciona tus servicios favoritos</p>
+    <p class="subtitle">⚡ Entrega Inmediata • 🛡️ Garantía Real Todo el Mes</p>
   </header>
 
-  <div class="grid">
-    <div class="card">
-      <div class="info"><h3>🎬 Netflix 4K</h3><div class="price">$15.000</div></div>
-      <button class="btn-add" onclick="updateCart('Netflix', 15000)">+</button>
-    </div>
-    <div class="card">
-      <div class="info"><h3>🐭 Disney+</h3><div class="price">$12.000</div></div>
-      <button class="btn-add" onclick="updateCart('Disney+', 12000)">+</button>
-    </div>
-    <div class="card">
-      <div class="info"><h3>🎞️ Max</h3><div class="price">$12.000</div></div>
-      <button class="btn-add" onclick="updateCart('Max', 12000)">+</button>
-    </div>
-    <div class="card">
-      <div class="info"><h3>🎵 Spotify</h3><div class="price">$10.000</div></div>
-      <button class="btn-add" onclick="updateCart('Spotify', 10000)">+</button>
+  <!-- Métodos de Pago aceptados -->
+  <div class="payment-methods">
+    <span>💳 Métodos de pago aceptados:</span>
+    <div class="payment-tags">
+      <span class="pay-badge">Nequi</span>
+      <span class="pay-badge">Bancolombia</span>
+      <span class="pay-badge">Daviplata</span>
+      <span class="pay-badge">PSE</span>
     </div>
   </div>
 
+  <!-- Buscador -->
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="🔍 Buscar servicio (ej: Netflix)..." onkeyup="searchServices()">
+    <button class="search-btn" onclick="searchServices()">Buscar</button>
+  </div>
+
+  <!-- Filtros por Categoría -->
+  <div class="categories">
+    <button class="cat-btn active" onclick="filterCategory('all', this)">Todos</button>
+    <button class="cat-btn" onclick="filterCategory('video', this)">Cine & TV</button>
+    <button class="cat-btn" onclick="filterCategory('music', this)">Música</button>
+  </div>
+
+  <!-- Catálogo de Servicios -->
+  <div class="grid" id="serviceGrid">
+    
+    <div class="card" data-category="video">
+      <div class="card-top">
+        <div class="info"><h3>Netflix 4K</h3></div>
+        <div class="price-badge">$15.000</div>
+      </div>
+      <p class="service-desc">Perfil privado exclusivo en Ultra HD (1 pantalla).</p>
+      <button class="btn-add" onclick="updateCart('Netflix 4K', 15000)">+ Agregar</button>
+    </div>
+
+    <div class="card" data-category="video">
+      <div class="card-top">
+        <div class="info"><h3>Disney+</h3></div>
+        <div class="price-badge">$12.000</div>
+      </div>
+      <p class="service-desc">Marvel, Star Wars, Pixar y deportes en HD.</p>
+      <button class="btn-add" onclick="updateCart('Disney+', 12000)">+ Agregar</button>
+    </div>
+
+    <div class="card" data-category="video">
+      <div class="card-top">
+        <div class="info"><h3>Max (HBO)</h3></div>
+        <div class="price-badge">$12.000</div>
+      </div>
+      <p class="service-desc">Series icónicas, eventos en vivo y estrenos.</p>
+      <button class="btn-add" onclick="updateCart('Max', 12000)">+ Agregar</button>
+    </div>
+
+    <div class="card" data-category="music">
+      <div class="card-top">
+        <div class="info"><h3>Spotify Premium</h3></div>
+        <div class="price-badge">$10.000</div>
+      </div>
+      <p class="service-desc">Música sin anuncios, descargas y modo offline.</p>
+      <button class="btn-add" onclick="updateCart('Spotify Premium', 10000)">+ Agregar</button>
+    </div>
+
+  </div>
+
+  <!-- Preguntas Frecuentes -->
+  <div class="faq-section">
+    <div class="faq-title">Preguntas Frecuentes</div>
+    <div class="faq-item">
+      <div class="faq-q">¿Cómo recibo mi cuenta?</div>
+      <div class="faq-a">Una vez realizado el pago, te enviamos los datos de acceso directamente por WhatsApp.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">¿Tienen garantía?</div>
+      <div class="faq-a">Sí, ofrecemos soporte y garantía completa durante la duración de tu suscripción.</div>
+    </div>
+  </div>
+
+  <!-- Botón de WhatsApp Flotante para dudas rápidas -->
+  <a href="https://wa.me/573122521685?text=Hola,%20tengo%20una%20consulta%20sobre%20los%20servicios" class="wa-float" target="_blank" title="Consultar por WhatsApp">💬</a>
+
+  <!-- Carrito -->
   <div id="cart-bar">
-    <p id="cart-text">Carrito vacío</p>
-    <button id="checkout-btn" style="display:none; margin-top:10px; padding:10px; width:100%; background:#25d366; color:white; border:none; border-radius:6px; font-weight:bold;" onclick="checkout()">PEDIR POR WHATSAPP</button>
-  </div>
-
-  <div class="payments">
-    <h3>💳 Métodos de Pago</h3>
-    <div class="payment-item">
-        <strong>Nequi:</strong> 3122521685 <br>
-        <small>Llave: @3122521685</small>
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <span id="cart-text" style="color:white; font-size:14px;">Servicios: 0</span>
+      <button class="clear-btn" onclick="clearCart()">Vaciar Carrito</button>
     </div>
-    <div class="payment-item">
-        <strong>Daviplata:</strong> 3122521685 <br>
-        <small>Llave: #</small>
-    </div>
+    <strong id="cart-total" style="display:block; margin-top:4px; font-size:18px; color:var(--primary);">$0</strong>
+    <button class="checkout-btn" onclick="checkout()">PEDIR POR WHATSAPP 🚀</button>
   </div>
 
   <script>
+    // Búsqueda en tiempo real
+    function searchServices() {
+      let input = document.getElementById('searchInput').value.toLowerCase();
+      let cards = document.getElementsByClassName('card');
+      for (let i = 0; i < cards.length; i++) {
+        let title = cards[i].getElementsByTagName("h3")[0].innerText.toLowerCase();
+        cards[i].style.display = title.indexOf(input) > -1 ? "" : "none";
+      }
+    }
+
+    // Filtros por categoría
+    function filterCategory(cat, btn) {
+      let buttons = document.getElementsByClassName('cat-btn');
+      for (let b of buttons) b.classList.remove('active');
+      btn.classList.add('active');
+
+      let cards = document.getElementsByClassName('card');
+      for (let card of cards) {
+        if (cat === 'all' || card.getAttribute('data-category') === cat) {
+          card.style.display = "";
+        } else {
+          card.style.display = "none";
+        }
+      }
+    }
+
+    // Carrito de compras
     let cart = {};
     function updateCart(item, price) {
       if(!cart[item]) cart[item] = { qty: 0, price: price };
       cart[item].qty++;
       renderCart();
     }
-    function renderCart() {
-      let text = "", total = 0;
-      for(let item in cart) {
-        text += `${item} (${cart[item].qty}) | `;
-        total += (cart[item].qty * cart[item].price);
-      }
-      document.getElementById('cart-text').innerText = text ? `${text} Total: $${total}` : "Carrito vacío";
-      document.getElementById('checkout-btn').style.display = text ? "block" : "none";
+
+    function clearCart() { 
+      cart = {}; 
+      renderCart(); 
+      document.getElementById('cart-bar').style.display = 'none'; 
     }
+
+    function renderCart() {
+      let count = 0, total = 0;
+      for(let i in cart) { count += cart[i].qty; total += (cart[i].qty * cart[i].price); }
+      if(count > 0) {
+        document.getElementById('cart-bar').style.display = 'block';
+        document.getElementById('cart-text').innerText = `Seleccionados: ${count}`;
+        document.getElementById('cart-total').innerText = `$${total.toLocaleString('es-CO')}`;
+      } else {
+        document.getElementById('cart-bar').style.display = 'none';
+      }
+    }
+
     function checkout() {
-      let msg = "¡Hola! Vengo de ZRRO Digital Media, quiero este pedido:\n";
-      for(let item in cart) msg += `- ${item}: ${cart[item].qty}\n`;
+      let msg = "¡Hola ZRRO Digital! Quiero solicitar los siguientes servicios:\n\n";
+      for(let i in cart) msg += `• ${i} (x${cart[i].qty})\n`;
+      let total = document.getElementById('cart-total').innerText;
+      msg += `\nTotal: ${total}\n\nQuedo atento a los datos para realizar la transferencia.`;
       window.location.href = `https://wa.me/573122521685?text=${encodeURIComponent(msg)}`;
     }
   </script>
