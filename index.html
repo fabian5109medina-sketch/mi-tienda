@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZRRO DIGITAL | Tienda</title>
+    <title>ZRRO DIGITAL | Tienda Completa</title>
     <style>
-        :root { --bg-color: #121212; --card-bg: #1e1e1e; --accent-color: #38bdf8; --text-light: #ffffff; --text-muted: #9ca3af; --discount-red: #ef4444; }
+        :root { --bg-color: #121212; --card-bg: #1e1e1e; --accent-color: #38bdf8; --text-light: #ffffff; --text-muted: #9ca3af; --discount-red: #ef4444; --agotado-bg: #7f1d1d; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-light); margin: 0; padding: 0; }
         
         .header { display: flex; justify-content: space-between; align-items: center; background: #18181b; padding: 12px 16px; border-bottom: 1px solid #27272a; }
@@ -33,11 +33,13 @@
 
         .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 10px; }
         .product-card { background: var(--card-bg); border-radius: 8px; overflow: hidden; border: 1px solid #27272a; display: flex; flex-direction: column; position: relative; }
+        .product-card.agotado { opacity: 0.6; filter: grayscale(40%); }
         
         .product-image-container { position: relative; width: 100%; aspect-ratio: 1; background: #000; display: flex; align-items: center; justify-content: center; }
         .product-image-container img { width: 100%; height: 100%; object-fit: cover; }
         
         .badge-discount { position: absolute; top: 8px; left: 8px; background: var(--discount-red); color: white; font-size: 0.7em; font-weight: bold; padding: 3px 6px; border-radius: 4px; z-index: 2; }
+        .badge-agotado { position: absolute; top: 8px; right: 8px; background: var(--agotado-bg); color: white; font-size: 0.7em; font-weight: bold; padding: 3px 6px; border-radius: 4px; z-index: 2; border: 1px solid #f87171; }
         
         .product-content { padding: 10px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
         .category { font-size: 0.65em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 2px; }
@@ -57,6 +59,7 @@
         .admin-content { background: #1e1e1e; padding: 20px; border-radius: 8px; width: 100%; max-width: 400px; border: 1px solid #3f3f46; max-height: 90vh; overflow-y: auto; }
         .admin-content h3 { margin-top: 0; color: var(--accent-color); }
         .admin-content input { width: 100%; padding: 10px; margin-bottom: 10px; background: #121212; border: 1px solid #3f3f46; color: #fff; border-radius: 4px; box-sizing: border-box; }
+        .admin-content select { width: 100%; padding: 10px; margin-bottom: 10px; background: #121212; border: 1px solid #3f3f46; color: #fff; border-radius: 4px; box-sizing: border-box; }
         .admin-content button { background: var(--accent-color); color: #000; border: none; padding: 12px; font-weight: bold; width: 100%; border-radius: 4px; cursor: pointer; margin-top: 5px; }
         .btn-close { background: #ef4444 !important; color: #fff !important; margin-top: 10px !important; }
 
@@ -76,7 +79,7 @@
         </div>
     </div>
 
-    <!-- MENÚ LATERAL DESLIZABLE (DRAWER) -->
+    <!-- MENÚ LATERAL (DRAWER) -->
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
     <div class="side-drawer" id="sideDrawer">
         <div class="drawer-header" onclick="toggleDrawer()">✕</div>
@@ -98,20 +101,30 @@
     </div>
 
     <div class="search-container">
-        <input type="text" id="buscador" class="search-box" placeholder="Buscar entre los servicios..." onkeyup="buscarServicios()">
+        <input type="text" id="buscador" class="search-box" placeholder="Buscar entre los 72 servicios..." onkeyup="buscarServicios()">
     </div>
 
     <div class="filter-bar">
         <select class="select-box" id="filtroCategoriaSelect" onchange="cambiarFiltroSelect()">
-            <option value="TODOS">TODAS LAS CATEGORÍAS</option>
+            <option value="TODOS">TODAS LAS CATEGORÍAS (72)</option>
             <option value="NETFLIX">NETFLIX</option>
             <option value="DISNEY+">DISNEY+</option>
             <option value="MAX">MAX (HBO)</option>
             <option value="AMAZON PRIME">AMAZON PRIME</option>
+            <option value="YOUTUBE">YOUTUBE</option>
+            <option value="CRUNCHYROLL">CRUNCHYROLL</option>
+            <option value="PARAMOUNT">PARAMOUNT+</option>
+            <option value="SPOTIFY">SPOTIFY</option>
+            <option value="IPTV">IPTV & STREAMING</option>
             <option value="COMBOS">COMBOS</option>
             <option value="CANVA PRO">CANVA PRO</option>
+            <option value="OTRAS">OTRAS PLATAFORMAS</option>
         </select>
-        <select class="select-box" id="itemsPorPagina" onchange="cambiarLimite()"><option value="12">12 por pág</option><option value="24">24 por pág</option></select>
+        <select class="select-box" id="itemsPorPagina" onchange="cambiarLimite()">
+            <option value="12">12 por pág</option>
+            <option value="24" selected>24 por pág</option>
+            <option value="72">Todos (72)</option>
+        </select>
     </div>
 
     <div class="product-grid" id="catalogo"></div>
@@ -182,12 +195,18 @@
             
             <label style="font-size: 0.8em;">Descuento (%):</label>
             <input type="text" id="nuevoDescuento" placeholder="-50%">
+
+            <label style="font-size: 0.8em;">Estado del Servicio:</label>
+            <select id="nuevoAgotado">
+                <option value="false">Disponible</option>
+                <option value="true">Agotado</option>
+            </select>
             
             <button onclick="agregarProducto()">Guardar y Agregar Producto</button>
             
             <hr style="border-color: #3f3f46; margin: 20px 0;">
             <h3 style="margin-bottom: 10px;">Gestión de Saldo</h3>
-            <label style="font-size: 0.8em;">Modificar Saldo del Usuario (Sin puntos, ej: 50000):</label>
+            <label style="font-size: 0.8em;">Modificar Saldo del Usuario (Ej: 50000):</label>
             <input type="number" id="nuevoSaldoInput" placeholder="Ej: 50000">
             <button onclick="guardarSaldo()" style="background: #10b981; color: white;">Acreditar Saldo</button>
 
@@ -260,28 +279,105 @@
             }
         }
 
-        let productos = JSON.parse(localStorage.getItem('zrro_productos')) || [
-            {cat: "NETFLIX", title: "Netflix Pantalla Normal", price: "$14.000", old: "$28.000", desc: "-50%", img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix Pantalla Standard", price: "$12.000", old: "$20.000", desc: "-40%", img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix Pantalla Genérica", price: "$12.000", old: "$20.000", desc: "-40%", img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix Pantalla Internacional Genérica", price: "$14.000", old: "$25.000", desc: "-45%", img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix Cuenta Completa Normal", price: "$52.000", old: "$75.000", desc: "-30%", img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix Cuenta Completa Standard", price: "$45.000", old: "$65.000", desc: "-30%", img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix Cuenta Completa Genérica", price: "$45.000", old: "$65.000", desc: "-30%", img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "DISNEY+", title: "Disney+ Premium Pantalla", price: "$9.000", old: "$18.000", desc: "-50%", img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-            {cat: "DISNEY+", title: "Disney+ Standard Pantalla", price: "$6.000", old: "$12.000", desc: "-50%", img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-            {cat: "MAX", title: "Max (HBO) Pantalla", price: "$8.000", old: "$16.000", desc: "-50%", img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "MAX", title: "Max (HBO) Platino Pantalla", price: "$8.000", old: "$16.000", desc: "-50%", img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "AMAZON PRIME", title: "Amazon Prime Pantalla", price: "$5.000", old: "$10.000", desc: "-50%", img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "AMAZON PRIME", title: "Amazon Prime Original Pantalla", price: "$8.000", old: "$16.000", desc: "-50%", img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "COMBOS", title: "Combo Netflix + Crunchyroll", price: "$15.000", old: "$30.000", desc: "-50%", img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "COMBOS", title: "Combo Netflix + Max (HBO)", price: "$18.000", old: "$36.000", desc: "-50%", img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "COMBOS", title: "Combo Netflix + Disney+", price: "$20.000", old: "$40.000", desc: "-50%", img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "CANVA PRO", title: "Canva Pro (1 Mes)", price: "$6.000", old: "$15.000", desc: "-60%", img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg"}
+        // 72 SERVICIOS OFICIALES DE STREAMING Y DIGITALES (Con opción de agotado: true/false)
+        const productosBase = [
+            // NETFLIX (1-10)
+            {cat: "NETFLIX", title: "Netflix Pantalla Normal 4K", price: "$14.000", old: "$28.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
+            {cat: "NETFLIX", title: "Netflix Pantalla Standard", price: "$12.000", old: "$20.000", desc: "-40%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
+            {cat: "NETFLIX", title: "Netflix Pantalla Genérica", price: "$12.000", old: "$20.000", desc: "-40%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
+            {cat: "NETFLIX", title: "Netflix Pantalla Internacional Genérica", price: "$14.000", old: "$25.000", desc: "-45%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
+            {cat: "NETFLIX", title: "Netflix Cuenta Completa Normal", price: "$52.000", old: "$75.000", desc: "-30%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
+            {cat: "NETFLIX", title: "Netflix Cuenta Completa Standard", price: "$45.000", old: "$65.000", desc: "-30%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
+            {cat: "NETFLIX", title: "Netflix Cuenta Completa Genérica", price: "$45.000", old: "$65.000", desc: "-30%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
+            {cat: "NETFLIX", title: "Netflix 2 Meses Pack Pro", price: "$95.000", old: "$130.000", desc: "-25%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
+            {cat: "NETFLIX", title: "Netflix Perfil Adicional Garantizado", price: "$18.000", old: "$30.000", desc: "-40%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
+            {cat: "NETFLIX", title: "Netflix Ultra HD 4 Pantallas", price: "$58.000", old: "$85.000", desc: "-32%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
+
+            // DISNEY+ (11-20)
+            {cat: "DISNEY+", title: "Disney+ Premium Pantalla", price: "$9.000", old: "$18.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
+            {cat: "DISNEY+", title: "Disney+ Standard Pantalla", price: "$6.000", old: "$12.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
+            {cat: "DISNEY+", title: "Disney+ Cuenta Completa Premium", price: "$28.000", old: "$50.000", desc: "-44%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
+            {cat: "DISNEY+", title: "Disney+ Cuenta Completa Standard", price: "$22.000", old: "$40.000", desc: "-45%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
+            {cat: "DISNEY+", title: "Disney+ 3 Meses Pack", price: "$75.000", old: "$120.000", desc: "-37%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
+            {cat: "DISNEY+", title: "Disney+ Familiar Ultra", price: "$32.000", old: "$60.000", desc: "-46%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
+            {cat: "DISNEY+", title: "Disney+ Kids Edición Especial", price: "$7.000", old: "$15.000", desc: "-53%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
+            {cat: "DISNEY+", title: "Disney+ Anual Estándar", price: "$180.000", old: "$300.000", desc: "-40%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
+            {cat: "DISNEY+", title: "Disney+ & Star+ Bundle Pantalla", price: "$12.000", old: "$24.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
+            {cat: "DISNEY+", title: "Disney+ VIP Acceso Total", price: "$15.000", old: "$30.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
+
+            // MAX (HBO) (21-30)
+            {cat: "MAX", title: "Max (HBO) Pantalla", price: "$8.000", old: "$16.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
+            {cat: "MAX", title: "Max (HBO) Platino Pantalla", price: "$8.000", old: "$16.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
+            {cat: "MAX", title: "Max (HBO) Cuenta Completa", price: "$25.000", old: "$45.000", desc: "-44%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
+            {cat: "MAX", title: "Max (HBO) 3 Meses", price: "$65.000", old: "$110.000", desc: "-40%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
+            {cat: "MAX", title: "Max (HBO) Ultra 4K", price: "$11.000", old: "$22.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
+            {cat: "MAX", title: "Max (HBO) Estreno Pack", price: "$9.500", old: "$19.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
+            {cat: "MAX", title: "Max (HBO) Perfil Privado", price: "$7.000", old: "$14.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
+            {cat: "MAX", title: "Max (HBO) Anual", price: "$140.000", old: "$250.000", desc: "-44%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
+            {cat: "MAX", title: "Max (HBO) + Warner Pass", price: "$13.000", old: "$26.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
+            {cat: "MAX", title: "Max (HBO) Familiar Global", price: "$29.000", old: "$50.000", desc: "-42%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
+
+            // AMAZON PRIME (31-40)
+            {cat: "AMAZON PRIME", title: "Amazon Prime Pantalla", price: "$5.000", old: "$10.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
+            {cat: "AMAZON PRIME", title: "Amazon Prime Original Pantalla", price: "$8.000", old: "$16.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
+            {cat: "AMAZON PRIME", title: "Amazon Prime Cuenta Completa", price: "$18.000", old: "$35.000", desc: "-48%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
+            {cat: "AMAZON PRIME", title: "Amazon Prime 6 Meses", price: "$85.000", old: "$150.000", desc: "-43%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
+            {cat: "AMAZON PRIME", title: "Amazon Prime Video Channels Add-on", price: "$12.000", old: "$24.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
+            {cat: "AMAZON PRIME", title: "Amazon Music Unlimited (1 Mes)", price: "$9.000", old: "$18.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
+            {cat: "AMAZON PRIME", title: "Amazon Gaming & Twitch Prime", price: "$6.000", old: "$12.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
+            {cat: "AMAZON PRIME", title: "Amazon Prime Anual Completa", price: "$95.000", old: "$180.000", desc: "-47%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
+            {cat: "AMAZON PRIME", title: "Amazon Prime Perfil Estándar", price: "$6.000", old: "$12.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
+            {cat: "AMAZON PRIME", title: "Amazon Prime Pack Estreno 4K", price: "$10.000", old: "$20.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
+
+            // YOUTUBE & SPOTIFY (41-50)
+            {cat: "YOUTUBE", title: "YouTube Premium 1 Mes (Tu Cuenta)", price: "$8.000", old: "$20.000", desc: "-60%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg"},
+            {cat: "YOUTUBE", title: "YouTube Premium 4 Meses Familiar", price: "$25.000", old: "$60.000", desc: "-58%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg"},
+            {cat: "YOUTUBE", title: "YouTube Premium Anual", price: "$75.000", old: "$180.000", desc: "-58%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg"},
+            {cat: "SPOTIFY", title: "Spotify Premium 1 Mes (Tu Cuenta)", price: "$7.000", old: "$16.000", desc: "-56%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text_%282015%29.svg"},
+            {cat: "SPOTIFY", title: "Spotify Premium 3 Meses Familiar", price: "$20.000", old: "$45.000", desc: "-55%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text_%282015%29.svg"},
+            {cat: "SPOTIFY", title: "Spotify Premium Anual", price: "$65.000", old: "$150.000", desc: "-56%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text_%282015%29.svg"},
+            {cat: "CRUNCHYROLL", title: "Crunchyroll Mega Fan Pantalla", price: "$6.000", old: "$15.000", desc: "-60%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
+            {cat: "CRUNCHYROLL", title: "Crunchyroll Cuenta Completa", price: "$18.000", old: "$35.000", desc: "-48%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
+            {cat: "PARAMOUNT", title: "Paramount+ Pantalla Estándar", price: "$7.000", old: "$15.000", desc: "-53%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
+            {cat: "PARAMOUNT", title: "Paramount+ Cuenta Completa", price: "$20.000", old: "$40.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
+
+            // COMBOS PREMIUM (51-62)
+            {cat: "COMBOS", title: "Combo Netflix + Crunchyroll", price: "$15.000", old: "$30.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
+            {cat: "COMBOS", title: "Combo Netflix + Max (HBO)", price: "$18.000", old: "$36.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
+            {cat: "COMBOS", title: "Combo Netflix + Disney+", price: "$20.000", old: "$40.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
+            {cat: "COMBOS", title: "Super Combo Triple (Netflix + Disney + Max)", price: "$26.000", old: "$55.000", desc: "-52%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
+            {cat: "COMBOS", title: "Combo Cine Total (Prime + Max + Paramount)", price: "$19.000", old: "$40.000", desc: "-52%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
+            {cat: "COMBOS", title: "Combo Música Pro (Spotify + YouTube)", price: "$13.000", old: "$30.000", desc: "-56%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text_%282015%29.svg"},
+            {cat: "COMBOS", title: "Combo Gamer & Anime (Crunchyroll + Prime)", price: "$11.000", old: "$25.000", desc: "-56%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
+            {cat: "COMBOS", title: "Combo Familiar Plus (Disney + Max + Prime)", price: "$21.000", old: "$45.000", desc: "-53%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
+            {cat: "COMBOS", title: "Mega Pack Anual Combinado 3 Pantallas", price: "$190.000", old: "$380.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
+            {cat: "COMBOS", title: "Combo Estudiantil (Canva + YouTube + Spotify)", price: "$18.000", old: "$40.000", desc: "-55%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg"},
+            {cat: "COMBOS", title: "Combo Fin de Semana (Netflix + Max Cuentas)", price: "$65.000", old: "$120.000", desc: "-45%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
+            {cat: "COMBOS", title: "Pack Global Streaming 5 Servicios", price: "$35.000", old: "$80.000", desc: "-56%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
+
+            // CANVA PRO Y DISEÑO (63-68)
+            {cat: "CANVA PRO", title: "Canva Pro (1 Mes - Invitación)", price: "$6.000", old: "$15.000", desc: "-60%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg"},
+            {cat: "CANVA PRO", title: "Canva Pro (3 Meses Educativo)", price: "$15.000", old: "$40.000", desc: "-62%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg"},
+            {cat: "CANVA PRO", title: "Canva Pro (1 Año Vitalicio Equipo)", price: "$45.000", old: "$120.000", desc: "-62%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg"},
+            {cat: "IPTV", title: "IPTV Smarters Pro 1 Mes (Más de 3000 canales)", price: "$15.000", old: "$30.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
+            {cat: "IPTV", title: "IPTV Magis TV 3 Meses Oficial", price: "$35.000", old: "$70.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
+            {cat: "IPTV", title: "IPTV Tele Latino 1 Año Pack Completo", price: "$90.000", old: "$180.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
+
+            // OTRAS PLATAFORMAS (69-72)
+            {cat: "OTRAS", title: "Apple TV+ (1 Mes)", price: "$10.000", old: "$22.000", desc: "-54%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
+            {cat: "OTRAS", title: "VIX+ Premium Pantalla", price: "$8.000", old: "$18.000", desc: "-55%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
+            {cat: "OTRAS", title: "Plex Pass Anual Oficial", price: "$40.000", old: "$90.000", desc: "-55%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
+            {cat: "OTRAS", title: "Pornhub Premium VIP Pass (1 Mes)", price: "$12.000", old: "$25.000", desc: "-52%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"}
         ];
 
+        let productos = JSON.parse(localStorage.getItem('zrro_productos_72_v2')) || productosBase;
+        if(productos.length < 72) {
+            productos = productosBase;
+            localStorage.setItem('zrro_productos_72_v2', JSON.stringify(productos));
+        }
+
         let paginaActual = 1;
-        let elementosPorPagina = 12;
+        let elementosPorPagina = 24;
         let productosFiltrados = [...productos];
 
         function renderizarPagina() {
@@ -289,7 +385,7 @@
             catalogo.innerHTML = "";
 
             let inicio = (paginaActual - 1) * elementosPorPagina;
-            let fin = inicio + elementosPorPagina;
+            let fin = elementosPorPagina === 72 ? 72 : inicio + elementosPorPagina;
             let itemsPagina = productosFiltrados.slice(inicio, fin);
 
             if(itemsPagina.length === 0) {
@@ -299,10 +395,14 @@
             }
 
             itemsPagina.forEach(p => {
+                let claseAgotado = p.agotado ? 'product-card agotado' : 'product-card';
+                let badgeAgotadoHTML = p.agotado ? '<span class="badge-agotado">AGOTADO</span>' : '';
+
                 catalogo.innerHTML += `
-                    <div class="product-card">
+                    <div class="${claseAgotado}">
                         <div class="product-image-container">
                             <span class="badge-discount">${p.desc}</span>
+                            ${badgeAgotadoHTML}
                             <img src="${p.img}" alt="${p.title}" style="object-fit: contain; padding: 15px; background: #111;">
                         </div>
                         <div class="product-content">
@@ -324,6 +424,10 @@
         }
 
         function renderizarPaginacion() {
+            if(elementosPorPagina === 72) {
+                document.getElementById('paginacion').innerHTML = "";
+                return;
+            }
             let totalPaginas = Math.ceil(productosFiltrados.length / elementosPorPagina);
             let paginacion = document.getElementById('paginacion');
             paginacion.innerHTML = "";
@@ -346,7 +450,12 @@
         }
 
         function cambiarLimite() {
-            elementosPorPagina = parseInt(document.getElementById('itemsPorPagina').value);
+            let val = document.getElementById('itemsPorPagina').value;
+            if(val === "72") {
+                elementosPorPagina = 72;
+            } else {
+                elementosPorPagina = parseInt(val);
+            }
             paginaActual = 1;
             renderizarPagina();
         }
@@ -405,6 +514,7 @@
             let price = "$" + document.getElementById('nuevoPrecio').value;
             let old = "$" + document.getElementById('nuevoOldPrecio').value;
             let desc = document.getElementById('nuevoDescuento').value;
+            let agotadoVal = document.getElementById('nuevoAgotado').value === "true";
 
             if(!cat || !title || !price) {
                 alert("Por favor completa al menos la categoría, título y precio.");
@@ -417,11 +527,12 @@
                 price: price,
                 old: old || "$20.000",
                 desc: desc || "-40%",
+                agotado: agotadoVal,
                 img: imgInput !== "" ? imgInput : "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
             };
 
             productos.unshift(nuevo);
-            localStorage.setItem('zrro_productos', JSON.stringify(productos));
+            localStorage.setItem('zrro_productos_72_v2', JSON.stringify(productos));
             productosFiltrados = [...productos];
             
             document.getElementById('nuevoCat').value = "";
@@ -430,6 +541,7 @@
             document.getElementById('nuevoPrecio').value = "";
             document.getElementById('nuevoOldPrecio').value = "";
             document.getElementById('nuevoDescuento').value = "";
+            document.getElementById('nuevoAgotado').value = "false";
 
             cerrarAdmin();
             renderizarPagina();
