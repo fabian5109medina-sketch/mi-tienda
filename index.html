@@ -8,23 +8,19 @@
         :root { --bg-color: #121212; --card-bg: #1e1e1e; --accent-color: #38bdf8; --text-light: #ffffff; --text-muted: #9ca3af; --discount-red: #ef4444; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-light); margin: 0; padding: 0; }
         
-        /* Header Superior */
         .header { display: flex; justify-content: space-between; align-items: center; background: #18181b; padding: 12px 16px; border-bottom: 1px solid #27272a; }
-        .logo-area { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 1.1em; color: var(--accent-color); }
+        .logo-area { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 1.1em; color: var(--accent-color); cursor: pointer; }
         .nav-icons { display: flex; gap: 15px; font-size: 1.2em; color: #d1d5db; cursor: pointer; }
 
-        /* Banner Cargar Saldo */
         .banner { background: linear-gradient(135deg, #1e3a8a, #0f172a); margin: 12px; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #3b82f6; }
         .banner h2 { margin: 0 0 10px 0; font-size: 1.1em; letter-spacing: 1px; color: #fff; }
         .btn-saldo { background: #ffffff; color: #000; border: none; padding: 8px 20px; font-weight: bold; border-radius: 20px; cursor: pointer; font-size: 0.9em; }
 
-        /* Barra de Filtros estilo WooCommerce */
         .filter-bar { display: flex; gap: 8px; padding: 0 12px 12px 12px; overflow-x: auto; }
         .filter-btn, .select-box { background: #27272a; color: #fff; border: 1px solid #3f3f46; padding: 8px 12px; border-radius: 4px; font-size: 0.8em; white-space: nowrap; }
         .search-container { padding: 0 12px 15px 12px; }
         .search-box { width: 100%; padding: 10px 12px; background: #18181b; border: 1px solid #3f3f46; color: white; border-radius: 6px; box-sizing: border-box; font-size: 0.9em; }
 
-        /* Cuadrícula de Productos (2 columnas) */
         .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 10px; }
         .product-card { background: var(--card-bg); border-radius: 8px; overflow: hidden; border: 1px solid #27272a; display: flex; flex-direction: column; position: relative; }
         
@@ -43,190 +39,291 @@
         .old-price { font-size: 0.75em; color: var(--text-muted); text-decoration: line-through; }
         .current-price { font-size: 0.9em; font-weight: bold; color: var(--text-light); }
 
-        /* Paginación Inferior */
-        .pagination { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 20px 0; }
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 20px 0; flex-wrap: wrap; }
         .page-item { background: #27272a; border: 1px solid #3f3f46; color: #fff; padding: 6px 10px; border-radius: 4px; font-size: 0.8em; cursor: pointer; }
         .page-item.active { background: #fff; color: #000; font-weight: bold; }
 
-        .footer-text { text-align: center; font-size: 0.7em; color: var(--text-muted); padding-bottom: 20px; }
+        /* Botón y Panel de Administración Flotante */
+        .admin-float-btn { position: fixed; bottom: 20px; right: 20px; background: var(--accent-color); color: #000; border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 1.2em; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+        
+        .admin-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; }
+        .admin-content { background: #1e1e1e; padding: 20px; border-radius: 8px; width: 100%; max-width: 400px; border: 1px solid #3f3f46; max-height: 90vh; overflow-y: auto; }
+        .admin-content h3 { margin-top: 0; color: var(--accent-color); }
+        .admin-content input, .admin-content select { width: 100%; padding: 8px; margin-bottom: 10px; background: #121212; border: 1px solid #3f3f46; color: #fff; border-radius: 4px; box-sizing: border-box; }
+        .admin-content button { background: var(--accent-color); color: #000; border: none; padding: 10px; font-weight: bold; width: 100%; border-radius: 4px; cursor: pointer; margin-top: 5px; }
+        .btn-close { background: #ef4444 !important; color: #fff !important; margin-top: 10px; }
+
+        .footer-text { text-align: center; font-size: 0.7em; color: var(--text-muted); padding-bottom: 30px; }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
     <div class="header">
-        <div class="logo-area">
+        <div class="logo-area" onclick="location.reload()">
             <span>⚡ ZRRO DIGITAL</span>
         </div>
         <div class="nav-icons">
-            <span>🔍</span>
-            <span>☰</span>
+            <span onclick="document.getElementById('buscador').focus()">🔍</span>
+            <span onclick="abrirAdmin()">⚙️</span>
         </div>
     </div>
 
-    <!-- Banner Cargar Saldo -->
     <div class="banner">
         <h2>MERCADO DIGITAL</h2>
         <button class="btn-saldo" onclick="alert('Saldo actual: $0.00')">CARGAR SALDO &gt;</button>
     </div>
 
-    <!-- Buscador Interno -->
     <div class="search-container">
-        <input type="text" id="buscador" class="search-box" placeholder="Buscar entre los servicios..." onkeyup="filtrarServicios()">
+        <input type="text" id="buscador" class="search-box" placeholder="Buscar entre los servicios..." onkeyup="buscarServicios()">
     </div>
 
-    <!-- Filtros simulados -->
     <div class="filter-bar">
-        <button class="filter-btn">⚙️ FILTRAR</button>
+        <button class="filter-btn" onclick="abrirAdmin()">⚙️ ADMIN</button>
         <select class="select-box"><option>ORDEN PREDETERMINADO</option></select>
-        <select class="select-box"><option>10</option></select>
+        <select class="select-box" id="itemsPorPagina" onchange="cambiarLimite()"><option value="12">12 por pág</option><option value="24">24 por pág</option></select>
     </div>
 
-    <!-- Catálogo de Productos Estilo E-commerce -->
-    <div class="product-grid" id="catalogo">
-        <!-- Producto 1 -->
-        <div class="product-card">
-            <div class="product-image-container">
-                <span class="badge-discount">-52%</span>
-                <img src="https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=300" alt="Netflix">
-            </div>
-            <div class="product-content">
-                <div>
-                    <div class="category">NETFLIX</div>
-                    <div class="product-title">NETFLIX PANTALLA NORMAL</div>
-                    <div class="stars">☆☆☆☆☆</div>
-                </div>
-                <div class="price-box">
-                    <span class="old-price">$28.000</span>
-                    <span class="current-price">$14.000</span>
-                </div>
-            </div>
-        </div>
+    <!-- Catálogo Dinámico -->
+    <div class="product-grid" id="catalogo"></div>
 
-        <!-- Producto 2 -->
-        <div class="product-card">
-            <div class="product-image-container">
-                <span class="badge-discount">-40%</span>
-                <img src="https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=300" alt="Netflix">
-            </div>
-            <div class="product-content">
-                <div>
-                    <div class="category">NETFLIX</div>
-                    <div class="product-title">NETFLIX PANTALLA STANDARD</div>
-                    <div class="stars">☆☆☆☆☆</div>
-                </div>
-                <div class="price-box">
-                    <span class="old-price">$20.000</span>
-                    <span class="current-price">$12.000</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Producto 3 -->
-        <div class="product-card">
-            <div class="product-image-container">
-                <span class="badge-discount">-60%</span>
-                <img src="https://images.unsplash.com/photo-1512070679279-8988d2e16bac?w=300" alt="Disney">
-            </div>
-            <div class="product-content">
-                <div>
-                    <div class="category">DISNEY+</div>
-                    <div class="product-title">DISNEY+ PREMIUM PANTALLA</div>
-                    <div class="stars">☆☆☆☆☆</div>
-                </div>
-                <div class="price-box">
-                    <span class="old-price">$22.000</span>
-                    <span class="current-price">$9.000</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Producto 4 -->
-        <div class="product-card">
-            <div class="product-image-container">
-                <span class="badge-discount">-50%</span>
-                <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300" alt="Max">
-            </div>
-            <div class="product-content">
-                <div>
-                    <div class="category">MAX (HBO)</div>
-                    <div class="product-title">MAX (HBO) PLATINO PANTALLA</div>
-                    <div class="stars">☆☆☆☆☆</div>
-                </div>
-                <div class="price-box">
-                    <span class="old-price">$16.000</span>
-                    <span class="current-price">$8.000</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Producto 5 -->
-        <div class="product-card">
-            <div class="product-image-container">
-                <span class="badge-discount">-74%</span>
-                <img src="https://images.unsplash.com/photo-1616469829941-c7200edec809?w=300" alt="Amazon">
-            </div>
-            <div class="product-content">
-                <div>
-                    <div class="category">AMAZON PRIME</div>
-                    <div class="product-title">AMAZON PRIME COMPLETA</div>
-                    <div class="stars">☆☆☆☆☆</div>
-                </div>
-                <div class="price-box">
-                    <span class="old-price">$38.000</span>
-                    <span class="current-price">$10.000</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Producto 6 -->
-        <div class="product-card">
-            <div class="product-image-container">
-                <span class="badge-discount">-84%</span>
-                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300" alt="Canva">
-            </div>
-            <div class="product-content">
-                <div>
-                    <div class="category">CANVA PRO</div>
-                    <div class="product-title">CANVA PRO X 1 MES A DOMINIO</div>
-                    <div class="stars">☆☆☆☆☆</div>
-                </div>
-                <div class="price-box">
-                    <span class="old-price">$15.000</span>
-                    <span class="current-price">$2.400</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Paginación -->
-    <div class="pagination">
-        <div class="page-item active">1</div>
-        <div class="page-item">2</div>
-        <div class="page-item">3</div>
-        <div class="page-item">...</div>
-        <div class="page-item">&gt;</div>
-    </div>
+    <!-- Paginación Interactiva -->
+    <div class="pagination" id="paginacion"></div>
 
     <div class="footer-text">
         Zrrodigital.co © 2026. Todos los Derechos Reservados
     </div>
 
-    <!-- Script de búsqueda en tiempo real -->
+    <!-- Botón flotante Admin -->
+    <button class="admin-float-btn" onclick="abrirAdmin()">⚙️</button>
+
+    <!-- Modal Admin -->
+    <div class="admin-modal" id="modalAdmin">
+        <div class="admin-content">
+            <h3>Panel de Administración</h3>
+            <p style="font-size: 0.8em; color: var(--text-muted);">Agrega o modifica productos fácilmente:</p>
+            <label style="font-size: 0.8em;">Categoría:</label>
+            <input type="text" id="nuevoCat" placeholder="EJ: NETFLIX">
+            <label style="font-size: 0.8em;">Nombre del Servicio:</label>
+            <input type="text" id="nuevoTitulo" placeholder="EJ: Netflix Pantalla 4K">
+            <label style="font-size: 0.8em;">Precio Actual ($):</label>
+            <input type="text" id="nuevoPrecio" placeholder="14.000">
+            <label style="font-size: 0.8em;">Precio Anterior (Tachado):</label>
+            <input type="text" id="nuevoOldPrecio" placeholder="28.000">
+            <label style="font-size: 0.8em;">Descuento (%):</label>
+            <input type="text" id="nuevoDescuento" placeholder="-50%">
+            <button onclick="agregarProducto()">Guardar y Agregar Producto</button>
+            <button class="btn-close" onclick="cerrarAdmin()">Cerrar</button>
+        </div>
+    </div>
+
     <script>
-        function filtrarServicios() {
-            let input = document.getElementById('buscador').value.toLowerCase();
-            let cards = document.getElementsByClassName('product-card');
-            for (let i = 0; i < cards.length; i++) {
-                let titulo = cards[i].getElementsByClassName('product-title')[0].innerText.toLowerCase();
-                let categoria = cards[i].getElementsByClassName('category')[0].innerText.toLowerCase();
-                if (titulo.includes(input) || categoria.includes(input)) {
-                    cards[i].style.display = "";
-                } else {
-                    cards[i].style.display = "none";
-                }
+        // Lista completa de tus 72 servicios guardados localmente
+        let productos = JSON.parse(localStorage.getItem('zrro_productos')) || [
+            {cat: "NETFLIX", title: "Netflix Pantalla Normal", price: "$14.000", old: "$28.000", desc: "-50%", img: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=300"},
+            {cat: "NETFLIX", title: "Netflix Pantalla Standard", price: "$12.000", old: "$20.000", desc: "-40%", img: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=300"},
+            {cat: "NETFLIX", title: "Netflix Pantalla Genérica", price: "$12.000", old: "$20.000", desc: "-40%", img: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=300"},
+            {cat: "NETFLIX", title: "Netflix Pantalla Internacional Genérica", price: "$14.000", old: "$25.000", desc: "-45%", img: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=300"},
+            {cat: "NETFLIX", title: "Netflix Cuenta Completa Normal", price: "$52.000", old: "$75.000", desc: "-30%", img: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=300"},
+            {cat: "NETFLIX", title: "Netflix Cuenta Completa Standard", price: "$45.000", old: "$65.000", desc: "-30%", img: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=300"},
+            {cat: "NETFLIX", title: "Netflix Cuenta Completa Genérica", price: "$45.000", old: "$65.000", desc: "-30%", img: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=300"},
+            {cat: "DISNEY+", title: "Disney+ Premium Pantalla", price: "$9.000", old: "$18.000", desc: "-50%", img: "https://images.unsplash.com/photo-1512070679279-8988d2e16bac?w=300"},
+            {cat: "DISNEY+", title: "Disney+ Standard Pantalla", price: "$6.000", old: "$12.000", desc: "-50%", img: "https://images.unsplash.com/photo-1512070679279-8988d2e16bac?w=300"},
+            {cat: "MAX", title: "Max (HBO) Pantalla", price: "$8.000", old: "$16.000", desc: "-50%", img: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300"},
+            {cat: "MAX", title: "Max (HBO) Platino Pantalla", price: "$8.000", old: "$16.000", desc: "-50%", img: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300"},
+            {cat: "AMAZON PRIME", title: "Amazon Prime Pantalla", price: "$5.000", old: "$10.000", desc: "-50%", img: "https://images.unsplash.com/photo-1616469829941-c7200edec809?w=300"},
+            {cat: "AMAZON PRIME", title: "Amazon Prime Original Pantalla", price: "$8.000", old: "$16.000", desc: "-50%", img: "https://images.unsplash.com/photo-1616469829941-c7200edec809?w=300"},
+            {cat: "CRUNCHYROLL", title: "Crunchyroll Pantalla", price: "$5.000", old: "$10.000", desc: "-50%", img: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=300"},
+            {cat: "CRUNCHYROLL", title: "Crunchyroll Pantalla Original", price: "$8.500", old: "$15.000", desc: "-45%", img: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=300"},
+            {cat: "PARAMOUNT+", title: "Paramount+ Pantalla", price: "$6.000", old: "$12.000", desc: "-50%", img: "https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?w=300"},
+            {cat: "PARAMOUNT+", title: "Paramount+ Pantalla Original", price: "$10.000", old: "$17.000", desc: "-40%", img: "https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?w=300"},
+            {cat: "VIX+", title: "ViX+", price: "$5.000", old: "$10.000", desc: "-50%", img: "https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=300"},
+            {cat: "UNIVERSAL+", title: "Universal+ Pantalla", price: "$7.000", old: "$14.000", desc: "-50%", img: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=300"},
+            {cat: "PLEX", title: "Plex Pantalla Original", price: "$6.000", old: "$12.000", desc: "-50%", img: "https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?w=300"},
+            {cat: "MUBI", title: "MUBI Pantalla", price: "$6.000", old: "$12.000", desc: "-50%", img: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=300"},
+            {cat: "VIKI RAKUTEN", title: "Viki Rakuten Pantalla (Dramas)", price: "$6.000", old: "$12.000", desc: "-50%", img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=300"},
+            {cat: "DIRECTV GO", title: "DirecTV GO Plan Oro (1 Disp.)", price: "$14.000", old: "$28.000", desc: "-50%", img: "https://images.unsplash.com/photo-1543536448-d209d2d13a1c?w=300"},
+            {cat: "DISNEY+", title: "Disney+ Premium Completa", price: "$38.000", old: "$65.000", desc: "-40%", img: "https://images.unsplash.com/photo-1512070679279-8988d2e16bac?w=300"},
+            {cat: "DISNEY+", title: "Disney+ Standard Completa", price: "$18.000", old: "$30.000", desc: "-40%", img: "https://images.unsplash.com/photo-1512070679279-8988d2e16bac?w=300"},
+            {cat: "MAX", title: "Max (HBO) Completa", price: "$18.000", old: "$30.000", desc: "-40%", img: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300"},
+            {cat: "MAX", title: "Max (HBO) Platino Completa", price: "$16.000", old: "$28.000", desc: "-40%", img: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300"},
+            {cat: "AMAZON PRIME", title: "Amazon Prime Completa", price: "$10.000", old: "$20.000", desc: "-50%", img: "https://images.unsplash.com/photo-1616469829941-c7200edec809?w=300"},
+            {cat: "AMAZON PRIME", title: "Amazon Prime Original Completa", price: "$20.000", old: "$35.000", desc: "-40%", img: "https://images.unsplash.com/photo-1616469829941-c7200edec809?w=300"},
+            {cat: "CRUNCHYROLL", title: "Crunchyroll Completa", price: "$14.000", old: "$25.000", desc: "-40%", img: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=300"},
+            {cat: "PARAMOUNT+", title: "Paramount+ Completa", price: "$18.000", old: "$30.000", desc: "-40%", img: "https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?w=300"},
+            {cat: "UNIVERSAL+", title: "Universal+ Completa", price: "$16.000", old: "$28.000", desc: "-40%", img: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=300"},
+            {cat: "VIX+", title: "ViX+ Completa", price: "$8.000", old: "$15.000", desc: "-45%", img: "https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=300"},
+            {cat: "PLEX", title: "Plex Completa", price: "$13.000", old: "$22.000", desc: "-40%", img: "https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?w=300"},
+            {cat: "MUBI", title: "MUBI Completa", price: "$10.000", old: "$18.000", desc: "-40%", img: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=300"},
+            {cat: "VIKI RAKUTEN", title: "Viki Rakuten Completa", price: "$13.000", old: "$22.000", desc: "-40%", img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=300"},
+            {cat: "ADULTOS", title: "Hot Go Premium Completa (+18)", price: "$18.000", old: "$30.000", desc: "-40%", img: "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=300"},
+            {cat: "DIRECTV GO", title: "DirecTV GO Plan Oro Completa (2 Disp.)", price: "$22.000", old: "$38.000", desc: "-40%", img: "https://images.unsplash.com/photo-1543536448-d209d2d13a1c?w=300"},
+            {cat: "IPTV", title: "IPTV Pantalla Original", price: "$10.000", old: "$18.000", desc: "-40%", img: "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=300"},
+            {cat: "IPTV", title: "IPTV Premium Completa (1 Mes - 3 Disp.)", price: "$12.000", old: "$20.000", desc: "-40%", img: "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=300"},
+            {cat: "IPTV", title: "IPTV Plan 3 Meses Completa", price: "$25.000", old: "$45.000", desc: "-40%", img: "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=300"},
+            {cat: "IPTV", title: "IPTV Plan 6 Meses Completa", price: "$45.000", old: "$80.000", desc: "-40%", img: "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=300"},
+            {cat: "IPTV", title: "IPTV Plan 1 Año Completo", price: "$80.000", old: "$150.000", desc: "-45%", img: "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=300"},
+            {cat: "STREAMING TV", title: "Flujo TV / Magis (3 Meses)", price: "$55.000", old: "$90.000", desc: "-40%", img: "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=300"},
+            {cat: "STREAMING TV", title: "Flujo TV / Magis (7 Meses)", price: "$95.000", old: "$160.000", desc: "-40%", img: "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=300"},
+            {cat: "STREAMING TV", title: "Flujo TV / Magis (14 Meses)", price: "$170.000", old: "$280.000", desc: "-40%", img: "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=300"},
+            {cat: "SPOTIFY", title: "Spotify Premium Original (1 Mes)", price: "$12.000", old: "$20.000", desc: "-40%", img: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300"},
+            {cat: "SPOTIFY", title: "Spotify Premium Original (2 Meses)", price: "$18.000", old: "$30.000", desc: "-40%", img: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300"},
+            {cat: "YOUTUBE", title: "YouTube Premium / A Dominio (1 Mes)", price: "$12.000", old: "$20.000", desc: "-40%", img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300"},
+            {cat: "DEEZER", title: "Deezer Original (1 Mes)", price: "$5.000", old: "$10.000", desc: "-50%", img: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300"},
+            {cat: "TIDAL", title: "Tidal Premium (1 Mes)", price: "$6.000", old: "$12.000", desc: "-50%", img: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300"},
+            {cat: "CANVA PRO", title: "Canva Pro (1 Mes)", price: "$6.000", old: "$15.000", desc: "-60%", img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300"},
+            {cat: "CANVA PRO", title: "Canva Pro a tu Dominio (1 Mes)", price: "$6.000", old: "$15.000", desc: "-60%", img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300"},
+            {cat: "CANVA PRO", title: "Canva Pro (1 Año)", price: "$25.000", old: "$100.000", desc: "-75%", img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300"},
+            {cat: "CANVA PRO", title: "Canva Pro a tu Dominio (1 Año)", price: "$22.000", old: "$100.000", desc: "-78%", img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300"},
+            {cat: "CAPCUT PRO", title: "CapCut Pro Individual (1 Mes)", price: "$18.000", old: "$30.000", desc: "-40%", img: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=300"},
+            {cat: "CAPCUT PRO", title: "CapCut Pro Completa 3 Disp. (1 Mes)", price: "$32.000", old: "$55.000", desc: "-40%", img: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=300"},
+            {cat: "OFFICE 365", title: "Office 365 Licencia 1 Año (1 PC)", price: "$25.000", old: "$50.000", desc: "-50%", img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=300"},
+            {cat: "OFFICE 365", title: "Office 365 Licencia 1 Año (5 Disp.)", price: "$65.000", old: "$130.000", desc: "-50%", img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=300"},
+            {cat: "DUOLINGO", title: "Duolingo Pro (1 Mes)", price: "$5.000", old: "$10.000", desc: "-50%", img: "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=300"},
+            {cat: "DUOLINGO", title: "Duolingo Pro Premium (1 Año)", price: "$20.000", old: "$40.000", desc: "-50%", img: "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=300"},
+            {cat: "ADULTOS", title: "Hot Go Premium Pantalla", price: "$7.000", old: "$14.000", desc: "-50%", img: "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=300"},
+            {cat: "ADULTOS", title: "Pornhub Pantalla (1 Año)", price: "$12.000", old: "$24.000", desc: "-50%", img: "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=300"},
+            {cat: "ADULTOS", title: "Pornhub Cuenta Completa (1 Año)", price: "$22.000", old: "$44.000", desc: "-50%", img: "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=300"},
+            {cat: "PANELES IPTV", title: "Panel IPTV (10 Créditos + Demos)", price: "$65.000", old: "$110.000", desc: "-40%", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300"},
+            {cat: "PANELES IPTV", title: "Panel IPTV (50 Créditos + Demos)", price: "$150.000", old: "$250.000", desc: "-40%", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300"},
+            {cat: "PANELES IPTV", title: "Panel IPTV PRO (100 Créditos + Demos)", price: "$230.000", old: "$380.000", desc: "-40%", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300"},
+            {cat: "COMBOS", title: "Combo Netflix + Crunchyroll", price: "$15.000", old: "$30.000", desc: "-50%", img: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=300"},
+            {cat: "COMBOS", title: "Combo Netflix + Max (HBO)", price: "$18.000", old: "$36.000", desc: "-50%", img: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=300"},
+            {cat: "COMBOS", title: "Combo Netflix + IPTV Premium", price: "$18.000", old: "$36.000", desc: "-50%", img: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=300"},
+            {cat: "COMBOS", title: "Combo Netflix + Disney+", price: "$20.000", old: "$40.000", desc: "-50%", img: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=300"},
+            {cat: "COMBOS", title: "Combo Netflix + Plex Premium", price: "$16.000", old: "$32.000", desc: "-50%", img: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=300"}
+        ];
+
+        let paginaActual = 1;
+        let elementosPorPagina = 12;
+        let productosFiltrados = [...productos];
+
+        function renderizarPagina() {
+            let catalogo = document.getElementById('catalogo');
+            catalogo.innerHTML = "";
+
+            let inicio = (paginaActual - 1) * elementosPorPagina;
+            let fin = inicio + elementosPorPagina;
+            let itemsPagina = productosFiltrados.slice(inicio, fin);
+
+            if(itemsPagina.length === 0) {
+                catalogo.innerHTML = "<p style='grid-column: span 2; text-align:center; color: var(--text-muted); padding: 20px;'>No se encontraron servicios.</p>";
+                document.getElementById('paginacion').innerHTML = "";
+                return;
+            }
+
+            itemsPagina.forEach(p => {
+                catalogo.innerHTML += `
+                    <div class="product-card">
+                        <div class="product-image-container">
+                            <span class="badge-discount">${p.desc}</span>
+                            <img src="${p.img}" alt="${p.title}">
+                        </div>
+                        <div class="product-content">
+                            <div>
+                                <div class="category">${p.cat}</div>
+                                <div class="product-title">${p.title}</div>
+                                <div class="stars">☆☆☆☆☆</div>
+                            </div>
+                            <div class="price-box">
+                                <span class="old-price">${p.old}</span>
+                                <span class="current-price">${p.price}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            renderizarPaginacion();
+        }
+
+        function renderizarPaginacion() {
+            let totalPaginas = Math.ceil(productosFiltrados.length / elementosPorPagina);
+            let paginacion = document.getElementById('paginacion');
+            paginacion.innerHTML = "";
+
+            if(totalPaginas <= 1) return;
+
+            for(let i = 1; i <= totalPaginas; i++) {
+                paginacion.innerHTML += `<div class="page-item ${i === paginaActual ? 'active' : ''}" onclick="cambiarPagina(${i})">${i}</div>`;
+            }
+
+            if(paginaActual < totalPaginas) {
+                paginacion.innerHTML += `<div class="page-item" onclick="cambiarPagina(${paginaActual + 1})">&gt;</div>`;
             }
         }
+
+        function cambiarPagina(p) {
+            paginaActual = p;
+            renderizarPagina();
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function cambiarLimite() {
+            elementosPorPagina = parseInt(document.getElementById('itemsPorPagina').value);
+            paginaActual = 1;
+            renderizarPagina();
+        }
+
+        function buscarServicios() {
+            let query = document.getElementById('buscador').value.toLowerCase();
+            productosFiltrados = productos.filter(p => 
+                p.title.toLowerCase().includes(query) || p.cat.toLowerCase().includes(query)
+            );
+            paginaActual = 1;
+            renderizarPagina();
+        }
+
+        function abrirAdmin() {
+            let pass = prompt("Ingresa la clave de Administrador:");
+            if(pass === "1234") { // Puedes cambiar tu clave aquí si deseas
+                document.getElementById('modalAdmin').style.display = 'flex';
+            } else if(pass !== null) {
+                alert("Contraseña incorrecta");
+            }
+        }
+
+        function cerrarAdmin() {
+            document.getElementById('modalAdmin').style.display = 'none';
+        }
+
+        function agregarProducto() {
+            let cat = document.getElementById('nuevoCat').value.toUpperCase();
+            let title = document.getElementById('nuevoTitulo').value;
+            let price = "$" + document.getElementById('nuevoPrecio').value;
+            let old = "$" + document.getElementById('nuevoOldPrecio').value;
+            let desc = document.getElementById('nuevoDescuento').value;
+
+            if(!cat || !title || !price) {
+                alert("Por favor completa al menos la categoría, título y precio.");
+                return;
+            }
+
+            let nuevo = {
+                cat: cat,
+                title: title,
+                price: price,
+                old: old || "$20.000",
+                desc: desc || "-40%",
+                img: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=300"
+            };
+
+            productos.unshift(nuevo);
+            localStorage.setItem('zrro_productos', JSON.stringify(productos));
+            productosFiltrados = [...productos];
+            
+            document.getElementById('nuevoCat').value = "";
+            document.getElementById('nuevoTitulo').value = "";
+            document.getElementById('nuevoPrecio').value = "";
+            document.getElementById('nuevoOldPrecio').value = "";
+            document.getElementById('nuevoDescuento').value = "";
+
+            cerrarAdmin();
+            renderizarPagina();
+            alert("¡Servicio agregado con éxito!");
+        }
+
+        // Inicializar al cargar la página
+        renderizarPagina();
     </script>
 </body>
 </html>
