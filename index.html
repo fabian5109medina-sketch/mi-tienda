@@ -3,29 +3,160 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
+  <title>Catálogo de Servicios & Streaming</title>
   <style>
-    body { font-family: sans-serif; background: #f4f6f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-    .container { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
-    h2 { text-align: center; }
-    input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
-    button { width: 100%; padding: 12px; background: #0066cc; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #0f172a;
+      color: #ffffff;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      font-size: 28px;
+      color: #38bdf8;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      font-size: 14px;
+      color: #94a3b8;
+    }
+
+    /* Grid de plataformas */
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .card {
+      background-color: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: #38bdf8;
+    }
+
+    .card h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    /* Colores para las marcas */
+    .card.netflix h3 { color: #e50914; }
+    .card.disney h3 { color: #113ccf; }
+    .card.max h3 { color: #002be7; }
+    .card.spotify h3 { color: #1db954; }
+
+    .price {
+      font-size: 22px;
+      font-weight: bold;
+      margin: 15px 0;
+      color: #f8fafc;
+    }
+
+    .btn-select {
+      background-color: #0284c7;
+      color: #ffffff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.2s;
+    }
+
+    .btn-select:hover {
+      background-color: #0369a1;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Iniciar Sesión</h2>
-    <form id="loginForm">
-      <input type="text" placeholder="Usuario" required>
-      <input type="password" placeholder="Contraseña" required>
-      <button type="submit">Ingresar</button>
-    </form>
+
+  <header>
+    <h1>Catálogo de Suscripciones</h1>
+    <p>Selecciona tu plataforma preferida</p>
+  </header>
+
+  <div class="catalog-grid">
+
+    <!-- Tarjeta Netflix -->
+    <div class="card netflix">
+      <div>
+        <h3>Netflix</h3>
+        <p>Pantalla Ultra HD / 4K</p>
+        <div class="price">$15.000 / mes</div>
+      </div>
+      <button class="btn-select" onclick="seleccionarServicio('Netflix')">Solicitar</button>
+    </div>
+
+    <!-- Tarjeta Disney+ -->
+    <div class="card disney">
+      <div>
+        <h3>Disney+</h3>
+        <p>Acceso Multidispositivo</p>
+        <div class="price">$12.000 / mes</div>
+      </div>
+      <button class="btn-select" onclick="seleccionarServicio('Disney+')">Solicitar</button>
+    </div>
+
+    <!-- Tarjeta Max -->
+    <div class="card max">
+      <div>
+        <h3>Max (HBO)</h3>
+        <p>Películas y Deportes en vivo</p>
+        <div class="price">$12.000 / mes</div>
+      </div>
+      <button class="btn-select" onclick="seleccionarServicio('Max')">Solicitar</button>
+    </div>
+
+    <!-- Tarjeta Spotify -->
+    <div class="card spotify">
+      <div>
+        <h3>Spotify Premium</h3>
+        <p>Música sin anuncios</p>
+        <div class="price">$10.000 / mes</div>
+      </div>
+      <button class="btn-select" onclick="seleccionarServicio('Spotify')">Solicitar</button>
+    </div>
+
   </div>
+
   <script>
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      window.location.href = 'https://everestreamingcom.com/cart/';
-    });
+    function seleccionarServicio(plataforma) {
+      alert('Has seleccionado: ' + plataforma + '. Redirigiendo...');
+      // Puedes cambiar este enlace para redirigir a un chat de atención o a un formulario
+      window.location.href = 'https://everestreamingcom.com/cart/?service=' + encodeURIComponent(plataforma);
+    }
   </script>
+
 </body>
 </html>
