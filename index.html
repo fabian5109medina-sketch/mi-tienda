@@ -4,19 +4,128 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZRRO DIGITAL</title>
-    <!-- Tailwind CSS para el diseño -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <!-- Firebase SDKs Modulares -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection, query, where, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRLE96tJIJrRSihMy6w0mOT3p_E8J1N0",
+            authDomain: "mi-tienda-56ef5.firebaseapp.com",
+            projectId: "mi-tienda-56ef5",
+            storageBucket: "mi-tienda-56ef5.appspot.com",
+            messagingSenderId: "716772431219",
+            appId: "1:716772431219:web:03f3a4312f2c8d234a5d7c",
+            measurementId: "G-2QB62W1LD8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const adminEmails = ["fabian1590medina@gmail.com"];
+
+        window.handleLogin = function() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            hideError();
+            signInWithEmailAndPassword(auth, email, password)
+                .catch(error => showError(error.message));
+        };
+
+        window.handleRegister = function() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            hideError();
+            createUserWithEmailAndPassword(auth, email, password)
+                .then(userCredential => {
+                    setDoc(doc(db, 'users', userCredential.user.uid), {
+                        email: email,
+                        balance: 0
+                    });
+                })
+                .catch(error => showError(error.message));
+        };
+
+        window.handleLogout = function() {
+            signOut(auth);
+        };
+
+        window.adminAddBalance = async function() {
+            const targetEmail = document.getElementById('admin-target-email').value;
+            const amount = parseFloat(document.getElementById('admin-amount').value);
+
+            if (!targetEmail || isNaN(amount)) {
+                alert("Completa los campos correctamente");
+                return;
+            }
+
+            try {
+                const q = query(collection(db, 'users'), where("email", "==", targetEmail));
+                const querySnapshot = await getDocs(q);
+                if (querySnapshot.empty) {
+                    alert("Usuario no encontrado");
+                    return;
+                }
+                querySnapshot.forEach(async (userDoc) => {
+                    const currentBalance = userDoc.data().balance || 0;
+                    await updateDoc(doc(db, 'users', userDoc.id), {
+                        balance: currentBalance + amount
+                    });
+                    alert("¡Saldo recargado con éxito!");
+                    document.getElementById('admin-target-email').value = '';
+                    document.getElementById('admin-amount').value = '';
+                });
+            } catch (error) {
+                alert("Error: " + error.message);
+            }
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('auth-section').classList.add('hidden');
+                document.getElementById('dashboard-section').classList.remove('hidden');
+                document.getElementById('user-email-display').innerText = user.email;
+
+                if (adminEmails.includes(user.email)) {
+                    document.getElementById('admin-panel').classList.remove('hidden');
+                } else {
+                    document.getElementById('admin-panel').classList.add('hidden');
+                }
+
+                onSnapshot(doc(db, 'users', user.uid), (docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        document.getElementById('user-balance').innerText = `$${(data.balance || 0).toLocaleString()}`;
+                    }
+                });
+            } else {
+                document.getElementById('auth-section').classList.remove('hidden');
+                document.getElementById('dashboard-section').classList.add('hidden');
+                document.getElementById('admin-panel').classList.add('hidden');
+            }
+        });
+
+        function showError(message) {
+            const errorDiv = document.getElementById('auth-error');
+            errorDiv.innerText = "Error: " + message;
+            errorDiv.classList.remove('hidden');
+        }
+
+        function hideError() {
+            const errorDiv = document.getElementById('auth-error');
+            errorDiv.classList.add('hidden');
+        }
+    </script>
 </head>
 <body class="bg-slate-950 text-white min-h-screen flex items-center justify-center p-4">
 
-    <!-- CONTENEDOR PRINCIPAL -->
     <div id="app" class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl">
         
-        <!-- VISTA DE AUTENTICACIÓN (LOGIN / REGISTRO) -->
+        <!-- VISTA DE LOGIN / REGISTRO -->
         <div id="auth-section">
             <div class="text-center mb-6">
                 <div class="w-16 h-16 bg-gradient-to-tr from-cyan-500 to-blue-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-cyan-500/30 mb-3">
@@ -29,12 +138,8 @@
             </div>
 
             <div class="space-y-4">
-                <div>
-                    <input type="email" id="email" placeholder="Correo electrónico" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition">
-                </div>
-                <div>
-                    <input type="password" id="password" placeholder="Contraseña" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition">
-                </div>
+                <input type="email" id="email" placeholder="Correo electrónico" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition">
+                <input type="password" id="password" placeholder="Contraseña" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition">
                 
                 <button onclick="handleLogin()" class="w-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-semibold py-3 rounded-xl transition shadow-lg shadow-cyan-400/20">
                     Iniciar Sesión
@@ -48,7 +153,7 @@
             </div>
         </div>
 
-        <!-- VISTA DEL PANEL / MONEDERO (Oculto al inicio) -->
+        <!-- VISTA DEL PANEL -->
         <div id="dashboard-section" class="hidden space-y-6">
             <div class="flex justify-between items-center border-b border-slate-800 pb-4">
                 <div>
@@ -60,13 +165,11 @@
                 </button>
             </div>
 
-            <!-- Monedero -->
             <div class="bg-gradient-to-r from-slate-800 to-slate-900 border border-slate-700/50 rounded-2xl p-4 text-center">
                 <p class="text-xs text-slate-400 uppercase tracking-wider font-medium">Saldo Disponible</p>
                 <h3 id="user-balance" class="text-3xl font-extrabold text-white mt-1">$0.00</h3>
             </div>
 
-            <!-- Catálogo / Acciones -->
             <div class="space-y-3">
                 <h3 class="text-sm font-semibold text-slate-300">Servicios Disponibles</h3>
                 <div class="bg-slate-800/50 border border-slate-800 p-3 rounded-xl flex justify-between items-center">
@@ -78,7 +181,6 @@
                 </div>
             </div>
 
-            <!-- Panel de Administración (Visible solo si eres admin) -->
             <div id="admin-panel" class="hidden border border-amber-500/30 bg-amber-950/10 rounded-2xl p-4 space-y-3">
                 <h3 class="text-sm font-bold text-amber-400 flex items-center gap-2">
                     <span>⚡ Panel de Administración</span>
@@ -94,125 +196,6 @@
         </div>
 
     </div>
-
-    <!-- SCRIPT DE CONFIGURACIÓN Y LÓGICA -->
-    <script>
-        // TUS CREDENCIALES REALES DE FIREBASE
-        const firebaseConfig = {
-            apiKey: "AIzaSyDRLE96tJIJrRSihMy6w0...", 
-            authDomain: "mi-tienda-56ef5.firebaseapp.com",
-            projectId: "mi-tienda-56ef5",
-            storageBucket: "mi-tienda-56ef5.appspot.com",
-            messagingSenderId: "716772431219",
-            appId: "1:716772431219:web:03f3a431..."
-        };
-
-        // Inicializar Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        // Lista de correos administradores (puedes poner el tuyo aquí)
-        const adminEmails = ["Fabian1590medina@gmail.com"];
-
-        // Observador de estado de sesión
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                document.getElementById('auth-section').classList.add('hidden');
-                document.getElementById('dashboard-section').classList.remove('hidden');
-                document.getElementById('user-email-display').innerText = user.email;
-
-                // Verificar si es admin
-                if (adminEmails.includes(user.email)) {
-                    document.getElementById('admin-panel').classList.remove('hidden');
-                }
-
-                loadUserData(user.uid);
-            } else {
-                document.getElementById('auth-section').classList.remove('hidden');
-                document.getElementById('dashboard-section').classList.add('hidden');
-                document.getElementById('admin-panel').classList.add('hidden');
-            }
-        });
-
-        function handleLogin() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            hideError();
-
-            auth.signInWithEmailAndPassword(email, password)
-                .catch(error => showError(error.message));
-        }
-
-        function handleRegister() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            hideError();
-
-            auth.createUserWithEmailAndPassword(email, password)
-                .then(userCredential => {
-                    // Crear documento inicial en Firestore con saldo 0
-                    db.collection('users').doc(userCredential.user.uid).set({
-                        email: email,
-                        balance: 0
-                    });
-                })
-                .catch(error => showError(error.message));
-        }
-
-        function handleLogout() {
-            auth.signOut();
-        }
-
-        function loadUserData(uid) {
-            db.collection('users').doc(uid).onSnapshot(doc => {
-                if (doc.exists) {
-                    const data = doc.data();
-                    document.getElementById('user-balance').innerText = `$${(data.balance || 0).toLocaleString()}`;
-                }
-            });
-        }
-
-        function adminAddBalance() {
-            const targetEmail = document.getElementById('admin-target-email').value;
-            const amount = parseFloat(document.getElementById('admin-amount').value);
-
-            if (!targetEmail || isNaN(amount)) {
-                alert("Completa los campos correctamente");
-                return;
-            }
-
-            db.collection('users').where("email", "==", targetEmail).get()
-                .then(querySnapshot => {
-                    if (querySnapshot.empty) {
-                        alert("Usuario no encontrado");
-                        return;
-                    }
-                    querySnapshot.forEach(userDoc => {
-                        const currentBalance = userDoc.data().balance || 0;
-                        db.collection('users').doc(userDoc.id).update({
-                            balance: currentBalance + amount
-                        }).then(() => {
-                            alert("¡Saldo recargado con éxito!");
-                            document.getElementById('admin-target-email').value = '';
-                            document.getElementById('admin-amount').value = '';
-                        });
-                    });
-                })
-                .catch(error => alert("Error: " + error.message));
-        }
-
-        function showError(message) {
-            const errorDiv = document.getElementById('auth-error');
-            errorDiv.innerText = "Error: " + message;
-            errorDiv.classList.remove('hidden');
-        }
-
-        function hideError() {
-            const errorDiv = document.getElementById('auth-error');
-            errorDiv.classList.add('hidden');
-        }
-    </script>
 </body>
 </html>
 
