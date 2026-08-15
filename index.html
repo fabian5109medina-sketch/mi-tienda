@@ -3,248 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZRRO DIGITAL</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Mi Tienda - Catálogo de Servicios</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f9; color: #333; margin: 0; padding: 20px; }
+        h1, h2 { color: #d9534f; }
+        .service-category { background: #fff; padding: 15px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        ul { list-style-type: none; padding: 0; }
+        li { padding: 8px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
+        .price { font-weight: bold; color: #28a745; }
+    </style>
 </head>
-<body class="bg-slate-950 text-white min-h-screen flex items-center justify-center p-4">
+<body>
+    <h1>Mi Tienda - Catálogo Completo</h1>
 
-    <div id="app" class="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl">
-        
-        <!-- VISTA DE LOGIN Y REGISTRO -->
-        <div id="auth-section">
-            <div class="text-center mb-6">
-                <div class="w-16 h-16 bg-gradient-to-tr from-cyan-500 to-blue-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-cyan-500/30 mb-3">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                    </svg>
-                </div>
-                <h1 class="text-2xl font-bold tracking-wide text-cyan-400">ZRRO DIGITAL</h1>
-                <p class="text-slate-400 text-sm mt-1">Inicia sesión para acceder a tu monedero y catálogo completo</p>
-            </div>
-
-            <div class="space-y-4">
-                <input type="email" id="email" placeholder="Correo electrónico" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition">
-                <input type="password" id="password" placeholder="Contraseña" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition">
-                
-                <button onclick="handleLogin()" class="w-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-semibold py-3 rounded-xl transition shadow-lg shadow-cyan-400/20">
-                    Iniciar Sesión
-                </button>
-                
-                <button onclick="handleRegister()" class="w-full bg-transparent hover:bg-slate-800 border border-cyan-500/50 text-cyan-400 font-semibold py-3 rounded-xl transition">
-                    Crear Cuenta Nueva
-                </button>
-
-                <div id="auth-error" class="hidden bg-red-950/50 border border-red-800 text-red-300 text-xs p-3 rounded-xl text-center"></div>
-            </div>
-        </div>
-
-        <!-- VISTA DEL PANEL Y CATÁLOGO -->
-        <div id="dashboard-section" class="hidden space-y-6">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-4">
-                <div>
-                    <h2 class="text-lg font-bold text-cyan-400">ZRRO DIGITAL</h2>
-                    <p id="user-email-display" class="text-xs text-slate-400"></p>
-                </div>
-                <button onclick="handleLogout()" class="text-xs bg-slate-800 hover:bg-red-900/40 text-red-400 px-3 py-1.5 rounded-lg border border-red-900/50 transition">
-                    Cerrar Sesión
-                </button>
-            </div>
-
-            <!-- MONEDERO / SALDO -->
-            <div class="bg-gradient-to-r from-slate-800 to-slate-900 border border-slate-700/50 rounded-2xl p-4 text-center">
-                <p class="text-xs text-slate-400 uppercase tracking-wider font-medium">Saldo Disponible</p>
-                <h3 id="user-balance" class="text-3xl font-extrabold text-white mt-1">$0.00</h3>
-            </div>
-
-            <!-- LISTADO DE LOS 72 SERVICIOS -->
-            <div class="space-y-3">
-                <h3 class="text-sm font-semibold text-slate-300">Catálogo de Servicios Digitales (72 ítems)</h3>
-                <div id="services-container" class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 space-y-2 max-h-64 overflow-y-auto pr-1">
-                    <!-- Los 72 servicios se inyectan dinámicamente -->
-                </div>
-            </div>
-
-            <!-- PANEL DE ADMINISTRACIÓN -->
-            <div id="admin-panel" class="hidden border border-amber-500/30 bg-amber-950/10 rounded-2xl p-4 space-y-3">
-                <h3 class="text-sm font-bold text-amber-400 flex items-center gap-2">
-                    <span>⚡ Panel de Administración</span>
-                </h3>
-                <div class="space-y-2">
-                    <input type="email" id="admin-target-email" placeholder="Correo del usuario a recargar" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
-                    <input type="number" id="admin-amount" placeholder="Monto a sumar en el saldo" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
-                    <button onclick="adminAddBalance()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold py-2 rounded-lg transition">
-                        Recargar Saldo a Usuario
-                    </button>
-                </div>
-            </div>
-        </div>
-
+    <div class="service-category">
+        <h2>📺 Netflix</h2>
+        <ul>
+            <li><span>Netflix Pantalla Normal</span> <span class="price">$14.000</span></li>
+            <li><span>Netflix Pantalla Standard</span> <span class="price">$12.000</span></li>
+            <li><span>Netflix Pantalla Genérica</span> <span class="price">$12.000</span></li>
+            <li><span>Netflix Pantalla Internacional Genérica</span> <span class="price">$14.000</span></li>
+            <li><span>Netflix Cuenta Completa Normal</span> <span class="price">$52.000</span></li>
+            <li><span>Netflix Cuenta Completa Standard</span> <span class="price">$45.000</span></li>
+            <li><span>Netflix Cuenta Completa Genérica</span> <span class="price">$45.000</span></li>
+        </ul>
     </div>
 
-    <!-- LÓGICA DE FIREBASE MODULAR Y APLICACIÓN -->
+    <div class="service-category">
+        <h2>📺 Pantallas Streaming (1 Mes)</h2>
+        <ul>
+            <li><span>Disney+ Premium Pantalla</span> <span class="price">$9.000</span></li>
+            <li><span>Disney+ Standard Pantalla</span> <span class="price">$6.000</span></li>
+            <li><span>Max (HBO) Pantalla</span> <span class="price">$8.000</span></li>
+            <li><span>Max (HBO) Platino Pantalla</span> <span class="price">$8.000</span></li>
+            <li><span>Amazon Prime Pantalla</span> <span class="price">$5.000</span></li>
+            <li><span>Amazon Prime Original Pantalla</span> <span class="price">$8.000</span></li>
+            <li><span>Crunchyroll Pantalla</span> <span class="price">$5.000</span></li>
+            <li><span>Crunchyroll Pantalla Original</span> <span class="price">$8.500</span></li>
+            <li><span>Paramount+ Pantalla</span> <span class="price">$6.000</span></li>
+            <li><span>Paramount+ Pantalla Original</span> <span class="price">$10.000</span></li>
+            <li><span>ViX+</span> <span class="price">$5.000</span></li>
+            <li><span>Universal+ Pantalla</span> <span class="price">$7.000</span></li>
+            <li><span>Plex Pantalla Original</span> <span class="price">$6.000</span></li>
+            <li><span>MUBI Pantalla</span> <span class="price">$6.000</span></li>
+            <li><span>Viki Rakuten Pantalla (Dramas)</span> <span class="price">$6.000</span></li>
+            <li><span>DirecTV GO Plan Oro (1 Disp.)</span> <span class="price">$14.000</span></li>
+        </ul>
+    </div>
+
+    <div class="service-category">
+        <h2>👑 Cuentas Completas (1 Mes)</h2>
+        <ul>
+            <li><span>Disney+ Premium Completa</span> <span class="price">$38.000</span></li>
+            <li><span>Disney+ Standard Completa</span> <span class="price">$18.000</span></li>
+            <li><span>Max (HBO) Completa</span> <span class="price">$18.000</span></li>
+            <li><span>Max (HBO) Platino Completa</span> <span class="price">$16.000</span></li>
+            <li><span>Amazon Prime Completa</span> <span class="price">$10.000</span></li>
+            <li><span>Amazon Prime Original Completa</span> <span class="price">$20.000</span></li>
+            <li><span>Crunchyroll Completa</span> <span class="price">$14.000</span></li>
+            <li><span>Paramount+ Completa</span> <span class="price">$18.000</span></li>
+            <li><span>Universal+ Completa</span> <span class="price">$16.000</span></li>
+            <li><span>ViX+ Completa</span> <span class="price">$8.000</span></li>
+            <li><span>Plex Completa</span> <span class="price">$13.000</span></li>
+            <li><span>MUBI Completa</span> <span class="price">$10.000</span></li>
+            <li><span>Viki Rakuten Completa</span> <span class="price">$13.000</span></li>
+            <li><span>Hot Go Premium Completa (+18)</span> <span class="price">$18.000</span></li>
+            <li><span>DirecTV GO Plan Oro Completa (2 Disp.)</span> <span class="price">$22.000</span></li>
+        </ul>
+    </div>
+
+    <div class="service-category">
+        <h2>📡 Televisión en Vivo & IPTV</h2>
+        <ul>
+            <li><span>IPTV Pantalla Original</span> <span class="price">$10.000</span></li>
+            <li><span>IPTV Premium Completa (1 Mes - 3 Disp.)</span> <span class="price">$12.000</span></li>
+            <li><span>IPTV Plan 3 Meses Completa</span> <span class="price">$25.000</span></li>
+            <li><span>IPTV Plan 6 Meses Completa</span> <span class="price">$45.000</span></li>
+            <li><span>IPTV Plan 1 Año Completo</span> <span class="price">$80.000</span></li>
+            <li><span>Flujo TV / Magis (3 Meses)</span> <span class="price">$55.000</span></li>
+            <li><span>Flujo TV / Magis (7 Meses)</span> <span class="price">$95.000</span></li>
+            <li><span>Flujo TV / Magis (14 Meses)</span> <span class="price">$170.000</span></li>
+        </ul>
+    </div>
+
+    <div class="service-category">
+        <h2>🎵 Música y Contenido</h2>
+        <ul>
+            <li><span>Spotify Premium Original (1 Mes)</span> <span class="price">$12.000</span></li>
+            <li><span>Spotify Premium Original (2 Meses)</span> <span class="price">$18.000</span></li>
+            <li><span>YouTube Premium / A Dominio (1 Mes)</span> <span class="price">$12.000</span></li>
+            <li><span>Deezer Original (1 Mes)</span> <span class="price">$5.000</span></li>
+            <li><span>Tidal Premium (1 Mes)</span> <span class="price">$6.000</span></li>
+        </ul>
+    </div>
+
+    <div class="service-category">
+        <h2>💻 Herramientas y Productividad</h2>
+        <ul>
+            <li><span>Canva Pro (1 Mes)</span> <span class="price">$6.000</span></li>
+            <li><span>Canva Pro a tu Dominio (1 Mes)</span> <span class="price">$6.000</span></li>
+            <li><span>Canva Pro (1 Año)</span> <span class="price">$25.000</span></li>
+            <li><span>Canva Pro a tu Dominio (1 Año)</span> <span class="price">$22.000</span></li>
+            <li><span>CapCut Pro Individual (1 Mes)</span> <span class="price">$18.000</span></li>
+            <li><span>CapCut Pro Completa 3 Disp. (1 Mes)</span> <span class="price">$32.000</span></li>
+            <li><span>Office 365 Licencia 1 Año (1 PC)</span> <span class="price">$25.000</span></li>
+            <li><span>Office 365 Licencia 1 Año (5 Disp.)</span> <span class="price">$65.000</span></li>
+            <li><span>Duolingo Pro (1 Mes)</span> <span class="price">$5.000</span></li>
+            <li><span>Duolingo Pro Premium (1 Año)</span> <span class="price">$20.000</span></li>
+        </ul>
+    </div>
+
+    <div class="service-category">
+        <h2>🔞 Contenido Adulto (+18)</h2>
+        <ul>
+            <li><span>Hot Go Premium Pantalla</span> <span class="price">$7.000</span></li>
+            <li><span>Pornhub Pantalla (1 Año)</span> <span class="price">$12.000</span></li>
+            <li><span>Pornhub Cuenta Completa (1 Año)</span> <span class="price">$22.000</span></li>
+        </ul>
+    </div>
+
+    <div class="service-category">
+        <h2>💼 Paneles para Distribuidores (IPTV)</h2>
+        <ul>
+            <li><span>Panel IPTV (10 Créditos + Demos)</span> <span class="price">$65.000</span></li>
+            <li><span>Panel IPTV (50 Créditos + Demos)</span> <span class="price">$150.000</span></li>
+            <li><span>Panel IPTV PRO (100 Créditos + Demos)</span> <span class="price">$230.000</span></li>
+        </ul>
+    </div>
+
+    <div class="service-category">
+        <h2>🔥 Combos en Oferta</h2>
+        <ul>
+            <li><span>Combo Netflix + Crunchyroll</span> <span class="price">$15.000</span></li>
+            <li><span>Combo Netflix + Max (HBO)</span> <span class="price">$18.000</span></li>
+            <li><span>Combo Netflix + IPTV Premium</span> <span class="price">$18.000</span></li>
+            <li><span>Combo Netflix + Disney+</span> <span class="price">$20.000</span></li>
+            <li><span>Combo Netflix + Plex Premium</span> <span class="price">$16.000</span></li>
+        </ul>
+    </div>
+
+    <!-- Configuración de Firebase -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+      import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+      import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDRLE96tJIJrRSihMy6w0mgBKI06n1yZag",
-            authDomain: "mi-tienda-56ef5.firebaseapp.com",
-            projectId: "mi-tienda-56ef5",
-            storageBucket: "mi-tienda-56ef5.firebasestorage.app",
-            messagingSenderId: "716772431219",
-            appId: "1:716772431219:web:03f3a431c72c17224b6106",
-            measurementId: "G-2QB62W1LD8"
-        };
+      const firebaseConfig = {
+        apiKey: "AIzaSyDrP9303f...",
+        authDomain: "mi-tienda-56ef5.firebaseapp.com",
+        projectId: "mi-tienda-56ef5",
+        storageBucket: "mi-tienda-56ef5.appspot.com",
+        messagingSenderId: "716772431219",
+        appId: "1:716772431219:web:03f3a431c72c17224b6106"
+      };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        const adminEmails = ["fabian1590medina@gmail.com"];
-
-        // Listado de los 72 servicios digitales
-        const listaServicios = [
-            "Netflix 4 Pantallas", "Netflix 1 Pantalla", "Disney+ Estándar", "Disney+ Premium",
-            "Max (HBO) Platino", "Max Estándar", "Amazon Prime Video", "Paramount+",
-            "Crunchyroll Mega Fan", "YouTube Premium 1 Mes", "Spotify Individual 1 Mes", "Apple Music",
-            "Apple TV+", "IPTV 1 Mes", "IPTV 3 Meses", "IPTV 6 Meses",
-            "IPTV 1 Año", "Plex Pass", "Deezer Premium", "Tidal HiFi",
-            "Vix Premium", "Universal+", "Magis TV 1 Mes", "Magis TV 3 Meses",
-            "Magis TV 6 Meses", "Magis TV 1 Año", "Flix Latino", "Acorn TV",
-            "Curiosity Stream", "MUBI", "WwITV", "Nebula",
-            "Shahid VIP", "Zattoo", "FuboTV", "Directv GO",
-            "Movistar Play", "Claro Video", "Paramount+ Anual", "Crunchyroll Anual",
-            "Canva Pro 1 Mes", "Canva Pro Anual", "CapCut Pro 1 Mes", "CapCut Pro Anual",
-            "ChatGPT Plus 1 Mes", "Claude Pro", "Midjourney 1 Mes", "Gemini Advanced",
-            "Microsoft 365 1 Año", "Office 2021 Pro Plus", "Windows 11 Pro Key", "Antivirus ESET 1 Año",
-            "Antivirus Kaspersky", "NordVPN 1 Mes", "NordVPN 1 Año", "ExpressVPN 1 Mes",
-            "Surfshark VPN", "IP Vanish", "Paramount+ Plus", "Crunchyroll Fan",
-            "Xbox Game Pass Ultimate 1 Mes", "PlayStation Plus Essential 1 Mes", "PlayStation Plus Extra", "Nintendo Switch Online",
-            "Free Fire 100 Diamantes", "Free Fire 310 Diamantes", "Free Fire 520 Diamantes", "Call of Duty Mobile CP",
-            "Robux 400", "Robux 800", "Puntos FIFA / FC 24", "Recarga de Saldo General"
-        ];
-
-        const servicesContainer = document.getElementById('services-container');
-        listaServicios.forEach((nombreServicio, index) => {
-            const item = document.createElement('div');
-            item.className = "bg-slate-800/50 border border-slate-800/80 p-2.5 rounded-lg flex justify-between items-center";
-            item.innerHTML = `
-                <div>
-                    <p class="text-xs font-medium text-slate-200">${index + 1}. ${nombreServicio}</p>
-                    <p class="text-[10px] text-slate-400">Activación y entrega inmediata</p>
-                </div>
-                <button onclick="comprarServicio('${nombreServicio}')" class="text-[10px] bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 px-2.5 py-1 rounded border border-cyan-500/30 font-medium transition">Adquirir</button>
-            `;
-            servicesContainer.appendChild(item);
-        });
-
-        window.comprarServicio = function(servicio) {
-            alert("Has seleccionado: " + servicio + ". Tu saldo se validará para completar la entrega automática.");
-        };
-
-        window.handleLogin = async function() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            hideError();
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-            } catch (error) {
-                showError(error.message);
-            }
-        };
-
-        window.handleRegister = async function() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            hideError();
-            try {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                await setDoc(doc(db, 'users', userCredential.user.uid), {
-                    email: email,
-                    balance: 0
-                });
-            } catch (error) {
-                showError(error.message);
-            }
-        };
-
-        window.handleLogout = async function() {
-            await signOut(auth);
-        };
-
-        window.adminAddBalance = async function() {
-            const targetEmail = document.getElementById('admin-target-email').value;
-            const amount = parseFloat(document.getElementById('admin-amount').value);
-
-            if (!targetEmail || isNaN(amount)) {
-                alert("Por favor completa los campos correctamente.");
-                return;
-            }
-
-            try {
-                const q = query(collection(db, 'users'), where("email", "==", targetEmail));
-                const snapshot = await getDocs(q);
-                
-                if (snapshot.empty) {
-                    alert("No se encontró ningún usuario registrado con ese correo.");
-                    return;
-                }
-                
-                snapshot.forEach(async (userDoc) => {
-                    const currentBalance = userDoc.data().balance || 0;
-                    await updateDoc(doc(db, 'users', userDoc.id), {
-                        balance: currentBalance + amount
-                    });
-                    alert("¡Saldo recargado con éxito al usuario!");
-                    document.getElementById('admin-target-email').value = '';
-                    document.getElementById('admin-amount').value = '';
-                });
-            } catch (error) {
-                alert("Error al procesar la recarga: " + error.message);
-            }
-        };
-
-        onAuthStateChanged(auth, async (user) => {
-            const authSection = document.getElementById('auth-section');
-            const dashboardSection = document.getElementById('dashboard-section');
-            const adminPanel = document.getElementById('admin-panel');
-
-            if (user) {
-                authSection.classList.add('hidden');
-                dashboardSection.classList.remove('hidden');
-                document.getElementById('user-email-display').innerText = user.email;
-
-                if (adminEmails.includes(user.email)) {
-                    adminPanel.classList.remove('hidden');
-                } else {
-                    adminPanel.classList.add('hidden');
-                }
-
-                const userDocRef = doc(db, 'users', user.uid);
-                const docSnap = await getDoc(userDocRef);
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    document.getElementById('user-balance').innerText = `$${(data.balance || 0).toLocaleString()}`;
-                }
-            } else {
-                authSection.classList.remove('hidden');
-                dashboardSection.classList.add('hidden');
-                adminPanel.classList.add('hidden');
-            }
-        });
-
-        function showError(message) {
-            const errorDiv = document.getElementById('auth-error');
-            errorDiv.innerText = "Error: " + message;
-            errorDiv.classList.remove('hidden');
-        }
-
-        function hideError() {
-            const errorDiv = document.getElementById('auth-error');
-            errorDiv.classList.add('hidden');
-        }
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
     </script>
 </body>
 </html>
