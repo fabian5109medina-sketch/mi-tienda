@@ -3,293 +3,416 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ZRRO Digital Media | Streaming & Combos</title>
+  <title>ZRRO Digital Media | Panel Automatizado con Admin</title>
   <style>
     :root { 
       --primary: #38bdf8; 
-      --bg: #0d1117; 
-      --card: #161b22; 
-      --border: #30363d; 
-      --text: #f0f6fc; 
-      --accent: #2ea043; 
+      --bg: #0b0f19; 
+      --card: #131b2e; 
+      --border: #1e293b; 
+      --text: #f8fafc; 
+      --accent: #22c55e; 
+      --danger: #ef4444;
+      --warning: #f59e0b;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding-bottom: 160px; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 120px; }
 
-    /* Navegación Estilo Panel */
+    /* Barra Superior */
     nav { 
-      background: #161b22; 
+      background: rgba(19, 27, 46, 0.95); 
+      backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border); 
-      padding: 12px 20px; 
+      padding: 10px 20px; 
       display: flex; 
       justify-content: space-between; 
       align-items: center; 
       position: sticky; top: 0; z-index: 90;
     }
-    .brand { font-weight: bold; color: var(--primary); font-size: 18px; letter-spacing: 1px; }
+    .brand-container { display: flex; align-items: center; gap: 10px; text-decoration: none; cursor: pointer; }
+    .brand-logo { 
+      width: 40px; height: 40px; background: linear-gradient(135deg, #38bdf8, #0284c7); 
+      border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+      font-size: 18px; box-shadow: 0 0 12px rgba(56, 189, 248, 0.4); border: 2px solid rgba(255,255,255,0.1);
+    }
+    .brand-text h2 { font-size: 14px; color: #fff; font-weight: 800; line-height: 1.1; }
+    .brand-text span { font-size: 10px; color: var(--primary); font-weight: 600; }
 
-    /* Menú de Botones Superior */
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .wallet-pill {
+      background: #1e293b; border: 1px solid var(--border); padding: 6px 12px;
+      border-radius: 20px; display: flex; align-items: center; gap: 6px; font-size: 12px; cursor: pointer;
+    }
+    .wallet-pill span { color: var(--accent); font-weight: 800; }
+
+    .admin-access-btn {
+      background: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger); color: var(--danger);
+      padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer;
+    }
+
+    /* Menú de Pestañas */
     .nav-links { 
-      display: flex; gap: 8px; overflow-x: auto; padding: 10px 20px; 
-      background: #010409; border-bottom: 1px solid var(--border); 
-      -webkit-overflow-scrolling: touch;
+      display: flex; gap: 8px; overflow-x: auto; padding: 12px 20px; 
+      background: #070a12; border-bottom: 1px solid var(--border); 
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
     }
+    .nav-links::-webkit-scrollbar { display: none; }
     .nav-btn { 
-      background: #21262d; color: var(--text); border: 1px solid var(--border); 
-      padding: 8px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; 
-      cursor: pointer; white-space: nowrap; text-decoration: none; display: flex; align-items: center; gap: 6px;
+      background: #131b2e; color: #94a3b8; border: 1px solid var(--border); 
+      padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; 
+      cursor: pointer; white-space: nowrap; transition: all 0.2s ease;
     }
-    .nav-btn:hover, .nav-btn.active { background: var(--primary); color: #0d1117; border-color: var(--primary); }
+    .nav-btn:hover, .nav-btn.active { background: var(--primary); color: #0b0f19; border-color: var(--primary); }
 
-    .main-container { padding: 20px; max-width: 550px; margin: 0 auto; }
+    .main-container { padding: 20px; max-width: 650px; margin: 0 auto; }
 
-    header { text-align: center; margin-bottom: 20px; }
-    h1 { color: var(--primary); font-size: 22px; text-transform: uppercase; letter-spacing: 1.5px; }
-    .subtitle { font-size: 12px; color: #8b949e; margin-top: 4px; }
+    /* Vistas */
+    .view-section { display: none; }
+    .view-section.active-view { display: block; }
+
+    /* Banner */
+    .hero-banner { 
+      background: linear-gradient(135deg, #131b2e 0%, #0f172a 100%);
+      border: 1px solid var(--border); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px;
+    }
+    .hero-banner h1 { color: #fff; font-size: 20px; font-weight: 800; margin-bottom: 5px; }
+    .hero-banner p { font-size: 12px; color: #94a3b8; }
 
     /* Buscador */
     .search-container { margin-bottom: 20px; display: flex; gap: 8px; }
-    #searchInput { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: #21262d; color: white; outline: none; }
-    .search-btn { padding: 10px 16px; border-radius: 8px; border: none; background: var(--primary); color: #0d1117; font-weight: bold; cursor: pointer; }
+    #searchInput { flex: 1; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border); background: #131b2e; color: white; outline: none; font-size: 13px; }
+    #searchInput:focus { border-color: var(--primary); }
 
     /* Grid de Productos */
-    .grid { display: grid; gap: 20px; }
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: transform 0.2s; }
-    .card:hover { transform: translateY(-3px); }
+    .grid { display: grid; gap: 12px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .card-body { padding: 14px; }
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; gap: 10px; }
+    .info h3 { font-size: 14px; color: #fff; font-weight: 700; }
+    .price-badge { font-weight: 800; color: var(--primary); font-size: 14px; background: rgba(56, 189, 248, 0.1); padding: 4px 8px; border-radius: 6px; }
     
-    /* Logos y Banners */
-    .card-banner { 
-      width: 100%; height: 130px; background: #090d11; 
-      display: flex; align-items: center; justify-content: center; 
-      border-bottom: 1px solid var(--border); position: relative;
-    }
-    .card-banner img { max-width: 70%; max-height: 80px; object-fit: contain; }
-    .badge-discount { 
-      position: absolute; top: 10px; right: 10px; background: #ef4444; 
-      color: white; font-size: 11px; font-weight: bold; padding: 3px 7px; border-radius: 4px; 
-    }
+    .stock-info { display: flex; justify-content: space-between; align-items: center; font-size: 11px; margin-bottom: 10px; color: #94a3b8; }
+    .stock-badge { padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+    .in-stock { background: rgba(34, 197, 94, 0.15); color: var(--accent); }
+    .low-stock { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+    
+    .service-desc { font-size: 11px; color: #94a3b8; margin-bottom: 12px; line-height: 1.3; }
+    .btn-buy { background: var(--accent); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: 700; width: 100%; font-size: 12px; }
+    .btn-buy:active { opacity: 0.8; }
 
-    .card-body { padding: 15px; }
-    .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .info h3 { font-size: 17px; color: #fff; }
-    .price-badge { font-weight: bold; color: var(--primary); font-size: 15px; background: #21262d; padding: 4px 10px; border-radius: 6px; }
-    .service-desc { font-size: 12px; color: #8b949e; margin-bottom: 14px; line-height: 1.4; }
-    .btn-add { background: var(--primary); color: #0d1117; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
+    /* Pedidos / Credenciales */
+    .order-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 10px; }
+    .order-header { display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; margin-bottom: 6px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+    .credentials-box { background: #0b0f19; border: 1px dashed var(--primary); padding: 10px; border-radius: 8px; margin-top: 8px; font-size: 12px; }
+    .credentials-box p { margin-bottom: 4px; color: #fff; }
 
-    /* FAQ */
-    .faq-section { margin-top: 35px; }
-    .faq-title { font-size: 14px; color: var(--primary); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
-    .faq-item { background: #161b22; padding: 12px; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border); font-size: 13px; }
-    .faq-q { color: #fff; font-weight: bold; margin-bottom: 4px; }
-    .faq-a { color: #8b949e; font-size: 12px; }
+    /* Recarga WhatsApp */
+    .recharge-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
+    .recharge-box p { font-size: 12px; color: #94a3b8; margin-bottom: 15px; }
+    .btn-whatsapp-recharge { display: inline-block; background: #25d366; color: white; text-decoration: none; padding: 12px 20px; border-radius: 10px; font-weight: bold; font-size: 13px; margin-top: 10px; width: 100%; }
 
-    /* Carrito Flotante */
-    #cart-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #161b22; padding: 15px; border-top: 2px solid var(--primary); display: none; z-index: 100; }
-    .clear-btn { background: #ef4444; color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; }
-    .checkout-btn { margin-top: 10px; padding: 12px; width: 100%; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; }
+    /* Panel de Admin Estilos */
+    .admin-panel-box { background: var(--card); border: 1px solid var(--danger); border-radius: 12px; padding: 16px; margin-bottom: 15px; }
+    .admin-input { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid var(--border); background: #0b0f19; color: white; font-size: 13px; }
+    .btn-admin-action { background: var(--danger); color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; width: 100%; cursor: pointer; font-size: 13px; }
 
-    /* Botón Flotante Soporte */
-    .wa-float {
-      position: fixed; bottom: 95px; right: 20px; background: #25d366; color: white;
-      width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center;
-      justify-content: center; font-size: 24px; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 99;
-    }
+    /* Notificación flotante / Toast */
+    #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; padding: 10px 20px; border-radius: 20px; border: 1px solid var(--primary); font-size: 13px; display: none; z-index: 1000; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
   </style>
 </head>
 <body>
 
   <!-- Barra Superior -->
   <nav>
-    <div class="brand">ZRRO DIGITAL MEDIA</div>
+    <div class="brand-container" onclick="switchView('catalog')">
+      <div class="brand-logo">⚡</div>
+      <div class="brand-text">
+        <h2>ZRRO DIGITAL</h2>
+        <span>Panel Automatizado</span>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="wallet-pill" onclick="switchView('recharge')">
+        💰 Saldo: <span id="userWallet">$15.000</span>
+      </div>
+      <button class="admin-access-btn" onclick="openAdminPanel()">⚙️ Admin</button>
+    </div>
   </nav>
 
-  <!-- Botones de Navegación / Secciones -->
+  <!-- Pestañas de Navegación -->
   <div class="nav-links">
-    <button class="nav-btn active" onclick="filterCategory('all', this)">🛍️ Tienda</button>
-    <button class="nav-btn" onclick="filterCategory('combos', this)">⭐ Combos Premium</button>
-    <button class="nav-btn" onclick="filterCategory('video', this)">🎬 Cine & TV</button>
-    <button class="nav-btn" onclick="filterCategory('music', this)">🎵 Música</button>
-    <a href="https://wa.me/573122521685?text=Hola,%20requiero%20soporte" class="nav-btn" target="_blank">💬 Soporte</a>
+    <button class="nav-btn active" onclick="switchView('catalog', this)">🛍️ Catálogo</button>
+    <button class="nav-btn" onclick="switchView('orders', this)">📦 Mis Pedidos (<span id="orderCount">0</span>)</button>
+    <button class="nav-btn" onclick="switchView('recharge', this)">💬 Recargar por WhatsApp</button>
+    <button class="nav-btn" id="tabAdminBtn" style="display:none; border-color:var(--danger); color:var(--danger);" onclick="switchView('admin', this)">⚙️ Panel Admin</button>
   </div>
 
   <div class="main-container">
 
-    <header>
-      <h1>Catálogo Oficial</h1>
-      <p class="subtitle">⚡ Entrega Inmediata • 🛡️ Garantía Total de Servicio</p>
-    </header>
+    <!-- ================= VISTA 1: CATALOGO ================= -->
+    <div id="view-catalog" class="view-section active-view">
+      <div class="hero-banner">
+        <h1>Catálogo y Entrega Instantánea</h1>
+        <p>Elige tu servicio. El saldo se descuenta de tu monedero y tus credenciales se generan al instante.</p>
+      </div>
 
-    <!-- Buscador -->
-    <div class="search-container">
-      <input type="text" id="searchInput" placeholder="🔍 Buscar servicio (ej: Prime, Netflix)..." onkeyup="searchServices()">
-      <button class="search-btn" onclick="searchServices()">Buscar</button>
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="🔍 Buscar servicio (ej: Netflix, IPTV)..." onkeyup="searchServices()">
+      </div>
+
+      <div class="grid" id="serviceGrid">
+        <div class="card" data-name="netflix pantalla normal">
+          <div class="card-body">
+            <div class="card-top">
+              <div class="info"><h3>Netflix Pantalla Normal</h3></div>
+              <div class="price-badge">$14.000</div>
+            </div>
+            <div class="stock-info">
+              <span>Disponibilidad:</span>
+              <span class="stock-badge in-stock">🟢 Stock Disponible (8)</span>
+            </div>
+            <p class="service-desc">1 Pantalla privada Ultra HD con PIN de seguridad.</p>
+            <button class="btn-buy" onclick="buyProduct('Netflix Pantalla Normal', 14000, 'Correo: netflix_auto_01@zrro.com | PIN: 4821')">Comprar al Instante</button>
+          </div>
+        </div>
+
+        <div class="card" data-name="disney+ premium pantalla">
+          <div class="card-body">
+            <div class="card-top">
+              <div class="info"><h3>Disney+ Premium Pantalla</h3></div>
+              <div class="price-badge">$9.000</div>
+            </div>
+            <div class="stock-info">
+              <span>Disponibilidad:</span>
+              <span class="stock-badge in-stock">🟢 Stock Disponible (14)</span>
+            </div>
+            <p class="service-desc">4K Ultra HD, ESPN en vivo y contenido Star.</p>
+            <button class="btn-buy" onclick="buyProduct('Disney+ Premium Pantalla', 9000, 'Correo: disney_auto_05@zrro.com | Clave: st9921')">Comprar al Instante</button>
+          </div>
+        </div>
+
+        <div class="card" data-name="max hbo pantalla">
+          <div class="card-body">
+            <div class="card-top">
+              <div class="info"><h3>Max (HBO) Pantalla</h3></div>
+              <div class="price-badge">$8.000</div>
+            </div>
+            <div class="stock-info">
+              <span>Disponibilidad:</span>
+              <span class="stock-badge low-stock">⚠️ Últimas 2 unidades</span>
+            </div>
+            <p class="service-desc">Películas de Warner, series de HBO y deportes.</p>
+            <button class="btn-buy" onclick="buyProduct('Max (HBO) Pantalla', 8000, 'Correo: max_user_88@zrro.com | Clave: hbo4321')">Comprar al Instante</button>
+          </div>
+        </div>
+
+        <div class="card" data-name="iptv premium 1 mes">
+          <div class="card-body">
+            <div class="card-top">
+              <div class="info"><h3>IPTV Premium 1 Mes</h3></div>
+              <div class="price-badge">$12.000</div>
+            </div>
+            <div class="stock-info">
+              <span>Disponibilidad:</span>
+              <span class="stock-badge in-stock">🟢 Ilimitado (Automático)</span>
+            </div>
+            <p class="service-desc">Miles de canales en vivo y películas en 3 dispositivos.</p>
+            <button class="btn-buy" onclick="buyProduct('IPTV Premium 1 Mes', 12000, 'Usuario: zrro_iptv_99 | Clave: 7788 | M3U: http://linea.tv/get')">Comprar al Instante</button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Catálogo de Productos -->
-    <div class="grid" id="serviceGrid">
-
-      <!-- Prime Video -->
-      <div class="card" data-category="video">
-        <div class="card-banner">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Amazon_Prime_Video_logo.svg" alt="Amazon Prime">
-        </div>
-        <div class="card-body">
-          <div class="card-top">
-            <div class="info"><h3>Amazon Prime</h3></div>
-            <div class="price-badge">$10.000</div>
-          </div>
-          <p class="service-desc">Perfil privado en Ultra HD. Incluye películas, series y envíos.</p>
-          <button class="btn-add" onclick="updateCart('Amazon Prime', 10000)">+ Agregar al Carrito</button>
-        </div>
+    <!-- ================= VISTA 2: MIS PEDIDOS ================= -->
+    <div id="view-orders" class="view-section">
+      <div class="hero-banner">
+        <h1>Tus Credenciales y Compras</h1>
+        <p>Aquí se almacenan los datos de acceso de los servicios que vas adquiriendo.</p>
       </div>
-
-      <!-- Netflix -->
-      <div class="card" data-category="video">
-        <div class="card-banner">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix">
-        </div>
-        <div class="card-body">
-          <div class="card-top">
-            <div class="info"><h3>Netflix 4K</h3></div>
-            <div class="price-badge">$15.000</div>
-          </div>
-          <p class="service-desc">Perfil privado exclusivo en Ultra HD (1 pantalla con PIN).</p>
-          <button class="btn-add" onclick="updateCart('Netflix 4K', 15000)">+ Agregar al Carrito</button>
-        </div>
+      <div id="ordersContainer">
+        <p style="text-align:center; color:#94a3b8; font-size:12px; margin-top:30px;">No tienes compras recientes registradas.</p>
       </div>
-
-      <!-- Disney+ -->
-      <div class="card" data-category="video">
-        <div class="card-banner">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg" alt="Disney+">
-        </div>
-        <div class="card-body">
-          <div class="card-top">
-            <div class="info"><h3>Disney+ Premium</h3></div>
-            <div class="price-badge">$12.000</div>
-          </div>
-          <p class="service-desc">Marvel, Star Wars, Pixar y deportes de ESPN en HD/4K.</p>
-          <button class="btn-add" onclick="updateCart('Disney+ Premium', 12000)">+ Agregar al Carrito</button>
-        </div>
-      </div>
-
-      <!-- Combo Especial -->
-      <div class="card" data-category="combos">
-        <div class="card-banner">
-          <span class="badge-discount">AHORRA $3.000</span>
-          <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Combo Cine" style="max-height: 50px;">
-        </div>
-        <div class="card-body">
-          <div class="card-top">
-            <div class="info"><h3>Combo Cine Pro</h3></div>
-            <div class="price-badge">$24.000</div>
-          </div>
-          <p class="service-desc">Incluye <b>Netflix 4K + Disney+ Premium</b> en oferta especial.</p>
-          <button class="btn-add" onclick="updateCart('Combo Cine Pro', 24000)">+ Agregar Combo</button>
-        </div>
-      </div>
-
-      <!-- Spotify -->
-      <div class="card" data-category="music">
-        <div class="card-banner">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg" alt="Spotify" style="max-height: 70px;">
-        </div>
-        <div class="card-body">
-          <div class="card-top">
-            <div class="info"><h3>Spotify Premium</h3></div>
-            <div class="price-badge">$10.000</div>
-          </div>
-          <p class="service-desc">Escucha música sin anuncios, descargas y modo offline.</p>
-          <button class="btn-add" onclick="updateCart('Spotify Premium', 10000)">+ Agregar al Carrito</button>
-        </div>
-      </div>
-
     </div>
 
-    <!-- Preguntas Frecuentes -->
-    <div class="faq-section">
-      <div class="faq-title">Preguntas Frecuentes</div>
-      <div class="faq-item">
-        <div class="faq-q">¿Cómo se realiza la entrega?</div>
-        <div class="faq-a">Una vez realizado el pago, te enviamos el correo, clave y número de perfil por WhatsApp al instante.</div>
+    <!-- ================= VISTA 3: RECARGAR POR WHATSAPP ================= -->
+    <div id="view-recharge" class="view-section">
+      <div class="hero-banner">
+        <h1>Recargas de Saldo por WhatsApp</h1>
+        <p>Gestiona tus fondos de forma directa y rápida con el administrador.</p>
       </div>
-      <div class="faq-item">
-        <div class="faq-q">¿Qué métodos de pago reciben?</div>
-        <div class="faq-a">Aceptamos Nequi, Bancolombia, Daviplata y transferencias PSE.</div>
+      
+      <div class="recharge-box">
+        <h3 style="color:#fff; font-size:14px; margin-bottom:8px;">¿Cómo recargar tu monedero?</h3>
+        <p>1. Realiza tu pago por Nequi o Daviplata.<br>2. Haz clic en el botón de abajo para enviar el comprobante directamente a WhatsApp.</p>
+        
+        <div style="background:#0b0f19; padding:12px; border-radius:8px; border:1px solid var(--border); margin-bottom:15px; text-align:left;">
+          <p style="color:#fff; font-size:12px; margin-bottom:4px;"><strong>Nequi / Daviplata:</strong> 312 252 1685</p>
+          <p style="color:#fff; font-size:12px;"><strong>Titular:</strong> Soporte ZRRO Digital</p>
+        </div>
+
+        <a href="https://wa.me/573122521685?text=Hola,%20deseo%20recargar%20saldo%20a%20mi%20monedero%20digital.%20Adjunto%20mi%20comprobante." class="btn-whatsapp-recharge" target="_blank">📲 Solicitar Recarga por WhatsApp</a>
+      </div>
+    </div>
+
+    <!-- ================= VISTA 4: PANEL DE ADMINISTRADOR ================= -->
+    <div id="view-admin" class="view-section">
+      <div class="hero-banner" style="border-color: var(--danger);">
+        <h1>Panel de Control de Administrador</h1>
+        <p>Acredita saldo a los monederos de tus clientes de forma directa.</p>
+      </div>
+
+      <div class="admin-panel-box">
+        <h3 style="color:#fff; font-size:14px; margin-bottom:10px;">⚡ Recargar Saldo a Usuario</h3>
+        <input type="text" id="adminUserEmail" class="admin-input" placeholder="Correo del cliente (ej: cliente@correo.com)">
+        <input type="number" id="adminAmount" class="admin-input" placeholder="Monto a recargar (ej: 15000)">
+        <button class="btn-admin-action" onclick="adminRechargeBalance()">Acreditar Saldo Inmediato</button>
+      </div>
+
+      <div style="background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px;">
+        <h3 style="color:#fff; font-size:13px; margin-bottom:8px;">📊 Estado Actual del Sistema (Simulado)</h3>
+        <p style="font-size:12px; color:#94a3b8; margin-bottom:4px;">Usuario Activo Actual: <strong style="color:var(--primary)">tucuenta@zrro.com</strong></p>
+        <p style="font-size:12px; color:#94a3b8;">Saldo en Monedero: <strong style="color:var(--accent)" id="adminViewBalance">$15.000</strong></p>
       </div>
     </div>
 
   </div>
 
-  <!-- Botón Flotante Soporte -->
-  <a href="https://wa.me/573122521685?text=Hola,%20tengo%20una%20consulta%20sobre%20un%20servicio" class="wa-float" target="_blank" title="Soporte Directo">💬</a>
-
-  <!-- Carrito Flotante -->
-  <div id="cart-bar">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <span id="cart-text" style="color:white; font-size:14px;">Servicios: 0</span>
-      <button class="clear-btn" onclick="clearCart()">Vaciar</button>
-    </div>
-    <strong id="cart-total" style="display:block; margin-top:4px; font-size:18px; color:var(--primary);">$0</strong>
-    <button class="checkout-btn" onclick="checkout()">PEDIR POR WHATSAPP 🚀</button>
-  </div>
+  <div id="toast">Notificación</div>
 
   <script>
+    // Inicializar datos en localStorage si no existen
+    if (!localStorage.getItem('zrro_balance')) {
+      localStorage.setItem('zrro_balance', '15000');
+    }
+    if (!localStorage.getItem('zrro_orders')) {
+      localStorage.setItem('zrro_orders', JSON.stringify([]));
+    }
+
+    let userBalance = parseInt(localStorage.getItem('zrro_balance'));
+    let myOrders = JSON.parse(localStorage.getItem('zrro_orders'));
+
+    // Actualizar UI inicial
+    document.getElementById('userWallet').innerText = `$${userBalance.toLocaleString('es-CO')}`;
+    document.getElementById('adminViewBalance').innerText = `$${userBalance.toLocaleString('es-CO')}`;
+    renderOrders();
+
+    function switchView(viewName, btnElement) {
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
+      document.getElementById('view-' + viewName).classList.add('active-view');
+
+      if(btnElement) {
+        document.querySelectorAll('.nav-links .nav-btn').forEach(el => el.classList.remove('active'));
+        btnElement.classList.add('active');
+      }
+    }
+
+    function showToast(msg) {
+      let t = document.getElementById('toast');
+      t.innerText = msg;
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 3000);
+    }
+
     function searchServices() {
-      let input = document.getElementById('searchInput').value.toLowerCase();
-      let cards = document.getElementsByClassName('card');
-      for (let i = 0; i < cards.length; i++) {
-        let title = cards[i].getElementsByTagName("h3")[0].innerText.toLowerCase();
-        cards[i].style.display = title.indexOf(input) > -1 ? "" : "none";
+      let query = document.getElementById('searchInput').value.toLowerCase();
+      let cards = document.querySelectorAll('#serviceGrid .card');
+      cards.forEach(card => {
+        let name = card.getAttribute('data-name');
+        card.style.display = name.includes(query) ? 'block' : 'none';
+      });
+    }
+
+    function buyProduct(productName, price, credentials) {
+      if (userBalance < price) {
+        showToast("⚠️ Saldo insuficiente. Dirígete a la sección de recargas.");
+        switchView('recharge');
+        return;
+      }
+
+      userBalance -= price;
+      saveUserData();
+
+      let orderDate = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+      myOrders.unshift({
+        name: productName,
+        price: price,
+        date: orderDate,
+        creds: credentials
+      });
+      
+      localStorage.setItem('zrro_orders', JSON.stringify(myOrders));
+      renderOrders();
+      showToast(`¡Compra exitosa! Revisa "Mis Pedidos".`);
+      switchView('orders');
+    }
+
+    function renderOrders() {
+      let container = document.getElementById('ordersContainer');
+      document.getElementById('orderCount').innerText = myOrders.length;
+
+      if (myOrders.length === 0) {
+        container.innerHTML = `<p style="text-align:center; color:#94a3b8; font-size:12px; margin-top:30px;">No tienes compras recientes registradas.</p>`;
+        return;
+      }
+
+      let html = "";
+      myOrders.forEach(o => {
+        html += `
+          <div class="order-card">
+            <div class="order-header">
+              <span>📅 ${o.date}</span>
+              <span style="color:var(--primary); font-weight:bold;">$${o.price.toLocaleString('es-CO')}</span>
+            </div>
+            <h3 style="color:#fff; font-size:14px; margin-bottom:4px;">${o.name}</h3>
+            <div class="credentials-box">
+              <p style="font-size:11px; color:var(--accent); font-weight:bold; margin-bottom:2px;">ACCESOS ASIGNADOS:</p>
+              <p>🔑 ${o.creds}</p>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function saveUserData() {
+      localStorage.setItem('zrro_balance', userBalance);
+      document.getElementById('userWallet').innerText = `$${userBalance.toLocaleString('es-CO')}`;
+      document.getElementById('adminViewBalance').innerText = `$${userBalance.toLocaleString('es-CO')}`;
+    }
+
+    // Sistema de seguridad básico para abrir el panel de admin
+    function openAdminPanel() {
+      let password = prompt("Introduce la contraseña de Administrador:");
+      if (password === "admin2026") { // Puedes cambiar la contraseña aquí
+        document.getElementById('tabAdminBtn').style.display = 'block';
+        switchView('admin', document.getElementById('tabAdminBtn'));
+        showToast("🔓 Acceso de Administrador Autorizado");
+      } else if (password !== null) {
+        showToast("❌ Contraseña incorrecta");
       }
     }
 
-    function filterCategory(cat, btn) {
-      let buttons = document.querySelectorAll('.nav-btn');
-      buttons.forEach(b => b.classList.remove('active'));
-      if(btn) btn.classList.add('active');
+    // Simulación de recarga administrativa al usuario
+    function adminRechargeBalance() {
+      let email = document.getElementById('adminUserEmail').value.trim();
+      let amount = parseInt(document.getElementById('adminAmount').value);
 
-      let cards = document.getElementsByClassName('card');
-      for (let card of cards) {
-        if (cat === 'all' || card.getAttribute('data-category') === cat) {
-          card.style.display = "";
-        } else {
-          card.style.display = "none";
-        }
+      if (!email || isNaN(amount) || amount <= 0) {
+        alert("Por favor introduce un correo válido y un monto mayor a 0.");
+        return;
       }
-    }
 
-    let cart = {};
-    function updateCart(item, price) {
-      if(!cart[item]) cart[item] = { qty: 0, price: price };
-      cart[item].qty++;
-      renderCart();
-    }
+      // En un sistema real con base de datos, aquí buscarías el ID por correo y harías el UPDATE.
+      // Como estamos simulando localmente para esta prueba, sumamos al saldo actual:
+      userBalance += amount;
+      saveUserData();
 
-    function clearCart() { 
-      cart = {}; 
-      renderCart(); 
-    }
-
-    function renderCart() {
-      let count = 0, total = 0;
-      for(let i in cart) { count += cart[i].qty; total += (cart[i].qty * cart[i].price); }
-      if(count > 0) {
-        document.getElementById('cart-bar').style.display = 'block';
-        document.getElementById('cart-text').innerText = `Servicios seleccionados: ${count}`;
-        document.getElementById('cart-total').innerText = `$${total.toLocaleString('es-CO')}`;
-      } else {
-        document.getElementById('cart-bar').style.display = 'none';
-      }
-    }
-
-    function checkout() {
-      let msg = "¡Hola ZRRO Digital Media! Quiero solicitar los siguientes servicios:\n\n";
-      for(let i in cart) msg += `• ${i} (x${cart[i].qty})\n`;
-      let total = document.getElementById('cart-total').innerText;
-      msg += `\nTotal a pagar: ${total}\n\nQuedo atento a los medios de pago para confirmar mi pedido.`;
-      window.location.href = `https://wa.me/573122521685?text=${encodeURIComponent(msg)}`;
+      alert(`¡Éxito! Se han acreditado $${amount.toLocaleString('es-CO')} al monedero del usuario ${email}.`);
+      document.getElementById('adminUserEmail').value = '';
+      document.getElementById('adminAmount').value = '';
+      switchView('catalog');
     }
   </script>
 </body>
 </html>
+
