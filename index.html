@@ -6,10 +6,6 @@
     <title>ZRRO DIGITAL</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Firebase SDKs versión COMPAT -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body class="bg-slate-950 text-white min-h-screen flex items-center justify-center p-4">
 
@@ -61,11 +57,11 @@
                 <h3 id="user-balance" class="text-3xl font-extrabold text-white mt-1">$0.00</h3>
             </div>
 
-            <!-- LISTADO DE LOS 72 SERVICIOS REALES -->
+            <!-- LISTADO DE LOS 72 SERVICIOS -->
             <div class="space-y-3">
                 <h3 class="text-sm font-semibold text-slate-300">Catálogo de Servicios Digitales (72 ítems)</h3>
                 <div id="services-container" class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 space-y-2 max-h-64 overflow-y-auto pr-1">
-                    <!-- Se inyectan los 72 servicios reales -->
+                    <!-- Los 72 servicios se inyectan dinámicamente -->
                 </div>
             </div>
 
@@ -86,24 +82,29 @@
 
     </div>
 
-    <!-- LÓGICA DE FIREBASE Y APLICACIÓN -->
-    <script>
+    <!-- LÓGICA DE FIREBASE MODULAR Y APLICACIÓN -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
         const firebaseConfig = {
             apiKey: "AIzaSyDRLE96tJIJrRSihMy6w0mOT3p_E8J1N0",
             authDomain: "mi-tienda-56ef5.firebaseapp.com",
             projectId: "mi-tienda-56ef5",
             storageBucket: "mi-tienda-56ef5.appspot.com",
             messagingSenderId: "716772431219",
-            appId: "1:716772431219:web:03f3a4312f2c8d234a5d7c"
+            appId: "1:716772431219:web:03f3a431c72c17224b6106",
+            measurementId: "G-2QB62W1..."
         };
 
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
         const adminEmails = ["fabian1590medina@gmail.com"];
 
-        // Listado exacto de los 72 servicios digitales y streaming
+        // Listado de los 72 servicios digitales
         const listaServicios = [
             "Netflix 4 Pantallas", "Netflix 1 Pantalla", "Disney+ Estándar", "Disney+ Premium",
             "Max (HBO) Platino", "Max Estándar", "Amazon Prime Video", "Paramount+",
@@ -125,7 +126,6 @@
             "Robux 400", "Robux 800", "Puntos FIFA / FC 24", "Recarga de Saldo General"
         ];
 
-        // Inyectar los 72 servicios en el contenedor
         const servicesContainer = document.getElementById('services-container');
         listaServicios.forEach((nombreServicio, index) => {
             const item = document.createElement('div');
@@ -144,30 +144,34 @@
             alert("Has seleccionado: " + servicio + ". Tu saldo se validará para completar la entrega automática.");
         };
 
-        window.handleLogin = function() {
+        window.handleLogin = async function() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             hideError();
-            auth.signInWithEmailAndPassword(email, password)
-                .catch(error => showError(error.message));
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                showError(error.message);
+            }
         };
 
-        window.handleRegister = function() {
+        window.handleRegister = async function() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             hideError();
-            auth.createUserWithEmailAndPassword(email, password)
-                .then(userCredential => {
-                    return db.collection('users').doc(userCredential.user.uid).set({
-                        email: email,
-                        balance: 0
-                    });
-                })
-                .catch(error => showError(error.message));
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                await setDoc(doc(db, 'users', userCredential.user.uid), {
+                    email: email,
+                    balance: 0
+                });
+            } catch (error) {
+                showError(error.message);
+            }
         };
 
-        window.handleLogout = function() {
-            auth.signOut();
+        window.handleLogout = async function() {
+            await signOut(auth);
         };
 
         window.adminAddBalance = async function() {
@@ -180,7 +184,9 @@
             }
 
             try {
-                const snapshot = await db.collection('users').where("email", "==", targetEmail).get();
+                const q = query(collection(db, 'users'), where("email", "==", targetEmail));
+                const snapshot = await getDocs(q);
+                
                 if (snapshot.empty) {
                     alert("No se encontró ningún usuario registrado con ese correo.");
                     return;
@@ -188,7 +194,7 @@
                 
                 snapshot.forEach(async (userDoc) => {
                     const currentBalance = userDoc.data().balance || 0;
-                    await db.collection('users').doc(userDoc.id).update({
+                    await updateDoc(doc(db, 'users', userDoc.id), {
                         balance: currentBalance + amount
                     });
                     alert("¡Saldo recargado con éxito al usuario!");
@@ -200,28 +206,32 @@
             }
         };
 
-        auth.onAuthStateChanged((user) => {
+        onAuthStateChanged(auth, async (user) => {
+            const authSection = document.getElementById('auth-section');
+            const dashboardSection = document.getElementById('dashboard-section');
+            const adminPanel = document.getElementById('admin-panel');
+
             if (user) {
-                document.getElementById('auth-section').classList.add('hidden');
-                document.getElementById('dashboard-section').classList.remove('hidden');
+                authSection.classList.add('hidden');
+                dashboardSection.classList.remove('hidden');
                 document.getElementById('user-email-display').innerText = user.email;
 
                 if (adminEmails.includes(user.email)) {
-                    document.getElementById('admin-panel').classList.remove('hidden');
+                    adminPanel.classList.remove('hidden');
                 } else {
-                    document.getElementById('admin-panel').classList.add('hidden');
+                    adminPanel.classList.add('hidden');
                 }
 
-                db.collection('users').doc(user.uid).onSnapshot((docSnap) => {
-                    if (docSnap.exists) {
-                        const data = docSnap.data();
-                        document.getElementById('user-balance').innerText = `$${(data.balance || 0).toLocaleString()}`;
-                    }
-                });
+                const userDocRef = doc(db, 'users', user.uid);
+                const docSnap = await getDoc(userDocRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    document.getElementById('user-balance').innerText = `$${(data.balance || 0).toLocaleString()}`;
+                }
             } else {
-                document.getElementById('auth-section').classList.remove('hidden');
-                document.getElementById('dashboard-section').classList.add('hidden');
-                document.getElementById('admin-panel').classList.add('hidden');
+                authSection.classList.remove('hidden');
+                dashboardSection.classList.add('hidden');
+                adminPanel.classList.add('hidden');
             }
         });
 
