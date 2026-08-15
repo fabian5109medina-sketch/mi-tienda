@@ -70,19 +70,17 @@
                 <button onclick="cambiarSeccion('catalogo')" id="btn-catalogo" class="bg-cyan-500 text-slate-950 px-4 py-2 rounded-xl font-bold text-xs shadow-md">🛍️ Catálogo</button>
                 <button onclick="cambiarSeccion('pedidos')" id="btn-pedidos" class="bg-[#131b2e] border border-gray-800 text-gray-300 px-4 py-2 rounded-xl font-semibold text-xs">📦 Mis Pedidos</button>
                 <button onclick="cambiarSeccion('recargas')" id="btn-recargas" class="bg-[#131b2e] border border-gray-800 text-gray-300 px-4 py-2 rounded-xl font-semibold text-xs">💳 Cargar Saldo</button>
-                <!-- Botón de Admin (Aparece condicionalmente si es uno de tus correos) -->
+                <!-- Botón de Admin -->
                 <button onclick="cambiarSeccion('admin')" id="btn-admin" class="hidden bg-amber-500/20 border border-amber-500/50 text-amber-300 px-4 py-2 rounded-xl font-bold text-xs">⚙️ Panel Admin</button>
             </div>
 
             <!-- SECCIÓN: CATÁLOGO -->
             <div id="seccion-catalogo" class="p-4 max-w-2xl mx-auto space-y-4">
-                <!-- Buscador -->
                 <div class="relative">
                     <input type="text" id="buscador" oninput="aplicarFiltros()" placeholder="Buscar servicio (ej: Netflix, Disney)..." class="w-full bg-[#131b2e] border border-gray-800 rounded-2xl px-4 py-3 pl-10 text-sm focus:outline-none focus:border-cyan-500">
                     <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
 
-                <!-- Filtros de Categoría -->
                 <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-hide text-xs">
                     <button onclick="filtrarCategoria('Todos')" class="btn-filtro bg-cyan-500 text-slate-950 px-3.5 py-1.5 rounded-full font-bold whitespace-nowrap shadow-sm">Todos</button>
                     <button onclick="filtrarCategoria('Netflix')" class="btn-filtro bg-[#131b2e] border border-gray-800 text-gray-300 px-3.5 py-1.5 rounded-full whitespace-nowrap">Netflix</button>
@@ -96,7 +94,6 @@
                     <button onclick="filtrarCategoria('Combos')" class="btn-filtro bg-[#131b2e] border border-gray-800 text-gray-300 px-3.5 py-1.5 rounded-full whitespace-nowrap">Combos</button>
                 </div>
 
-                <!-- Grid de productos en 2 columnas -->
                 <div id="lista-servicios" class="grid grid-cols-2 gap-3 pb-10"></div>
             </div>
 
@@ -157,12 +154,12 @@
     <!-- CONFIGURACIÓN Y LÓGICA -->
     <script>
         const firebaseConfig = {
-            apiKey: "TU_API_KEY",
-            authDomain: "TU_AUTH_DOMAIN",
-            projectId: "TU_PROJECT_ID",
-            storageBucket: "TU_STORAGE_BUCKET",
-            messagingSenderId: "TU_MESSAGING_SENDER_ID",
-            appId: "TU_APP_ID"
+            apiKey: "AIzaSy...", 
+            authDomain: "tu-proyecto.firebaseapp.com",
+            projectId: "tu-proyecto",
+            storageBucket: "tu-proyecto.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcde..."
         };
 
         if (!firebase.apps.length) {
@@ -175,7 +172,6 @@
         let usuarioActual = null;
         let categoriaActual = "Todos";
 
-        // Tus dos correos con acceso de administrador autorizado
         const CORREOS_ADMIN = [
             "fabian5109medina@gmail.com",
             "fabian1590medina@gmail.com"
@@ -252,7 +248,7 @@
             { nombre: "Combo Netflix + Crunchyroll", precio: 15000, cat: "Combos" },
             { nombre: "Combo Netflix + Max", precio: 18000, cat: "Combos" },
             { nombre: "Combo Netflix + IPTV", precio: 18000, cat: "Combos" },
-            { nombre: "Combo Netflix + Disney+", emoji: "🎬", precio: 20000, cat: "Combos" },
+            { nombre: "Combo Netflix + Disney+", precio: 20000, cat: "Combos" },
             { nombre: "Combo Netflix + Plex", precio: 16000, cat: "Combos" }
         ];
 
@@ -262,7 +258,6 @@
                 document.getElementById('auth-container').classList.add('hidden');
                 document.getElementById('app-container').classList.remove('hidden');
                 
-                // Verificar si el correo actual está en la lista de administradores
                 if (CORREOS_ADMIN.includes(user.email)) {
                     document.getElementById('btn-admin').classList.remove('hidden');
                     document.getElementById('rol-badge').innerText = "Panel de Administrador";
@@ -298,7 +293,7 @@
             const pass = document.getElementById('password').value.trim();
             auth.createUserWithEmailAndPassword(email, pass)
                 .then((res) => {
-                    db.collection('usuarios').doc(res.user.uid).set({ saldo: 0, email: email });
+                    db.collection('usuarios').doc(res.user.uid).set({ saldo: 0, email: email, rol: "cliente" });
                 })
                 .catch(err => mostrarError("Error: " + err.message));
         }
