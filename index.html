@@ -3,553 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZRRO DIGITAL | Tienda Completa</title>
+    <title>ZRRO DIGITAL | Tienda Pro</title>
     <style>
-        :root { --bg-color: #121212; --card-bg: #1e1e1e; --accent-color: #38bdf8; --text-light: #ffffff; --text-muted: #9ca3af; --discount-red: #ef4444; --agotado-bg: #7f1d1d; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-light); margin: 0; padding: 0; }
-        
-        .header { display: flex; justify-content: space-between; align-items: center; background: #18181b; padding: 12px 16px; border-bottom: 1px solid #27272a; }
-        .logo-area { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 1.1em; color: var(--accent-color); cursor: pointer; }
-        .nav-icons { display: flex; gap: 15px; font-size: 1.2em; color: #d1d5db; cursor: pointer; }
-
-        /* MENÚ LATERAL (DRAWER) */
-        .drawer-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; }
-        .side-drawer { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #18181b; z-index: 1001; transition: left 0.3s ease; display: flex; flex-direction: column; border-right: 1px solid #27272a; box-sizing: border-box; }
-        .side-drawer.open { left: 0; }
-        .drawer-header { display: flex; justify-content: flex-end; padding: 15px; font-size: 1.3em; color: #fff; cursor: pointer; }
-        .drawer-menu { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; }
-        .drawer-menu li { border-bottom: 1px solid #27272a; }
-        .drawer-menu li a, .drawer-menu li div { padding: 16px 20px; color: #d1d5db; text-decoration: none; display: flex; align-items: center; gap: 10px; font-size: 0.95em; cursor: pointer; background: transparent; transition: background 0.2s; }
-        .drawer-menu li a:hover, .drawer-menu li div:hover, .drawer-menu li.active div { background: #27272a; color: #fff; }
-
-        .banner { background: linear-gradient(135deg, #1e3a8a, #0f172a); margin: 12px; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #3b82f6; }
-        .banner h2 { margin: 0 0 10px 0; font-size: 1.1em; letter-spacing: 1px; color: #fff; }
-        .btn-saldo { background: #ffffff; color: #000; border: none; padding: 8px 20px; font-weight: bold; border-radius: 20px; cursor: pointer; font-size: 0.9em; }
-
-        .filter-bar { display: flex; gap: 8px; padding: 0 12px 12px 12px; overflow-x: auto; }
-        .select-box { background: #27272a; color: #fff; border: 1px solid #3f3f46; padding: 8px 12px; border-radius: 4px; font-size: 0.8em; white-space: nowrap; width: 50%; }
-        .search-container { padding: 0 12px 15px 12px; }
-        .search-box { width: 100%; padding: 10px 12px; background: #18181b; border: 1px solid #3f3f46; color: white; border-radius: 6px; box-sizing: border-box; font-size: 0.9em; }
-
-        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 10px; }
-        .product-card { background: var(--card-bg); border-radius: 8px; overflow: hidden; border: 1px solid #27272a; display: flex; flex-direction: column; position: relative; }
-        .product-card.agotado { opacity: 0.6; filter: grayscale(40%); }
-        
-        .product-image-container { position: relative; width: 100%; aspect-ratio: 1; background: #000; display: flex; align-items: center; justify-content: center; }
-        .product-image-container img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .badge-discount { position: absolute; top: 8px; left: 8px; background: var(--discount-red); color: white; font-size: 0.7em; font-weight: bold; padding: 3px 6px; border-radius: 4px; z-index: 2; }
-        .badge-agotado { position: absolute; top: 8px; right: 8px; background: var(--agotado-bg); color: white; font-size: 0.7em; font-weight: bold; padding: 3px 6px; border-radius: 4px; z-index: 2; border: 1px solid #f87171; }
-        
-        .product-content { padding: 10px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
-        .category { font-size: 0.65em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 2px; }
-        .product-title { font-size: 0.8em; font-weight: 600; color: #fff; margin: 0 0 6px 0; line-height: 1.25em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        
-        .stars { color: #d1d5db; font-size: 0.7em; margin-bottom: 6px; }
-        
-        .price-box { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
-        .old-price { font-size: 0.75em; color: var(--text-muted); text-decoration: line-through; }
-        .current-price { font-size: 0.9em; font-weight: bold; color: var(--text-light); }
-
-        .pagination { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 20px 0; flex-wrap: wrap; }
-        .page-item { background: #27272a; border: 1px solid #3f3f46; color: #fff; padding: 6px 10px; border-radius: 4px; font-size: 0.8em; cursor: pointer; }
-        .page-item.active { background: #fff; color: #000; font-weight: bold; }
-
-        .admin-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; }
-        .admin-content { background: #1e1e1e; padding: 20px; border-radius: 8px; width: 100%; max-width: 400px; border: 1px solid #3f3f46; max-height: 90vh; overflow-y: auto; }
-        .admin-content h3 { margin-top: 0; color: var(--accent-color); }
-        .admin-content input { width: 100%; padding: 10px; margin-bottom: 10px; background: #121212; border: 1px solid #3f3f46; color: #fff; border-radius: 4px; box-sizing: border-box; }
-        .admin-content select { width: 100%; padding: 10px; margin-bottom: 10px; background: #121212; border: 1px solid #3f3f46; color: #fff; border-radius: 4px; box-sizing: border-box; }
-        .admin-content button { background: var(--accent-color); color: #000; border: none; padding: 12px; font-weight: bold; width: 100%; border-radius: 4px; cursor: pointer; margin-top: 5px; }
-        .btn-close { background: #ef4444 !important; color: #fff !important; margin-top: 10px !important; }
-
-        .footer-text { text-align: center; font-size: 0.7em; color: var(--text-muted); padding-bottom: 30px; }
+        :root { --bg: #121212; --card: #1e1e1e; --accent: #38bdf8; --text: #ffffff; --agotado: #7f1d1d; }
+        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; }
+        .modal { display: flex; position: fixed; top:0; left:0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .box { background: var(--card); padding: 25px; border-radius: 12px; width: 100%; max-width: 400px; text-align: center; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid #333; color: #fff; box-sizing: border-box; border-radius: 6px; }
+        button { width: 100%; padding: 12px; background: var(--accent); border: none; font-weight: bold; cursor: pointer; border-radius: 6px; margin-top: 10px; }
+        .product-card { background: var(--card); border-radius: 8px; padding: 15px; position: relative; border: 1px solid #333; }
+        .agotado { opacity: 0.5; filter: grayscale(1); pointer-events: none; border: 1px solid var(--agotado); }
+        .badge-agotado { background: var(--agotado); color: white; padding: 4px 8px; font-size: 10px; font-weight: bold; position: absolute; top: 10px; right: 10px; border-radius: 4px; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="logo-area" style="gap: 12px;">
-            <span onclick="toggleDrawer()" style="font-size: 1.3em; cursor: pointer; padding: 2px 6px; background: #27272a; border-radius: 4px;">☰</span>
-            <span onclick="location.reload()">⚡ ZRRO DIGITAL</span>
-        </div>
-        <div class="nav-icons">
-            <span onclick="document.getElementById('buscador').focus()">🔍</span>
-            <span onclick="abrirAdmin()">⚙️</span>
-        </div>
+<!-- LOGIN -->
+<div id="modalLogin" class="modal">
+    <div class="box">
+        <h2>Bienvenido a ZRRO</h2>
+        <p>Ingresa tu correo para ver tu saldo</p>
+        <input type="email" id="inputEmail" placeholder="usuario@ejemplo.com">
+        <button onclick="iniciarSesion()">ACCEDER</button>
     </div>
+</div>
 
-    <!-- MENÚ LATERAL (DRAWER) -->
-    <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
-    <div class="side-drawer" id="sideDrawer">
-        <div class="drawer-header" onclick="toggleDrawer()">✕</div>
-        <ul class="drawer-menu">
-            <li onclick="filtrarSeccion('TODOS')"><div>🏠 INICIO</div></li>
-            <li class="active" onclick="filtrarSeccion('TODOS')"><div>🛍️ TIENDA</div></li>
-            <li onclick="filtrarSeccion('COMBOS')"><div>⭐ COMBOS PREMIUM</div></li>
-            <li onclick="abrirMiCuenta()"><div>👤 MI CUENTA</div></li>
-            <li onclick="abrirCarrito()"><div>🛒 CARRITO</div></li>
-            <li onclick="abrirSoporte()"><div>💬 SOPORTE</div></li>
-            <li onclick="abrirSaldo()"><div>💳 MI MONEDERO</div></li>
-            <li onclick="cerrarSesion()"><div>🚪 LOG OUT</div></li>
-        </ul>
+<!-- HEADER -->
+<div style="padding: 15px; display: flex; justify-content: space-between; align-items: center; background: #18181b;">
+    <strong>⚡ ZRRO DIGITAL</strong>
+    <div id="userProfile" style="text-align: right;">
+        <div id="displayEmail" style="font-size: 10px; color: #888;"></div>
+        <div id="displaySaldo" style="font-weight: bold; color: var(--accent);">Saldo: $0</div>
     </div>
+    <button onclick="abrirAdmin()" style="width: auto; padding: 5px 10px;">⚙️</button>
+</div>
 
-    <div class="banner">
-        <h2>MERCADO DIGITAL</h2>
-        <button class="btn-saldo" id="btnSaldoTop" onclick="abrirSaldo()">CARGAR SALDO &gt;</button>
+<!-- CATALOGO -->
+<div id="catalogo" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px;"></div>
+
+<!-- ADMIN MODAL -->
+<div id="modalAdmin" class="modal" style="display:none;">
+    <div class="box" style="max-height: 90vh; overflow-y: auto;">
+        <h3>Panel Admin</h3>
+        <input type="email" id="adminEmail" placeholder="Correo del usuario">
+        <input type="number" id="adminSaldo" placeholder="Nuevo saldo (ej: 50000)">
+        <button onclick="actualizarSaldo()">ACTUALIZAR SALDO</button>
+        <hr style="margin: 20px 0;">
+        <label>Alternar estado de producto:</label>
+        <select id="selectAgotado"></select>
+        <button onclick="toggleEstado()" style="background: #444;">CAMBIAR ESTADO</button>
+        <button onclick="document.getElementById('modalAdmin').style.display='none'" style="background: red;">CERRAR</button>
     </div>
+</div>
 
-    <div class="search-container">
-        <input type="text" id="buscador" class="search-box" placeholder="Buscar entre los 72 servicios..." onkeyup="buscarServicios()">
-    </div>
+<script>
+    let usuarios = JSON.parse(localStorage.getItem('zrro_usuarios')) || {};
+    let usuarioActual = null;
+    
+    // Lista de 72 servicios
+    let productos = JSON.parse(localStorage.getItem('zrro_productos_72')) || Array.from({length: 72}, (_, i) => ({
+        id: i, title: "Servicio Digital #" + (i+1), price: "$10.000", agotado: false
+    }));
 
-    <div class="filter-bar">
-        <select class="select-box" id="filtroCategoriaSelect" onchange="cambiarFiltroSelect()">
-            <option value="TODOS">TODAS LAS CATEGORÍAS (72)</option>
-            <option value="NETFLIX">NETFLIX</option>
-            <option value="DISNEY+">DISNEY+</option>
-            <option value="MAX">MAX (HBO)</option>
-            <option value="AMAZON PRIME">AMAZON PRIME</option>
-            <option value="YOUTUBE">YOUTUBE</option>
-            <option value="CRUNCHYROLL">CRUNCHYROLL</option>
-            <option value="PARAMOUNT">PARAMOUNT+</option>
-            <option value="SPOTIFY">SPOTIFY</option>
-            <option value="IPTV">IPTV & STREAMING</option>
-            <option value="COMBOS">COMBOS</option>
-            <option value="CANVA PRO">CANVA PRO</option>
-            <option value="OTRAS">OTRAS PLATAFORMAS</option>
-        </select>
-        <select class="select-box" id="itemsPorPagina" onchange="cambiarLimite()">
-            <option value="12">12 por pág</option>
-            <option value="24" selected>24 por pág</option>
-            <option value="72">Todos (72)</option>
-        </select>
-    </div>
+    function iniciarSesion() {
+        let email = document.getElementById('inputEmail').value.toLowerCase();
+        if(!email) return;
+        if(!usuarios[email]) usuarios[email] = { saldo: 0 };
+        usuarioActual = email;
+        localStorage.setItem('zrro_usuarios', JSON.stringify(usuarios));
+        document.getElementById('modalLogin').style.display = 'none';
+        render();
+    }
 
-    <div class="product-grid" id="catalogo"></div>
-    <div class="pagination" id="paginacion"></div>
+    function render() {
+        let cat = document.getElementById('catalogo');
+        cat.innerHTML = "";
+        document.getElementById('displayEmail').innerText = usuarioActual;
+        document.getElementById('displaySaldo').innerText = "Saldo: $" + (usuarios[usuarioActual]?.saldo || 0).toLocaleString();
+        
+        productos.forEach((p, index) => {
+            cat.innerHTML += `
+                <div class="product-card ${p.agotado ? 'agotado' : ''}">
+                    ${p.agotado ? '<span class="badge-agotado">AGOTADO</span>' : ''}
+                    <div style="font-size: 12px; margin-bottom: 5px;">${p.title}</div>
+                    <div style="font-weight: bold; color: var(--accent);">${p.price}</div>
+                </div>
+            `;
+        });
 
-    <div class="footer-text">
-        Zrrodigital.co © 2026. Todos los Derechos Reservados
-    </div>
+        // Actualizar select admin
+        let select = document.getElementById('selectAgotado');
+        select.innerHTML = productos.map((p, i) => `<option value="${i}">${p.title} (${p.agotado ? 'Agotado' : 'Disp.'})</option>`).join('');
+    }
 
-    <!-- MODAL DE BILLETERA / MONEDERO -->
-    <div class="admin-modal" id="modalSaldo">
-        <div class="admin-content" style="text-align: center;">
-            <h3 style="color: #fff;">Mi Monedero</h3>
-            <h1 style="color: var(--accent-color); margin: 15px 0; font-size: 2.5em;" id="saldoDisplay">$0</h1>
-            <p style="font-size: 0.9em; color: var(--text-muted); margin-bottom: 20px;">Comunícate con nuestro soporte por WhatsApp para conocer los medios de pago habilitados y recargar tu saldo.</p>
-            
-            <a href="https://wa.me/573000000000?text=Hola,%20deseo%20conocer%20los%20medios%20de%20pago%20para%20recargar%20saldo%20en%20ZRRO%20DIGITAL" target="_blank" style="text-decoration: none;">
-                <button style="background: #25D366; color: #fff; font-size: 1.1em; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
-                    Contactar por WhatsApp
-                </button>
-            </a>
-            <button class="btn-close" onclick="cerrarSaldo()" style="background: #3f3f46!important;">Volver a la tienda</button>
-        </div>
-    </div>
+    function abrirAdmin() {
+        if(prompt("Clave Admin:") === "1234") document.getElementById('modalAdmin').style.display = 'flex';
+    }
 
-    <!-- MODAL MI CUENTA -->
-    <div class="admin-modal" id="modalMiCuenta">
-        <div class="admin-content" style="text-align: center;">
-            <h3 style="color: #fff;">Mi Cuenta</h3>
-            <p style="font-size: 0.9em; color: var(--text-muted);">Estado de sesión y perfil de usuario en ZRRO DIGITAL.</p>
-            <div style="background: #121212; padding: 15px; border-radius: 6px; margin: 15px 0; text-align: left; font-size: 0.85em;">
-                <p style="margin: 5px 0;">👤 <b>Usuario:</b> Cliente Activo</p>
-                <p style="margin: 5px 0;">🌐 <b>Plataforma:</b> ZRRO DIGITAL</p>
-                <p style="margin: 5px 0;">💳 <b>Monedero:</b> <span id="cuentaSaldoText">$0</span></p>
-            </div>
-            <button class="btn-close" onclick="document.getElementById('modalMiCuenta').style.display='none'" style="background: var(--accent-color)!important; color:#000!important;">Cerrar</button>
-        </div>
-    </div>
+    function actualizarSaldo() {
+        let email = document.getElementById('adminEmail').value.toLowerCase();
+        let nuevo = parseInt(document.getElementById('adminSaldo').value);
+        if(usuarios[email]) {
+            usuarios[email].saldo = nuevo;
+            localStorage.setItem('zrro_usuarios', JSON.stringify(usuarios));
+            alert("¡Saldo actualizado!");
+            render();
+        } else alert("Usuario no encontrado");
+    }
 
-    <!-- MODAL CARRITO -->
-    <div class="admin-modal" id="modalCarrito">
-        <div class="admin-content" style="text-align: center;">
-            <h3 style="color: #fff;">Mi Carrito</h3>
-            <p style="font-size: 0.9em; color: var(--text-muted); margin: 20px 0;">Tu carrito de compras se encuentra vacío actualmente.</p>
-            <button class="btn-close" onclick="document.getElementById('modalCarrito').style.display='none'" style="background: var(--accent-color)!important; color:#000!important;">Seguir Comprando</button>
-        </div>
-    </div>
+    function toggleEstado() {
+        let id = document.getElementById('selectAgotado').value;
+        productos[id].agotado = !productos[id].agotado;
+        localStorage.setItem('zrro_productos_72', JSON.stringify(productos));
+        render();
+    }
 
-    <!-- MODAL DE ADMINISTRADOR (CLAVE: 1234) -->
-    <div class="admin-modal" id="modalAdmin">
-        <div class="admin-content">
-            <h3>Agregar Servicio con Logo/Foto</h3>
-            <label style="font-size: 0.8em;">Categoría:</label>
-            <input type="text" id="nuevoCat" placeholder="EJ: NETFLIX">
-            
-            <label style="font-size: 0.8em;">Nombre del Servicio:</label>
-            <input type="text" id="nuevoTitulo" placeholder="EJ: Netflix Pantalla 4K">
-            
-            <label style="font-size: 0.8em;">URL de la Imagen (Logo o Póster):</label>
-            <input type="text" id="nuevoImg" placeholder="https://ejemplo.com/imagen.jpg">
-            
-            <label style="font-size: 0.8em;">Precio Actual ($):</label>
-            <input type="text" id="nuevoPrecio" placeholder="14.000">
-            
-            <label style="font-size: 0.8em;">Precio Anterior (Tachado):</label>
-            <input type="text" id="nuevoOldPrecio" placeholder="28.000">
-            
-            <label style="font-size: 0.8em;">Descuento (%):</label>
-            <input type="text" id="nuevoDescuento" placeholder="-50%">
-
-            <label style="font-size: 0.8em;">Estado del Servicio:</label>
-            <select id="nuevoAgotado">
-                <option value="false">Disponible</option>
-                <option value="true">Agotado</option>
-            </select>
-            
-            <button onclick="agregarProducto()">Guardar y Agregar Producto</button>
-            
-            <hr style="border-color: #3f3f46; margin: 20px 0;">
-            <h3 style="margin-bottom: 10px;">Gestión de Saldo</h3>
-            <label style="font-size: 0.8em;">Modificar Saldo del Usuario (Ej: 50000):</label>
-            <input type="number" id="nuevoSaldoInput" placeholder="Ej: 50000">
-            <button onclick="guardarSaldo()" style="background: #10b981; color: white;">Acreditar Saldo</button>
-
-            <button class="btn-close" onclick="cerrarAdmin()">Cerrar Admin</button>
-        </div>
-    </div>
-
-    <script>
-        let saldoActual = localStorage.getItem('zrro_saldo') || "0";
-        actualizarTextoSaldo();
-
-        function actualizarTextoSaldo() {
-            let saldoFormateado = Number(saldoActual).toLocaleString('es-CO');
-            document.getElementById('btnSaldoTop').innerText = "SALDO: $" + saldoFormateado + " >";
-            document.getElementById('saldoDisplay').innerText = "$" + saldoFormateado;
-            let cuentaText = document.getElementById('cuentaSaldoText');
-            if(cuentaText) cuentaText.innerText = "$" + saldoFormateado;
-        }
-
-        function toggleDrawer() {
-            let drawer = document.getElementById('sideDrawer');
-            let overlay = document.getElementById('drawerOverlay');
-            if(drawer.classList.contains('open')) {
-                drawer.classList.remove('open');
-                overlay.style.display = 'none';
-            } else {
-                drawer.classList.add('open');
-                overlay.style.display = 'block';
-            }
-        }
-
-        function abrirSaldo() {
-            toggleDrawer();
-            document.getElementById('modalSaldo').style.display = 'flex';
-        }
-
-        function cerrarSaldo() {
-            document.getElementById('modalSaldo').style.display = 'none';
-        }
-
-        function abrirMiCuenta() {
-            toggleDrawer();
-            document.getElementById('modalMiCuenta').style.display = 'flex';
-        }
-
-        function abrirCarrito() {
-            toggleDrawer();
-            document.getElementById('modalCarrito').style.display = 'flex';
-        }
-
-        function abrirSoporte() {
-            toggleDrawer();
-            window.open('https://wa.me/573000000000?text=Hola,%20necesito%20soporte%20en%20ZRRO%20DIGITAL', '_blank');
-        }
-
-        function cerrarSesion() {
-            toggleDrawer();
-            alert("Has cerrado sesión correctamente.");
-            location.reload();
-        }
-
-        function guardarSaldo() {
-            let nuevoSaldo = document.getElementById('nuevoSaldoInput').value;
-            if(nuevoSaldo !== "") {
-                saldoActual = nuevoSaldo;
-                localStorage.setItem('zrro_saldo', saldoActual);
-                actualizarTextoSaldo();
-                alert("✅ Saldo actualizado correctamente a $" + Number(nuevoSaldo).toLocaleString('es-CO'));
-                document.getElementById('nuevoSaldoInput').value = "";
-            }
-        }
-
-        // 72 SERVICIOS OFICIALES DE STREAMING Y DIGITALES (Con opción de agotado: true/false)
-        const productosBase = [
-            // NETFLIX (1-10)
-            {cat: "NETFLIX", title: "Netflix Pantalla Normal 4K", price: "$14.000", old: "$28.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix Pantalla Standard", price: "$12.000", old: "$20.000", desc: "-40%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix Pantalla Genérica", price: "$12.000", old: "$20.000", desc: "-40%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix Pantalla Internacional Genérica", price: "$14.000", old: "$25.000", desc: "-45%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix Cuenta Completa Normal", price: "$52.000", old: "$75.000", desc: "-30%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix Cuenta Completa Standard", price: "$45.000", old: "$65.000", desc: "-30%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix Cuenta Completa Genérica", price: "$45.000", old: "$65.000", desc: "-30%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix 2 Meses Pack Pro", price: "$95.000", old: "$130.000", desc: "-25%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix Perfil Adicional Garantizado", price: "$18.000", old: "$30.000", desc: "-40%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "NETFLIX", title: "Netflix Ultra HD 4 Pantallas", price: "$58.000", old: "$85.000", desc: "-32%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-
-            // DISNEY+ (11-20)
-            {cat: "DISNEY+", title: "Disney+ Premium Pantalla", price: "$9.000", old: "$18.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-            {cat: "DISNEY+", title: "Disney+ Standard Pantalla", price: "$6.000", old: "$12.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-            {cat: "DISNEY+", title: "Disney+ Cuenta Completa Premium", price: "$28.000", old: "$50.000", desc: "-44%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-            {cat: "DISNEY+", title: "Disney+ Cuenta Completa Standard", price: "$22.000", old: "$40.000", desc: "-45%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-            {cat: "DISNEY+", title: "Disney+ 3 Meses Pack", price: "$75.000", old: "$120.000", desc: "-37%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-            {cat: "DISNEY+", title: "Disney+ Familiar Ultra", price: "$32.000", old: "$60.000", desc: "-46%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-            {cat: "DISNEY+", title: "Disney+ Kids Edición Especial", price: "$7.000", old: "$15.000", desc: "-53%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-            {cat: "DISNEY+", title: "Disney+ Anual Estándar", price: "$180.000", old: "$300.000", desc: "-40%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-            {cat: "DISNEY+", title: "Disney+ & Star+ Bundle Pantalla", price: "$12.000", old: "$24.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-            {cat: "DISNEY+", title: "Disney+ VIP Acceso Total", price: "$15.000", old: "$30.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-
-            // MAX (HBO) (21-30)
-            {cat: "MAX", title: "Max (HBO) Pantalla", price: "$8.000", old: "$16.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "MAX", title: "Max (HBO) Platino Pantalla", price: "$8.000", old: "$16.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "MAX", title: "Max (HBO) Cuenta Completa", price: "$25.000", old: "$45.000", desc: "-44%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "MAX", title: "Max (HBO) 3 Meses", price: "$65.000", old: "$110.000", desc: "-40%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "MAX", title: "Max (HBO) Ultra 4K", price: "$11.000", old: "$22.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "MAX", title: "Max (HBO) Estreno Pack", price: "$9.500", old: "$19.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "MAX", title: "Max (HBO) Perfil Privado", price: "$7.000", old: "$14.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "MAX", title: "Max (HBO) Anual", price: "$140.000", old: "$250.000", desc: "-44%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "MAX", title: "Max (HBO) + Warner Pass", price: "$13.000", old: "$26.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "MAX", title: "Max (HBO) Familiar Global", price: "$29.000", old: "$50.000", desc: "-42%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-
-            // AMAZON PRIME (31-40)
-            {cat: "AMAZON PRIME", title: "Amazon Prime Pantalla", price: "$5.000", old: "$10.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "AMAZON PRIME", title: "Amazon Prime Original Pantalla", price: "$8.000", old: "$16.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "AMAZON PRIME", title: "Amazon Prime Cuenta Completa", price: "$18.000", old: "$35.000", desc: "-48%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "AMAZON PRIME", title: "Amazon Prime 6 Meses", price: "$85.000", old: "$150.000", desc: "-43%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "AMAZON PRIME", title: "Amazon Prime Video Channels Add-on", price: "$12.000", old: "$24.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "AMAZON PRIME", title: "Amazon Music Unlimited (1 Mes)", price: "$9.000", old: "$18.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "AMAZON PRIME", title: "Amazon Gaming & Twitch Prime", price: "$6.000", old: "$12.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "AMAZON PRIME", title: "Amazon Prime Anual Completa", price: "$95.000", old: "$180.000", desc: "-47%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "AMAZON PRIME", title: "Amazon Prime Perfil Estándar", price: "$6.000", old: "$12.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "AMAZON PRIME", title: "Amazon Prime Pack Estreno 4K", price: "$10.000", old: "$20.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-
-            // YOUTUBE & SPOTIFY (41-50)
-            {cat: "YOUTUBE", title: "YouTube Premium 1 Mes (Tu Cuenta)", price: "$8.000", old: "$20.000", desc: "-60%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg"},
-            {cat: "YOUTUBE", title: "YouTube Premium 4 Meses Familiar", price: "$25.000", old: "$60.000", desc: "-58%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg"},
-            {cat: "YOUTUBE", title: "YouTube Premium Anual", price: "$75.000", old: "$180.000", desc: "-58%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg"},
-            {cat: "SPOTIFY", title: "Spotify Premium 1 Mes (Tu Cuenta)", price: "$7.000", old: "$16.000", desc: "-56%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text_%282015%29.svg"},
-            {cat: "SPOTIFY", title: "Spotify Premium 3 Meses Familiar", price: "$20.000", old: "$45.000", desc: "-55%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text_%282015%29.svg"},
-            {cat: "SPOTIFY", title: "Spotify Premium Anual", price: "$65.000", old: "$150.000", desc: "-56%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text_%282015%29.svg"},
-            {cat: "CRUNCHYROLL", title: "Crunchyroll Mega Fan Pantalla", price: "$6.000", old: "$15.000", desc: "-60%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "CRUNCHYROLL", title: "Crunchyroll Cuenta Completa", price: "$18.000", old: "$35.000", desc: "-48%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "PARAMOUNT", title: "Paramount+ Pantalla Estándar", price: "$7.000", old: "$15.000", desc: "-53%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "PARAMOUNT", title: "Paramount+ Cuenta Completa", price: "$20.000", old: "$40.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-
-            // COMBOS PREMIUM (51-62)
-            {cat: "COMBOS", title: "Combo Netflix + Crunchyroll", price: "$15.000", old: "$30.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "COMBOS", title: "Combo Netflix + Max (HBO)", price: "$18.000", old: "$36.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "COMBOS", title: "Combo Netflix + Disney+", price: "$20.000", old: "$40.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "COMBOS", title: "Super Combo Triple (Netflix + Disney + Max)", price: "$26.000", old: "$55.000", desc: "-52%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "COMBOS", title: "Combo Cine Total (Prime + Max + Paramount)", price: "$19.000", old: "$40.000", desc: "-52%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "COMBOS", title: "Combo Música Pro (Spotify + YouTube)", price: "$13.000", old: "$30.000", desc: "-56%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text_%282015%29.svg"},
-            {cat: "COMBOS", title: "Combo Gamer & Anime (Crunchyroll + Prime)", price: "$11.000", old: "$25.000", desc: "-56%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video_logo_%282024%29.svg"},
-            {cat: "COMBOS", title: "Combo Familiar Plus (Disney + Max + Prime)", price: "$21.000", old: "$45.000", desc: "-53%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-            {cat: "COMBOS", title: "Mega Pack Anual Combinado 3 Pantallas", price: "$190.000", old: "$380.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "COMBOS", title: "Combo Estudiantil (Canva + YouTube + Spotify)", price: "$18.000", old: "$40.000", desc: "-55%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg"},
-            {cat: "COMBOS", title: "Combo Fin de Semana (Netflix + Max Cuentas)", price: "$65.000", old: "$120.000", desc: "-45%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-            {cat: "COMBOS", title: "Pack Global Streaming 5 Servicios", price: "$35.000", old: "$80.000", desc: "-56%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-
-            // CANVA PRO Y DISEÑO (63-68)
-            {cat: "CANVA PRO", title: "Canva Pro (1 Mes - Invitación)", price: "$6.000", old: "$15.000", desc: "-60%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg"},
-            {cat: "CANVA PRO", title: "Canva Pro (3 Meses Educativo)", price: "$15.000", old: "$40.000", desc: "-62%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg"},
-            {cat: "CANVA PRO", title: "Canva Pro (1 Año Vitalicio Equipo)", price: "$45.000", old: "$120.000", desc: "-62%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg"},
-            {cat: "IPTV", title: "IPTV Smarters Pro 1 Mes (Más de 3000 canales)", price: "$15.000", old: "$30.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "IPTV", title: "IPTV Magis TV 3 Meses Oficial", price: "$35.000", old: "$70.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "IPTV", title: "IPTV Tele Latino 1 Año Pack Completo", price: "$90.000", old: "$180.000", desc: "-50%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-
-            // OTRAS PLATAFORMAS (69-72)
-            {cat: "OTRAS", title: "Apple TV+ (1 Mes)", price: "$10.000", old: "$22.000", desc: "-54%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "OTRAS", title: "VIX+ Premium Pantalla", price: "$8.000", old: "$18.000", desc: "-55%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "OTRAS", title: "Plex Pass Anual Oficial", price: "$40.000", old: "$90.000", desc: "-55%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg"},
-            {cat: "OTRAS", title: "Pornhub Premium VIP Pass (1 Mes)", price: "$12.000", old: "$25.000", desc: "-52%", agotado: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"}
-        ];
-
-        let productos = JSON.parse(localStorage.getItem('zrro_productos_72_v2')) || productosBase;
-        if(productos.length < 72) {
-            productos = productosBase;
-            localStorage.setItem('zrro_productos_72_v2', JSON.stringify(productos));
-        }
-
-        let paginaActual = 1;
-        let elementosPorPagina = 24;
-        let productosFiltrados = [...productos];
-
-        function renderizarPagina() {
-            let catalogo = document.getElementById('catalogo');
-            catalogo.innerHTML = "";
-
-            let inicio = (paginaActual - 1) * elementosPorPagina;
-            let fin = elementosPorPagina === 72 ? 72 : inicio + elementosPorPagina;
-            let itemsPagina = productosFiltrados.slice(inicio, fin);
-
-            if(itemsPagina.length === 0) {
-                catalogo.innerHTML = "<p style='grid-column: span 2; text-align:center; color: var(--text-muted); padding: 20px;'>No se encontraron servicios.</p>";
-                document.getElementById('paginacion').innerHTML = "";
-                return;
-            }
-
-            itemsPagina.forEach(p => {
-                let claseAgotado = p.agotado ? 'product-card agotado' : 'product-card';
-                let badgeAgotadoHTML = p.agotado ? '<span class="badge-agotado">AGOTADO</span>' : '';
-
-                catalogo.innerHTML += `
-                    <div class="${claseAgotado}">
-                        <div class="product-image-container">
-                            <span class="badge-discount">${p.desc}</span>
-                            ${badgeAgotadoHTML}
-                            <img src="${p.img}" alt="${p.title}" style="object-fit: contain; padding: 15px; background: #111;">
-                        </div>
-                        <div class="product-content">
-                            <div>
-                                <div class="category">${p.cat}</div>
-                                <div class="product-title">${p.title}</div>
-                                <div class="stars">☆☆☆☆☆</div>
-                            </div>
-                            <div class="price-box">
-                                <span class="old-price">${p.old}</span>
-                                <span class="current-price">${p.price}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            renderizarPaginacion();
-        }
-
-        function renderizarPaginacion() {
-            if(elementosPorPagina === 72) {
-                document.getElementById('paginacion').innerHTML = "";
-                return;
-            }
-            let totalPaginas = Math.ceil(productosFiltrados.length / elementosPorPagina);
-            let paginacion = document.getElementById('paginacion');
-            paginacion.innerHTML = "";
-
-            if(totalPaginas <= 1) return;
-
-            for(let i = 1; i <= totalPaginas; i++) {
-                paginacion.innerHTML += `<div class="page-item ${i === paginaActual ? 'active' : ''}" onclick="cambiarPagina(${i})">${i}</div>`;
-            }
-
-            if(paginaActual < totalPaginas) {
-                paginacion.innerHTML += `<div class="page-item" onclick="cambiarPagina(${paginaActual + 1})">&gt;</div>`;
-            }
-        }
-
-        function cambiarPagina(p) {
-            paginaActual = p;
-            renderizarPagina();
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        }
-
-        function cambiarLimite() {
-            let val = document.getElementById('itemsPorPagina').value;
-            if(val === "72") {
-                elementosPorPagina = 72;
-            } else {
-                elementosPorPagina = parseInt(val);
-            }
-            paginaActual = 1;
-            renderizarPagina();
-        }
-
-        function buscarServicios() {
-            let query = document.getElementById('buscador').value.toLowerCase();
-            productosFiltrados = productos.filter(p => 
-                p.title.toLowerCase().includes(query) || p.cat.toLowerCase().includes(query)
-            );
-            paginaActual = 1;
-            renderizarPagina();
-        }
-
-        function filtrarSeccion(categoria) {
-            toggleDrawer();
-            document.getElementById('filtroCategoriaSelect').value = categoria;
-            if(categoria === 'TODOS') {
-                productosFiltrados = [...productos];
-            } else {
-                productosFiltrados = productos.filter(p => p.cat === categoria);
-            }
-            paginaActual = 1;
-            renderizarPagina();
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        }
-
-        function cambiarFiltroSelect() {
-            let categoria = document.getElementById('filtroCategoriaSelect').value;
-            if(categoria === 'TODOS') {
-                productosFiltrados = [...productos];
-            } else {
-                productosFiltrados = productos.filter(p => p.cat === categoria);
-            }
-            paginaActual = 1;
-            renderizarPagina();
-        }
-
-        // CLAVE DE ADMIN: 1234
-        function abrirAdmin() {
-            let pass = prompt("Ingresa la clave de Administrador:");
-            if(pass === "1234") { 
-                document.getElementById('modalAdmin').style.display = 'flex';
-            } else if(pass !== null) {
-                alert("Contraseña incorrecta");
-            }
-        }
-
-        function cerrarAdmin() {
-            document.getElementById('modalAdmin').style.display = 'none';
-        }
-
-        function agregarProducto() {
-            let cat = document.getElementById('nuevoCat').value.toUpperCase();
-            let title = document.getElementById('nuevoTitulo').value;
-            let imgInput = document.getElementById('nuevoImg').value.trim();
-            let price = "$" + document.getElementById('nuevoPrecio').value;
-            let old = "$" + document.getElementById('nuevoOldPrecio').value;
-            let desc = document.getElementById('nuevoDescuento').value;
-            let agotadoVal = document.getElementById('nuevoAgotado').value === "true";
-
-            if(!cat || !title || !price) {
-                alert("Por favor completa al menos la categoría, título y precio.");
-                return;
-            }
-
-            let nuevo = {
-                cat: cat,
-                title: title,
-                price: price,
-                old: old || "$20.000",
-                desc: desc || "-40%",
-                agotado: agotadoVal,
-                img: imgInput !== "" ? imgInput : "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
-            };
-
-            productos.unshift(nuevo);
-            localStorage.setItem('zrro_productos_72_v2', JSON.stringify(productos));
-            productosFiltrados = [...productos];
-            
-            document.getElementById('nuevoCat').value = "";
-            document.getElementById('nuevoTitulo').value = "";
-            document.getElementById('nuevoImg').value = "";
-            document.getElementById('nuevoPrecio').value = "";
-            document.getElementById('nuevoOldPrecio').value = "";
-            document.getElementById('nuevoDescuento').value = "";
-            document.getElementById('nuevoAgotado').value = "false";
-
-            cerrarAdmin();
-            renderizarPagina();
-            alert("¡Servicio agregado con éxito!");
-        }
-
-        renderizarPagina();
-    </script>
+    render();
+</script>
 </body>
 </html>
 
