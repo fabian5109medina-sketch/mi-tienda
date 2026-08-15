@@ -12,12 +12,10 @@
         .balance { background: #1c2128; padding: 5px 15px; border-radius: 20px; font-size: 0.9em; border: 1px solid #30363d; }
         .search-box { width: 100%; padding: 12px; background: #161b22; border: 1px solid #30363d; color: white; border-radius: 8px; margin-bottom: 20px; box-sizing: border-box; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .card { background: var(--card-bg); border-radius: 12px; padding: 15px; position: relative; border: 1px solid #30363d; }
-        .badge { position: absolute; top: 8px; left: 8px; background: var(--discount-red); color: white; font-size: 0.7em; padding: 2px 6px; border-radius: 4px; }
-        .card h3 { margin: 20px 0 5px 0; font-size: 0.9em; }
-        .card p { font-size: 0.75em; color: var(--text-muted); margin-bottom: 10px; }
-        .price { font-size: 1.1em; font-weight: bold; margin-bottom: 10px; display: block; }
-        .btn { width: 100%; background: var(--accent-green); color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .card { background: var(--card-bg); border-radius: 12px; padding: 12px; position: relative; border: 1px solid #30363d; display: flex; flex-direction: column; justify-content: space-between; }
+        .card h3 { margin: 5px 0; font-size: 0.8em; line-height: 1.2em; min-height: 2.4em; }
+        .price { font-size: 1em; font-weight: bold; margin: 8px 0; display: block; color: #38bdf8; }
+        .btn { width: 100%; background: var(--accent-green); color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.8em; }
     </style>
 </head>
 <body>
@@ -25,25 +23,101 @@
         <div class="logo">⚡ ZRRO DIGITAL</div>
         <div class="balance">Saldo: $0</div>
     </div>
-    <input type="text" class="search-box" placeholder="Buscar servicio (ej: Netflix, Disney)...">
+    <input type="text" id="buscador" class="search-box" placeholder="Buscar entre los 72 servicios..." onkeyup="filtrarServicios()">
+    
     <div class="grid" id="catalogo">
-        <!-- Ejemplo de estructura de tarjeta, esto se repite para los 72 items -->
-        <div class="card">
-            <span class="badge">-52%</span>
-            <h3>NETFLIX</h3>
-            <p>1 Pantalla privada Ultra HD con PIN.</p>
-            <span class="price">$14.000</span>
-            <button class="btn">Comprar</button>
-        </div>
-        <div class="card">
-            <span class="badge">-40%</span>
-            <h3>DISNEY+</h3>
-            <p>4K Ultra HD y ESPN en vivo incluido.</p>
-            <span class="price">$9.000</span>
-            <button class="btn">Comprar</button>
-        </div>
+        <!-- 1 a 7 -->
+        <div class="card"><h3>Netflix Pantalla Normal</h3><span class="price">$14.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Netflix Pantalla Standard</h3><span class="price">$12.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Netflix Pantalla Genérica</h3><span class="price">$12.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Netflix Pantalla Internacional Genérica</h3><span class="price">$14.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Netflix Cuenta Completa Normal</h3><span class="price">$52.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Netflix Cuenta Completa Standard</h3><span class="price">$45.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Netflix Cuenta Completa Genérica</h3><span class="price">$45.000</span><button class="btn">Comprar</button></div>
+
+        <!-- 8 a 23 -->
+        <div class="card"><h3>Disney+ Premium Pantalla</h3><span class="price">$9.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Disney+ Standard Pantalla</h3><span class="price">$6.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Max (HBO) Pantalla</h3><span class="price">$8.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Max (HBO) Platino Pantalla</h3><span class="price">$8.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Amazon Prime Pantalla</h3><span class="price">$5.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Amazon Prime Original Pantalla</h3><span class="price">$8.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Crunchyroll Pantalla</h3><span class="price">$5.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Crunchyroll Pantalla Original</h3><span class="price">$8.500</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Paramount+ Pantalla</h3><span class="price">$6.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Paramount+ Pantalla Original</h3><span class="price">$10.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>ViX+</h3><span class="price">$5.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Universal+ Pantalla</h3><span class="price">$7.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Plex Pantalla Original</h3><span class="price">$6.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>MUBI Pantalla</h3><span class="price">$6.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Viki Rakuten Pantalla (Dramas)</h3><span class="price">$6.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>DirecTV GO Plan Oro (1 Disp.)</h3><span class="price">$14.000</span><button class="btn">Comprar</button></div>
+
+        <!-- 24 a 38 -->
+        <div class="card"><h3>Disney+ Premium Completa</h3><span class="price">$38.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Disney+ Standard Completa</h3><span class="price">$18.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Max (HBO) Completa</h3><span class="price">$18.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Max (HBO) Platino Completa</h3><span class="price">$16.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Amazon Prime Completa</h3><span class="price">$10.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Amazon Prime Original Completa</h3><span class="price">$20.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Crunchyroll Completa</h3><span class="price">$14.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Paramount+ Completa</h3><span class="price">$18.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Universal+ Completa</h3><span class="price">$16.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>ViX+ Completa</h3><span class="price">$8.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Plex Completa</h3><span class="price">$13.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>MUBI Completa</h3><span class="price">$10.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Viki Rakuten Completa</h3><span class="price">$13.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Hot Go Premium Completa (+18)</h3><span class="price">$18.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>DirecTV GO Plan Oro Completa (2 Disp.)</h3><span class="price">$22.000</span><button class="btn">Comprar</button></div>
+
+        <!-- 39 a 46 -->
+        <div class="card"><h3>IPTV Pantalla Original</h3><span class="price">$10.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>IPTV Premium Completa (1 Mes - 3 Disp.)</h3><span class="price">$12.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>IPTV Plan 3 Meses Completa</h3><span class="price">$25.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>IPTV Plan 6 Meses Completa</h3><span class="price">$45.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>IPTV Plan 1 Año Completo</h3><span class="price">$80.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Flujo TV / Magis (3 Meses)</h3><span class="price">$55.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Flujo TV / Magis (7 Meses)</h3><span class="price">$95.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Flujo TV / Magis (14 Meses)</h3><span class="price">$170.000</span><button class="btn">Comprar</button></div>
+
+        <!-- 47 a 51 -->
+        <div class="card"><h3>Spotify Premium Original (1 Mes)</h3><span class="price">$12.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Spotify Premium Original (2 Meses)</h3><span class="price">$18.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>YouTube Premium / A Dominio (1 Mes)</h3><span class="price">$12.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Deezer Original (1 Mes)</h3><span class="price">$5.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Tidal Premium (1 Mes)</h3><span class="price">$6.000</span><button class="btn">Comprar</button></div>
+
+        <!-- 52 a 61 -->
+        <div class="card"><h3>Canva Pro (1 Mes)</h3><span class="price">$6.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Canva Pro a tu Dominio (1 Mes)</h3><span class="price">$6.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Canva Pro (1 Año)</h3><span class="price">$25.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Canva Pro a tu Dominio (1 Año)</h3><span class="price">$22.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>CapCut Pro Individual (1 Mes)</h3><span class="price">$18.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>CapCut Pro Completa 3 Disp. (1 Mes)</h3><span class="price">$32.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Office 365 Licencia 1 Año (1 PC)</h3><span class="price">$25.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Office 365 Licencia 1 Año (5 Disp.)</h3><span class="price">$65.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Duolingo Pro (1 Mes)</h3><span class="price">$5.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Duolingo Pro Premium (1 Año)</h3><span class="price">$20.000</span><button class="btn">Comprar</button></div>
+
+        <!-- 62 a 64 -->
+        <div class="card"><h3>Hot Go Premium Pantalla</h3><span class="price">$7.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Pornhub Pantalla (1 Año)</h3><span class="price">$12.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Pornhub Cuenta Completa (1 Año)</h3><span class="price">$22.000</span><button class="btn">Comprar</button></div>
+
+        <!-- 65 a 67 -->
+        <div class="card"><h3>Panel IPTV (10 Créditos + Demos)</h3><span class="price">$65.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Panel IPTV (50 Créditos + Demos)</h3><span class="price">$150.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Panel IPTV PRO (100 Créditos + Demos)</h3><span class="price">$230.000</span><button class="btn">Comprar</button></div>
+
+        <!-- 68 a 72 -->
+        <div class="card"><h3>Combo Netflix + Crunchyroll</h3><span class="price">$15.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Combo Netflix + Max (HBO)</h3><span class="price">$18.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Combo Netflix + IPTV Premium</h3><span class="price">$18.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Combo Netflix + Disney+</h3><span class="price">$20.000</span><button class="btn">Comprar</button></div>
+        <div class="card"><h3>Combo Netflix + Plex Premium</h3><span class="price">$16.000</span><button class="btn">Comprar</button></div>
     </div>
 
+    <!-- Script de Firebase y Buscador -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -58,6 +132,20 @@
         };
         initializeApp(firebaseConfig);
     </script>
+
+    <script>
+        function filtrarServicios() {
+            let input = document.getElementById('buscador').value.toLowerCase();
+            let cards = document.getElementsByClassName('card');
+            for (let i = 0; i < cards.length; i++) {
+                let titulo = cards[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
+                if (titulo.includes(input)) {
+                    cards[i].style.display = "";
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
+        }
+    </script>
 </body>
 </html>
-
