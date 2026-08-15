@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ZRRO Digital Media | Panel Automatizado con Admin</title>
+  <title>ZRRO Digital | Panel Automatizado</title>
   <style>
     :root { 
       --primary: #38bdf8; 
@@ -20,281 +20,367 @@
 
     /* Barra Superior */
     nav { 
-      background: rgba(19, 27, 46, 0.95); 
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border); 
-      padding: 10px 20px; 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
+      background: rgba(19, 27, 46, 0.95); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border); padding: 12px 20px; 
+      display: flex; justify-content: space-between; align-items: center; 
       position: sticky; top: 0; z-index: 90;
     }
-    .brand-container { display: flex; align-items: center; gap: 10px; text-decoration: none; cursor: pointer; }
+    .brand-container { display: flex; align-items: center; gap: 10px; cursor: pointer; }
     .brand-logo { 
       width: 40px; height: 40px; background: linear-gradient(135deg, #38bdf8, #0284c7); 
       border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-      font-size: 18px; box-shadow: 0 0 12px rgba(56, 189, 248, 0.4); border: 2px solid rgba(255,255,255,0.1);
+      font-size: 18px; box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
     }
     .brand-text h2 { font-size: 14px; color: #fff; font-weight: 800; line-height: 1.1; }
     .brand-text span { font-size: 10px; color: var(--primary); font-weight: 600; }
 
-    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .nav-right { display: flex; align-items: center; gap: 8px; }
     .wallet-pill {
-      background: #1e293b; border: 1px solid var(--border); padding: 6px 12px;
-      border-radius: 20px; display: flex; align-items: center; gap: 6px; font-size: 12px; cursor: pointer;
+      background: #1e293b; border: 1px solid var(--border); padding: 5px 10px;
+      border-radius: 20px; display: flex; align-items: center; gap: 5px; font-size: 11px;
     }
     .wallet-pill span { color: var(--accent); font-weight: 800; }
 
-    .admin-access-btn {
-      background: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger); color: var(--danger);
-      padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer;
-    }
-
-    /* Menú de Pestañas */
+    /* Pestañas de Navegación */
     .nav-links { 
       display: flex; gap: 8px; overflow-x: auto; padding: 12px 20px; 
       background: #070a12; border-bottom: 1px solid var(--border); 
-      -webkit-overflow-scrolling: touch; scrollbar-width: none;
     }
     .nav-links::-webkit-scrollbar { display: none; }
     .nav-btn { 
       background: #131b2e; color: #94a3b8; border: 1px solid var(--border); 
-      padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; 
-      cursor: pointer; white-space: nowrap; transition: all 0.2s ease;
+      padding: 7px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; 
+      cursor: pointer; white-space: nowrap; transition: all 0.2s;
     }
-    .nav-btn:hover, .nav-btn.active { background: var(--primary); color: #0b0f19; border-color: var(--primary); }
+    .nav-btn.active { background: var(--primary); color: #0b0f19; border-color: var(--primary); }
 
-    .main-container { padding: 20px; max-width: 650px; margin: 0 auto; }
-
-    /* Vistas */
+    .main-container { padding: 15px; max-width: 600px; margin: 0 auto; }
     .view-section { display: none; }
     .view-section.active-view { display: block; }
 
-    /* Banner */
+    /* Hero Banner de la Tienda */
     .hero-banner { 
       background: linear-gradient(135deg, #131b2e 0%, #0f172a 100%);
-      border: 1px solid var(--border); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px;
+      border: 1px solid var(--border); border-radius: 14px; padding: 18px; text-align: center; margin-bottom: 15px;
     }
-    .hero-banner h1 { color: #fff; font-size: 20px; font-weight: 800; margin-bottom: 5px; }
-    .hero-banner p { font-size: 12px; color: #94a3b8; }
+    .hero-banner h1 { color: #fff; font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+    .hero-banner p { font-size: 11px; color: #94a3b8; margin-bottom: 12px; }
+    .btn-banner-recharge {
+      background: #fff; color: #0b0f19; border: none; padding: 8px 16px; border-radius: 20px;
+      font-weight: 800; font-size: 11px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;
+    }
 
-    /* Buscador */
-    .search-container { margin-bottom: 20px; display: flex; gap: 8px; }
-    #searchInput { flex: 1; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border); background: #131b2e; color: white; outline: none; font-size: 13px; }
+    /* Buscador Profesional */
+    .search-container { margin-bottom: 15px; }
+    #searchInput { width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border); background: #131b2e; color: white; outline: none; font-size: 12px; }
     #searchInput:focus { border-color: var(--primary); }
 
-    /* Grid de Productos */
-    .grid { display: grid; gap: 12px; }
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-    .card-body { padding: 14px; }
-    .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; gap: 10px; }
-    .info h3 { font-size: 14px; color: #fff; font-weight: 700; }
-    .price-badge { font-weight: 800; color: var(--primary); font-size: 14px; background: rgba(56, 189, 248, 0.1); padding: 4px 8px; border-radius: 6px; }
+    /* Grilla de Productos en Cuadrados (2 Columnas) */
+    .product-grid { 
+      display: grid; 
+      grid-template-columns: repeat(2, 1fr); 
+      gap: 12px; 
+    }
+    .product-card { 
+      background: var(--card); 
+      border: 1px solid var(--border); 
+      border-radius: 12px; 
+      overflow: hidden; 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: space-between; 
+    }
     
-    .stock-info { display: flex; justify-content: space-between; align-items: center; font-size: 11px; margin-bottom: 10px; color: #94a3b8; }
-    .stock-badge { padding: 2px 6px; border-radius: 4px; font-weight: 700; }
-    .in-stock { background: rgba(34, 197, 94, 0.15); color: var(--accent); }
-    .low-stock { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+    .product-image-box { height: 100px; background: linear-gradient(135deg, #1e293b, #0f172a); position: relative; display: flex; align-items: center; justify-content: center; padding: 8px; border-bottom: 1px solid var(--border); }
+    .discount-badge { position: absolute; top: 8px; left: 8px; background: var(--danger); color: #fff; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 5px; }
+    .product-title-overlay { font-size: 13px; font-weight: 800; color: #fff; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.6); }
+
+    .product-body { padding: 10px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+    .product-desc { font-size: 10px; color: #94a3b8; line-height: 1.3; }
     
-    .service-desc { font-size: 11px; color: #94a3b8; margin-bottom: 12px; line-height: 1.3; }
-    .btn-buy { background: var(--accent); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: 700; width: 100%; font-size: 12px; }
-    .btn-buy:active { opacity: 0.8; }
+    .price-row { display: flex; align-items: center; gap: 8px; margin-top: auto; }
+    .old-price { font-size: 10px; color: #64748b; text-decoration: line-through; font-weight: 600; }
+    .current-price { font-size: 14px; color: var(--primary); font-weight: 800; }
 
-    /* Pedidos / Credenciales */
-    .order-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 10px; }
-    .order-header { display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; margin-bottom: 6px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
-    .credentials-box { background: #0b0f19; border: 1px dashed var(--primary); padding: 10px; border-radius: 8px; margin-top: 8px; font-size: 12px; }
-    .credentials-box p { margin-bottom: 4px; color: #fff; }
+    .btn-buy-card { background: var(--accent); color: #fff; border: none; padding: 8px; border-radius: 6px; font-weight: bold; width: 100%; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; gap: 4px; }
+    .btn-buy-card:active { opacity: 0.8; }
 
-    /* Recarga WhatsApp */
-    .recharge-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
-    .recharge-box p { font-size: 12px; color: #94a3b8; margin-bottom: 15px; }
-    .btn-whatsapp-recharge { display: inline-block; background: #25d366; color: white; text-decoration: none; padding: 12px 20px; border-radius: 10px; font-weight: bold; font-size: 13px; margin-top: 10px; width: 100%; }
+    /* Tarjetas Generales y Autenticación */
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+    .auth-input { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid var(--border); background: #0b0f19; color: white; font-size: 12px; }
+    .btn-main { background: var(--primary); color: #0b0f19; border: none; padding: 10px; border-radius: 8px; font-weight: bold; width: 100%; cursor: pointer; font-size: 12px; }
 
-    /* Panel de Admin Estilos */
-    .admin-panel-box { background: var(--card); border: 1px solid var(--danger); border-radius: 12px; padding: 16px; margin-bottom: 15px; }
-    .admin-input { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid var(--border); background: #0b0f19; color: white; font-size: 13px; }
-    .btn-admin-action { background: var(--danger); color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; width: 100%; cursor: pointer; font-size: 13px; }
+    /* Modal de Compra Exitosa */
+    #successModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
+    .modal-content { background: var(--card); border: 1px solid var(--accent); border-radius: 14px; padding: 18px; max-width: 380px; width: 100%; text-align: center; }
+    .credentials-box { background: #0b0f19; border: 1px dashed var(--primary); padding: 10px; border-radius: 8px; margin: 12px 0; text-align: left; font-size: 11px; color: #fff; }
 
-    /* Notificación flotante / Toast */
-    #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; padding: 10px 20px; border-radius: 20px; border: 1px solid var(--primary); font-size: 13px; display: none; z-index: 1000; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+    .hidden { display: none !important; }
+    #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; padding: 8px 16px; border-radius: 20px; border: 1px solid var(--primary); font-size: 12px; display: none; z-index: 1000; }
   </style>
+
+  <!-- SDKs de Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // TODO: Reemplaza con tus datos reales de Firebase
+    const firebaseConfig = {
+      apiKey: "TU_API_KEY",
+      authDomain: "TU_PROYECTO.firebaseapp.com",
+      projectId: "TU_PROYECTO",
+      storageBucket: "TU_PROYECTO.appspot.com",
+      messagingSenderId: "TU_SENDER_ID",
+      appId: "TU_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    window.firebaseAuth = auth;
+    window.firebaseDb = db;
+    window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+    window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+    window.signOut = signOut;
+    window.doc = doc;
+    window.getDoc = getDoc;
+    window.setDoc = setDoc;
+    window.updateDoc = updateDoc;
+    window.collection = collection;
+    window.getDocs = getDocs;
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        document.getElementById('authView').classList.add('hidden');
+        document.getElementById('appContainer').classList.remove('hidden');
+        window.currentUserUid = user.uid;
+        
+        const userRef = doc(db, "usuarios", user.uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          window.currentSaldo = userSnap.data().saldo || 0;
+          document.getElementById('userWallet').innerText = `$${window.currentSaldo.toLocaleString('es-CO')}`;
+        } else {
+          await setDoc(userRef, { email: user.email, saldo: 0, rol: "cliente" });
+          window.currentSaldo = 0;
+          document.getElementById('userWallet').innerText = `$0`;
+        }
+      } else {
+        document.getElementById('authView').classList.remove('hidden');
+        document.getElementById('appContainer').classList.add('hidden');
+      }
+    });
+  </script>
 </head>
 <body>
 
-  <!-- Barra Superior -->
-  <nav>
-    <div class="brand-container" onclick="switchView('catalog')">
-      <div class="brand-logo">⚡</div>
-      <div class="brand-text">
-        <h2>ZRRO DIGITAL</h2>
-        <span>Panel Automatizado</span>
+  <!-- VISTA DE AUTENTICACIÓN -->
+  <div id="authView" class="main-container" style="margin-top: 40px;">
+    <div class="card" style="border-color: var(--primary);">
+      <div style="text-align:center; margin-bottom:15px;">
+        <div class="brand-logo" style="margin: 0 auto 10px auto; width:45px; height:45px; font-size:20px;">⚡</div>
+        <h2 style="color:#fff; font-size:16px;">ZRRO DIGITAL</h2>
+        <p style="font-size:11px; color:#94a3b8;">Inicia sesión para acceder a tu monedero y catálogo</p>
       </div>
+      <input type="email" id="authEmail" class="auth-input" placeholder="Correo electrónico">
+      <input type="password" id="authPassword" class="auth-input" placeholder="Contraseña">
+      <button class="btn-main" style="margin-bottom:8px;" onclick="iniciarSesion()">Iniciar Sesión</button>
+      <button class="btn-main" style="background:transparent; border:1px solid var(--primary); color:var(--primary);" onclick="registrarUsuario()">Crear Cuenta Nueva</button>
     </div>
-    <div class="nav-right">
-      <div class="wallet-pill" onclick="switchView('recharge')">
-        💰 Saldo: <span id="userWallet">$15.000</span>
-      </div>
-      <button class="admin-access-btn" onclick="openAdminPanel()">⚙️ Admin</button>
-    </div>
-  </nav>
-
-  <!-- Pestañas de Navegación -->
-  <div class="nav-links">
-    <button class="nav-btn active" onclick="switchView('catalog', this)">🛍️ Catálogo</button>
-    <button class="nav-btn" onclick="switchView('orders', this)">📦 Mis Pedidos (<span id="orderCount">0</span>)</button>
-    <button class="nav-btn" onclick="switchView('recharge', this)">💬 Recargar por WhatsApp</button>
-    <button class="nav-btn" id="tabAdminBtn" style="display:none; border-color:var(--danger); color:var(--danger);" onclick="switchView('admin', this)">⚙️ Panel Admin</button>
   </div>
 
-  <div class="main-container">
-
-    <!-- ================= VISTA 1: CATALOGO ================= -->
-    <div id="view-catalog" class="view-section active-view">
-      <div class="hero-banner">
-        <h1>Catálogo y Entrega Instantánea</h1>
-        <p>Elige tu servicio. El saldo se descuenta de tu monedero y tus credenciales se generan al instante.</p>
-      </div>
-
-      <div class="search-container">
-        <input type="text" id="searchInput" placeholder="🔍 Buscar servicio (ej: Netflix, IPTV)..." onkeyup="searchServices()">
-      </div>
-
-      <div class="grid" id="serviceGrid">
-        <div class="card" data-name="netflix pantalla normal">
-          <div class="card-body">
-            <div class="card-top">
-              <div class="info"><h3>Netflix Pantalla Normal</h3></div>
-              <div class="price-badge">$14.000</div>
-            </div>
-            <div class="stock-info">
-              <span>Disponibilidad:</span>
-              <span class="stock-badge in-stock">🟢 Stock Disponible (8)</span>
-            </div>
-            <p class="service-desc">1 Pantalla privada Ultra HD con PIN de seguridad.</p>
-            <button class="btn-buy" onclick="buyProduct('Netflix Pantalla Normal', 14000, 'Correo: netflix_auto_01@zrro.com | PIN: 4821')">Comprar al Instante</button>
-          </div>
-        </div>
-
-        <div class="card" data-name="disney+ premium pantalla">
-          <div class="card-body">
-            <div class="card-top">
-              <div class="info"><h3>Disney+ Premium Pantalla</h3></div>
-              <div class="price-badge">$9.000</div>
-            </div>
-            <div class="stock-info">
-              <span>Disponibilidad:</span>
-              <span class="stock-badge in-stock">🟢 Stock Disponible (14)</span>
-            </div>
-            <p class="service-desc">4K Ultra HD, ESPN en vivo y contenido Star.</p>
-            <button class="btn-buy" onclick="buyProduct('Disney+ Premium Pantalla', 9000, 'Correo: disney_auto_05@zrro.com | Clave: st9921')">Comprar al Instante</button>
-          </div>
-        </div>
-
-        <div class="card" data-name="max hbo pantalla">
-          <div class="card-body">
-            <div class="card-top">
-              <div class="info"><h3>Max (HBO) Pantalla</h3></div>
-              <div class="price-badge">$8.000</div>
-            </div>
-            <div class="stock-info">
-              <span>Disponibilidad:</span>
-              <span class="stock-badge low-stock">⚠️ Últimas 2 unidades</span>
-            </div>
-            <p class="service-desc">Películas de Warner, series de HBO y deportes.</p>
-            <button class="btn-buy" onclick="buyProduct('Max (HBO) Pantalla', 8000, 'Correo: max_user_88@zrro.com | Clave: hbo4321')">Comprar al Instante</button>
-          </div>
-        </div>
-
-        <div class="card" data-name="iptv premium 1 mes">
-          <div class="card-body">
-            <div class="card-top">
-              <div class="info"><h3>IPTV Premium 1 Mes</h3></div>
-              <div class="price-badge">$12.000</div>
-            </div>
-            <div class="stock-info">
-              <span>Disponibilidad:</span>
-              <span class="stock-badge in-stock">🟢 Ilimitado (Automático)</span>
-            </div>
-            <p class="service-desc">Miles de canales en vivo y películas en 3 dispositivos.</p>
-            <button class="btn-buy" onclick="buyProduct('IPTV Premium 1 Mes', 12000, 'Usuario: zrro_iptv_99 | Clave: 7788 | M3U: http://linea.tv/get')">Comprar al Instante</button>
-          </div>
+  <!-- APLICACIÓN PRINCIPAL -->
+  <div id="appContainer" class="hidden">
+    <!-- Barra Superior -->
+    <nav>
+      <div class="brand-container" onclick="switchView('catalog', event.target)">
+        <div class="brand-logo">⚡</div>
+        <div class="brand-text">
+          <h2>ZRRO DIGITAL</h2>
+          <span>Panel Automatizado</span>
         </div>
       </div>
+      <div class="nav-right">
+        <div class="wallet-pill" onclick="switchView('recharge', document.querySelectorAll('.nav-btn')[2])">
+          💰 Saldo: <span id="userWallet">$0</span>
+        </div>
+        <button onclick="cerrarSesion()" style="background:rgba(239, 68, 68, 0.15); border:1px solid var(--danger); color:var(--danger); padding:5px 8px; border-radius:6px; font-size:10px; font-weight:bold; cursor:pointer;">Salir</button>
+      </div>
+    </nav>
+
+    <!-- Pestañas de Navegación -->
+    <div class="nav-links">
+      <button class="nav-btn active" onclick="switchView('catalog', this)">🛍️ Catálogo</button>
+      <button class="nav-btn" onclick="switchView('orders', this)">📦 Mis Pedidos</button>
+      <button class="nav-btn" onclick="switchView('recharge', this)">💬 Cargar Saldo</button>
+      <button class="nav-btn" style="border-color:var(--danger); color:var(--danger);" onclick="switchView('admin', this); cargarUsuariosRegistrados();">⚙️ Admin</button>
     </div>
 
-    <!-- ================= VISTA 2: MIS PEDIDOS ================= -->
-    <div id="view-orders" class="view-section">
-      <div class="hero-banner">
-        <h1>Tus Credenciales y Compras</h1>
-        <p>Aquí se almacenan los datos de acceso de los servicios que vas adquiriendo.</p>
-      </div>
-      <div id="ordersContainer">
-        <p style="text-align:center; color:#94a3b8; font-size:12px; margin-top:30px;">No tienes compras recientes registradas.</p>
-      </div>
-    </div>
+    <div class="main-container">
 
-    <!-- ================= VISTA 3: RECARGAR POR WHATSAPP ================= -->
-    <div id="view-recharge" class="view-section">
-      <div class="hero-banner">
-        <h1>Recargas de Saldo por WhatsApp</h1>
-        <p>Gestiona tus fondos de forma directa y rápida con el administrador.</p>
+      <!-- ================= VISTA 1: CATALOGO (CUADRADOS 2 COLUMNAS) ================= -->
+      <div id="view-catalog" class="view-section active-view">
+        <div class="hero-banner">
+          <h1>CUENTAS STREAMING AL INSTANTE</h1>
+          <p>Entrega automática inmediata respaldada por saldo en la nube.</p>
+          <button class="btn-banner-recharge" onclick="switchView('recharge', document.querySelectorAll('.nav-btn')[2])">
+            CARGAR SALDO <span>›</span>
+          </button>
+        </div>
+
+        <div class="search-container">
+          <input type="text" id="searchInput" placeholder="🔍 Buscar servicio (ej: Netflix, Disney)..." onkeyup="searchServices()">
+        </div>
+
+        <div class="product-grid" id="productGrid">
+          
+          <!-- Producto 1: Netflix -->
+          <div class="product-card" data-name="netflix pantalla normal">
+            <div class="product-image-box">
+              <span class="discount-badge">-52%</span>
+              <div class="product-title-overlay">NETFLIX</div>
+            </div>
+            <div class="product-body">
+              <p class="product-desc">1 Pantalla privada Ultra HD con PIN.</p>
+              <div class="price-row">
+                <span class="old-price">$30.000</span>
+                <span class="current-price">$14.000</span>
+              </div>
+              <button class="btn-buy-card" onclick="realizarCompra('Netflix Pantalla Normal', 14000, 'Correo: netflix_auto_01@zrro.com | PIN: 4821')">Comprar</button>
+            </div>
+          </div>
+
+          <!-- Producto 2: Disney+ -->
+          <div class="product-card" data-name="disney+ premium pantalla">
+            <div class="product-image-box">
+              <span class="discount-badge">-40%</span>
+              <div class="product-title-overlay">DISNEY+</div>
+            </div>
+            <div class="product-body">
+              <p class="product-desc">4K Ultra HD y ESPN en vivo incluido.</p>
+              <div class="price-row">
+                <span class="old-price">$15.000</span>
+                <span class="current-price">$9.000</span>
+              </div>
+              <button class="btn-buy-card" onclick="realizarCompra('Disney+ Premium Pantalla', 9000, 'Correo: disney_auto_05@zrro.com | Clave: st9921')">Comprar</button>
+            </div>
+          </div>
+
+          <!-- Producto 3: Max (HBO) -->
+          <div class="product-card" data-name="max (hbo) pantalla">
+            <div class="product-image-box">
+              <span class="discount-badge">-45%</span>
+              <div class="product-title-overlay">MAX (HBO)</div>
+            </div>
+            <div class="product-body">
+              <p class="product-desc">Películas y estrenos exclusivos en HD.</p>
+              <div class="price-row">
+                <span class="old-price">$14.000</span>
+                <span class="current-price">$8.000</span>
+              </div>
+              <button class="btn-buy-card" onclick="realizarCompra('Max (HBO) Pantalla', 8000, 'Correo: max_auto_88@zrro.com | Clave: hbo4321')">Comprar</button>
+            </div>
+          </div>
+
+          <!-- Producto 4: IPTV Premium -->
+          <div class="product-card" data-name="iptv premium 1 mes">
+            <div class="product-image-box">
+              <span class="discount-badge">-30%</span>
+              <div class="product-title-overlay">IPTV 1 MES</div>
+            </div>
+            <div class="product-body">
+              <p class="product-desc">Miles de canales, deportes y películas.</p>
+              <div class="price-row">
+                <span class="old-price">$18.000</span>
+                <span class="current-price">$12.000</span>
+              </div>
+              <button class="btn-buy-card" onclick="realizarCompra('IPTV Premium 1 Mes', 12000, 'Usuario: zrro_iptv_99 | Clave: 7788 | Link M3U: http://linea.tv/get')">Comprar</button>
+            </div>
+          </div>
+
+        </div>
       </div>
+
+      <!-- ================= VISTA 2: MIS PEDIDOS ================= -->
+      <div id="view-orders" class="view-section">
+        <div class="hero-banner">
+          <h1>Tus Credenciales y Compras</h1>
+          <p>Aquí se almacenan los datos de acceso de los servicios que vas adquiriendo.</p>
+        </div>
+        <div id="ordersContainer">
+          <p style="text-align:center; color:#94a3b8; font-size:11px; margin-top:25px;">No tienes compras recientes registradas en esta sesión.</p>
+        </div>
+      </div>
+
+      <!-- ================= VISTA 3: RECARGAR SALDO ================= -->
+      <div id="view-recharge" class="view-section">
+        <div class="hero-banner">
+          <h1>Recargas por WhatsApp</h1>
+          <p>Envía tu comprobante de Nequi o Daviplata para acreditar saldo a tu cuenta.</p>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div style="background:#0b0f19; padding:12px; border-radius:8px; border:1px solid var(--border); margin-bottom:12px; text-align:left;">
+            <p style="color:#fff; font-size:11px; margin-bottom:4px;"><strong>Nequi / Daviplata:</strong> 312 252 1685</p>
+            <p style="color:#fff; font-size:11px;"><strong>Titular:</strong> Soporte ZRRO Digital</p>
+          </div>
+          <a href="https://wa.me/573122521685?text=Hola,%20deseo%20recargar%20saldo%20a%20mi%20monedero%20digital.%20Adjunto%20mi%20comprobante." target="_blank" style="display:inline-block; background:#25d366; color:#fff; text-decoration:none; padding:10px; border-radius:8px; font-weight:bold; font-size:12px; width:100%;">📲 Reportar Recarga por WhatsApp</a>
+        </div>
+      </div>
+
+      <!-- ================= VISTA 4: PANEL DE ADMIN Y REGISTROS ================= -->
+      <div id="view-admin" class="view-section">
+        <div class="hero-banner" style="border-color:var(--danger);">
+          <h1>Panel de Administración</h1>
+          <p>Monitorea los usuarios registrados y acredita saldo a sus monederos.</p>
+        </div>
+
+        <!-- Lista de Usuarios Registrados en la Nube -->
+        <div class="card" style="margin-bottom: 12px;">
+          <h3 style="color: #fff; font-size: 13px; margin-bottom: 10px;">👥 Usuarios Registrados en la Nube</h3>
+          <div id="usersListContainer" style="max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;">
+            <p style="color: #94a3b8; font-size: 11px; text-align: center;">Cargando lista de usuarios...</p>
+          </div>
+        </div>
+
+        <!-- Acreditar Saldo -->
+        <div class="card" style="border-color:var(--danger);">
+          <h3 style="color:#fff; font-size:13px; margin-bottom:8px;">⚡ Acreditar Saldo a Usuario</h3>
+          <input type="text" id="adminTargetEmail" class="auth-input" placeholder="Correo del cliente (ej: cliente@correo.com)">
+          <input type="number" id="adminTargetAmount" class="auth-input" placeholder="Monto a sumar (ej: 15000)">
+          <button class="btn-main" style="background:var(--danger); color:#fff;" onclick="recargarSaldoAdmin()">Sumar Saldo en la Nube</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL DE COMPRA EXITOSA -->
+  <div id="successModal">
+    <div class="modal-content">
+      <h3 style="color:var(--accent); font-size:15px; margin-bottom:6px;">🎉 ¡Compra Exitosa!</h3>
+      <p style="font-size:11px; color:#94a3b8; margin-bottom:8px;">Tu servicio ha sido entregado al instante.</p>
       
-      <div class="recharge-box">
-        <h3 style="color:#fff; font-size:14px; margin-bottom:8px;">¿Cómo recargar tu monedero?</h3>
-        <p>1. Realiza tu pago por Nequi o Daviplata.<br>2. Haz clic en el botón de abajo para enviar el comprobante directamente a WhatsApp.</p>
-        
-        <div style="background:#0b0f19; padding:12px; border-radius:8px; border:1px solid var(--border); margin-bottom:15px; text-align:left;">
-          <p style="color:#fff; font-size:12px; margin-bottom:4px;"><strong>Nequi / Daviplata:</strong> 312 252 1685</p>
-          <p style="color:#fff; font-size:12px;"><strong>Titular:</strong> Soporte ZRRO Digital</p>
-        </div>
+      <div class="credentials-box" id="modalCredsText"></div>
 
-        <a href="https://wa.me/573122521685?text=Hola,%20deseo%20recargar%20saldo%20a%20mi%20monedero%20digital.%20Adjunto%20mi%20comprobante." class="btn-whatsapp-recharge" target="_blank">📲 Solicitar Recarga por WhatsApp</a>
-      </div>
+      <button class="btn-main" onclick="cerrarModalCompra()">Entendido y Guardado</button>
     </div>
-
-    <!-- ================= VISTA 4: PANEL DE ADMINISTRADOR ================= -->
-    <div id="view-admin" class="view-section">
-      <div class="hero-banner" style="border-color: var(--danger);">
-        <h1>Panel de Control de Administrador</h1>
-        <p>Acredita saldo a los monederos de tus clientes de forma directa.</p>
-      </div>
-
-      <div class="admin-panel-box">
-        <h3 style="color:#fff; font-size:14px; margin-bottom:10px;">⚡ Recargar Saldo a Usuario</h3>
-        <input type="text" id="adminUserEmail" class="admin-input" placeholder="Correo del cliente (ej: cliente@correo.com)">
-        <input type="number" id="adminAmount" class="admin-input" placeholder="Monto a recargar (ej: 15000)">
-        <button class="btn-admin-action" onclick="adminRechargeBalance()">Acreditar Saldo Inmediato</button>
-      </div>
-
-      <div style="background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px;">
-        <h3 style="color:#fff; font-size:13px; margin-bottom:8px;">📊 Estado Actual del Sistema (Simulado)</h3>
-        <p style="font-size:12px; color:#94a3b8; margin-bottom:4px;">Usuario Activo Actual: <strong style="color:var(--primary)">tucuenta@zrro.com</strong></p>
-        <p style="font-size:12px; color:#94a3b8;">Saldo en Monedero: <strong style="color:var(--accent)" id="adminViewBalance">$15.000</strong></p>
-      </div>
-    </div>
-
   </div>
 
   <div id="toast">Notificación</div>
 
   <script>
-    // Inicializar datos en localStorage si no existen
-    if (!localStorage.getItem('zrro_balance')) {
-      localStorage.setItem('zrro_balance', '15000');
-    }
-    if (!localStorage.getItem('zrro_orders')) {
-      localStorage.setItem('zrro_orders', JSON.stringify([]));
-    }
+    window.currentSaldo = 0;
+    window.currentUserUid = null;
+    let myOrders = [];
 
-    let userBalance = parseInt(localStorage.getItem('zrro_balance'));
-    let myOrders = JSON.parse(localStorage.getItem('zrro_orders'));
-
-    // Actualizar UI inicial
-    document.getElementById('userWallet').innerText = `$${userBalance.toLocaleString('es-CO')}`;
-    document.getElementById('adminViewBalance').innerText = `$${userBalance.toLocaleString('es-CO')}`;
-    renderOrders();
+    function showToast(msg) {
+      let t = document.getElementById('toast');
+      t.innerText = msg;
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 3000);
+    }
 
     function switchView(viewName, btnElement) {
       document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
@@ -306,67 +392,96 @@
       }
     }
 
-    function showToast(msg) {
-      let t = document.getElementById('toast');
-      t.innerText = msg;
-      t.style.display = 'block';
-      setTimeout(() => { t.style.display = 'none'; }, 3000);
-    }
-
     function searchServices() {
       let query = document.getElementById('searchInput').value.toLowerCase();
-      let cards = document.querySelectorAll('#serviceGrid .card');
+      let cards = document.querySelectorAll('#productGrid .product-card');
       cards.forEach(card => {
         let name = card.getAttribute('data-name');
-        card.style.display = name.includes(query) ? 'block' : 'none';
+        card.style.display = name.includes(query) ? 'flex' : 'none';
       });
     }
 
-    function buyProduct(productName, price, credentials) {
-      if (userBalance < price) {
-        showToast("⚠️ Saldo insuficiente. Dirígete a la sección de recargas.");
-        switchView('recharge');
+    async function iniciarSesion() {
+      let email = document.getElementById('authEmail').value;
+      let pass = document.getElementById('authPassword').value;
+      try {
+        await window.signInWithEmailAndPassword(window.firebaseAuth, email, pass);
+        showToast("¡Sesión iniciada con éxito!");
+      } catch (error) {
+        showToast("Error: " + error.message);
+      }
+    }
+
+    async function registrarUsuario() {
+      let email = document.getElementById('authEmail').value;
+      let pass = document.getElementById('authPassword').value;
+      try {
+        let cred = await window.createUserWithEmailAndPassword(window.firebaseAuth, email, pass);
+        await window.setDoc(window.doc(window.firebaseDb, "usuarios", cred.user.uid), {
+          email: email,
+          saldo: 0,
+          rol: "cliente"
+        });
+        showToast("¡Cuenta creada y registrada en la nube!");
+      } catch (error) {
+        showToast("Error: " + error.message);
+      }
+    }
+
+    async function cerrarSesion() {
+      await window.signOut(window.firebaseAuth);
+      showToast("Sesión cerrada");
+    }
+
+    async function realizarCompra(nombreServicio, precio, credenciales) {
+      if (window.currentSaldo < precio) {
+        alert("⚠️ Saldo insuficiente en tu monedero. Carga saldo por WhatsApp para continuar.");
+        switchView('recharge', document.querySelectorAll('.nav-btn')[2]);
         return;
       }
 
-      userBalance -= price;
-      saveUserData();
+      window.currentSaldo -= precio;
 
-      let orderDate = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
-      myOrders.unshift({
-        name: productName,
-        price: price,
-        date: orderDate,
-        creds: credentials
-      });
-      
-      localStorage.setItem('zrro_orders', JSON.stringify(myOrders));
-      renderOrders();
-      showToast(`¡Compra exitosa! Revisa "Mis Pedidos".`);
-      switchView('orders');
+      try {
+        const userRef = window.doc(window.firebaseDb, "usuarios", window.currentUserUid);
+        await window.updateDoc(userRef, { saldo: window.currentSaldo });
+
+        document.getElementById('userWallet').innerText = `$${window.currentSaldo.toLocaleString('es-CO')}`;
+
+        let orderDate = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+        myOrders.unshift({ name: nombreServicio, price: precio, date: orderDate, creds: credenciales });
+        renderOrders();
+
+        document.getElementById('modalCredsText').innerHTML = `
+          <strong style="color:var(--primary);">${nombreServicio}</strong><br><br>
+          🔑 <b>Datos de Acceso:</b><br>${credenciales}
+        `;
+        document.getElementById('successModal').style.display = 'flex';
+
+      } catch (error) {
+        alert("Error al procesar la compra: " + error.message);
+        window.currentSaldo += precio;
+      }
     }
 
     function renderOrders() {
       let container = document.getElementById('ordersContainer');
-      document.getElementById('orderCount').innerText = myOrders.length;
-
       if (myOrders.length === 0) {
-        container.innerHTML = `<p style="text-align:center; color:#94a3b8; font-size:12px; margin-top:30px;">No tienes compras recientes registradas.</p>`;
+        container.innerHTML = `<p style="text-align:center; color:#94a3b8; font-size:11px; margin-top:25px;">No tienes compras recientes registradas.</p>`;
         return;
       }
-
       let html = "";
       myOrders.forEach(o => {
         html += `
-          <div class="order-card">
-            <div class="order-header">
+          <div class="card" style="margin-bottom:8px; padding:12px;">
+            <div style="display:flex; justify-content:space-between; font-size:11px; color:#94a3b8; margin-bottom:5px; border-bottom:1px solid var(--border); padding-bottom:5px;">
               <span>📅 ${o.date}</span>
               <span style="color:var(--primary); font-weight:bold;">$${o.price.toLocaleString('es-CO')}</span>
             </div>
-            <h3 style="color:#fff; font-size:14px; margin-bottom:4px;">${o.name}</h3>
-            <div class="credentials-box">
-              <p style="font-size:11px; color:var(--accent); font-weight:bold; margin-bottom:2px;">ACCESOS ASIGNADOS:</p>
-              <p>🔑 ${o.creds}</p>
+            <h3 style="color:#fff; font-size:13px; margin-bottom:5px;">${o.name}</h3>
+            <div style="background:#0b0f19; border:1px dashed var(--primary); padding:8px; border-radius:6px; font-size:11px;">
+              <p style="color:var(--accent); font-weight:bold; margin-bottom:2px;">ACCESOS ASIGNADOS:</p>
+              <p style="color:#fff;">🔑 ${o.creds}</p>
             </div>
           </div>
         `;
@@ -374,43 +489,58 @@
       container.innerHTML = html;
     }
 
-    function saveUserData() {
-      localStorage.setItem('zrro_balance', userBalance);
-      document.getElementById('userWallet').innerText = `$${userBalance.toLocaleString('es-CO')}`;
-      document.getElementById('adminViewBalance').innerText = `$${userBalance.toLocaleString('es-CO')}`;
+    function cerrarModalCompra() {
+      document.getElementById('successModal').style.display = 'none';
+      switchView('orders', document.querySelectorAll('.nav-btn')[1]);
     }
 
-    // Sistema de seguridad básico para abrir el panel de admin
-    function openAdminPanel() {
-      let password = prompt("Introduce la contraseña de Administrador:");
-      if (password === "admin2026") { // Puedes cambiar la contraseña aquí
-        document.getElementById('tabAdminBtn').style.display = 'block';
-        switchView('admin', document.getElementById('tabAdminBtn'));
-        showToast("🔓 Acceso de Administrador Autorizado");
-      } else if (password !== null) {
-        showToast("❌ Contraseña incorrecta");
+    async function cargarUsuariosRegistrados() {
+      let container = document.getElementById('usersListContainer');
+      container.innerHTML = `<p style="color: #94a3b8; font-size: 11px; text-align: center;">Buscando registros...</p>`;
+
+      try {
+        const querySnapshot = await window.getDocs(window.collection(window.firebaseDb, "usuarios"));
+        let html = "";
+        
+        if (querySnapshot.empty) {
+          container.innerHTML = `<p style="color: #94a3b8; font-size: 11px; text-align: center;">No hay usuarios registrados todavía.</p>`;
+          return;
+        }
+
+        querySnapshot.forEach((doc) => {
+          let data = doc.data();
+          let correo = data.email || "Sin correo";
+          let saldo = data.saldo || 0;
+          let rol = data.rol || "cliente";
+
+          html += `
+            <div style="background: #0b0f19; border: 1px solid var(--border); padding: 8px 10px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; font-size: 11px;">
+              <div>
+                <p style="color: #fff; font-weight: bold;">📧 ${correo}</p>
+                <p style="color: #94a3b8; font-size: 10px;">Rol: ${rol}</p>
+              </div>
+              <div style="text-align: right;">
+                <span style="color: var(--accent); font-weight: bold;">$${saldo.toLocaleString('es-CO')}</span>
+              </div>
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+      } catch (error) {
+        container.innerHTML = `<p style="color: var(--danger); font-size: 11px; text-align: center;">Error al cargar: ${error.message}</p>`;
       }
     }
 
-    // Simulación de recarga administrativa al usuario
-    function adminRechargeBalance() {
-      let email = document.getElementById('adminUserEmail').value.trim();
-      let amount = parseInt(document.getElementById('adminAmount').value);
+    async function recargarSaldoAdmin() {
+      let targetEmail = document.getElementById('adminTargetEmail').value.trim();
+      let amount = parseInt(document.getElementById('adminTargetAmount').value);
 
-      if (!email || isNaN(amount) || amount <= 0) {
-        alert("Por favor introduce un correo válido y un monto mayor a 0.");
+      if(!targetEmail || isNaN(amount)) {
+        alert("Completa los campos correctamente.");
         return;
       }
-
-      // En un sistema real con base de datos, aquí buscarías el ID por correo y harías el UPDATE.
-      // Como estamos simulando localmente para esta prueba, sumamos al saldo actual:
-      userBalance += amount;
-      saveUserData();
-
-      alert(`¡Éxito! Se han acreditado $${amount.toLocaleString('es-CO')} al monedero del usuario ${email}.`);
-      document.getElementById('adminUserEmail').value = '';
-      document.getElementById('adminAmount').value = '';
-      switchView('catalog');
+      alert(`Petición lista para sumar $${amount} al correo ${targetEmail} en Firestore.`);
     }
   </script>
 </body>
