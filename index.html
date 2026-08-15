@@ -5,471 +5,91 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#070b14">
 <title>ZRRO / ST | Servicios Digitales</title>
+<meta name="application-name" content="ZRRO / ST">
+<meta name="apple-mobile-web-app-title" content="ZRRO / ST">
+<meta name="description" content="ZRRO / ST - Servicios digitales, streaming, IPTV, música y herramientas.">
 
 <style>
 :root{
- --bg:#070b14;
- --bg2:#0b1220;
- --card:#111827;
- --card2:#172033;
- --primary:#38bdf8;
- --primary2:#0ea5e9;
- --text:#f8fafc;
- --muted:#94a3b8;
- --border:#263449;
- --green:#22c55e;
- --whatsapp:#25d366;
- --red:#ef4444;
- --gold:#fbbf24;
+ --bg:#070b14;--bg2:#0b1220;--card:#111827;--card2:#172033;
+ --primary:#38bdf8;--primary2:#0ea5e9;--text:#f8fafc;--muted:#94a3b8;
+ --border:#263449;--green:#22c55e;--whatsapp:#25d366;--red:#ef4444;--gold:#fbbf24;
 }
-
 *{box-sizing:border-box;margin:0;padding:0}
-
 html{scroll-behavior:smooth}
-
-body{
- font-family:Segoe UI,Tahoma,Arial,sans-serif;
- background:
- radial-gradient(circle at top,#10223b 0,#070b14 45%);
- color:var(--text);
- min-height:100vh;
- padding-bottom:40px;
-}
-
+body{font-family:Segoe UI,Tahoma,Arial,sans-serif;background:radial-gradient(circle at top,#10223b 0,#070b14 45%);color:var(--text);min-height:100vh;padding-bottom:40px}
 button,input{font:inherit}
-
-button{
- cursor:pointer;
- touch-action:manipulation;
-}
-
-.nav{
- position:sticky;
- top:0;
- z-index:1000;
- display:flex;
- justify-content:space-between;
- align-items:center;
- gap:10px;
- padding:13px 16px;
- background:rgba(7,11,20,.94);
- backdrop-filter:blur(14px);
- border-bottom:1px solid var(--border);
- box-shadow:0 5px 25px rgba(0,0,0,.3);
-}
-
-.logo{
- color:var(--primary);
- font-size:20px;
- font-weight:900;
- letter-spacing:1px;
-}
-
-.user-info{
- display:flex;
- align-items:center;
- gap:10px;
- font-size:13px;
-}
-
-.user-info span{
- color:var(--primary);
- font-weight:800;
-}
-
-.container{
- width:min(1200px,100%);
- margin:auto;
- padding:20px 15px;
-}
-
-.hero{
- text-align:center;
- padding:25px 10px 20px;
-}
-
-.hero h2{
- font-size:clamp(25px,6vw,42px);
- margin-bottom:8px;
- background:linear-gradient(90deg,#38bdf8,#a78bfa);
- -webkit-background-clip:text;
- color:transparent;
-}
-
-.hero p{
- color:var(--muted);
- font-size:14px;
-}
-
-.controls{
- display:flex;
- flex-direction:column;
- gap:12px;
- margin-bottom:20px;
-}
-
-input{
- width:100%;
- padding:13px 15px;
- border:1px solid var(--border);
- border-radius:12px;
- background:var(--card);
- color:var(--text);
- outline:none;
-}
-
-input:focus{
- border-color:var(--primary);
- box-shadow:0 0 0 3px rgba(56,189,248,.12);
-}
-
-.filters{
- display:flex;
- gap:8px;
- overflow-x:auto;
- scrollbar-width:none;
- padding-bottom:4px;
-}
-
+button{cursor:pointer;touch-action:manipulation}
+.nav{position:sticky;top:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 16px;background:rgba(7,11,20,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);box-shadow:0 5px 25px rgba(0,0,0,.3)}
+.logo{color:var(--primary);font-size:20px;font-weight:900;letter-spacing:1px}
+.user-info{display:flex;align-items:center;gap:10px;font-size:13px}
+.user-info span{color:var(--primary);font-weight:800}
+.container{width:min(1200px,100%);margin:auto;padding:20px 15px}
+.hero{text-align:center;padding:25px 10px 20px}
+.hero h2{font-size:clamp(25px,6vw,42px);margin-bottom:8px;background:linear-gradient(90deg,#38bdf8,#a78bfa);-webkit-background-clip:text;color:transparent}
+.hero p{color:var(--muted);font-size:14px}
+.controls{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+input{width:100%;padding:13px 15px;border:1px solid var(--border);border-radius:12px;background:var(--card);color:var(--text);outline:none}
+input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(56,189,248,.12)}
+.filters{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
 .filters::-webkit-scrollbar{display:none}
-
-.filter{
- white-space:nowrap;
- border:1px solid var(--border);
- background:var(--card);
- color:var(--muted);
- padding:9px 15px;
- border-radius:30px;
- font-size:13px;
- font-weight:800;
-}
-
-.filter.active{
- background:var(--primary);
- border-color:var(--primary);
- color:#001018;
-}
-
-.catalog{
- display:grid;
- grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
- gap:14px;
-}
-
-.card{
- position:relative;
- overflow:hidden;
- display:flex;
- flex-direction:column;
- justify-content:space-between;
- min-height:205px;
- padding:16px;
- border-radius:17px;
- background:linear-gradient(145deg,var(--card2),var(--card));
- border:1px solid var(--border);
- box-shadow:0 8px 25px rgba(0,0,0,.22);
- transition:.2s;
-}
-
-.card:hover{
- transform:translateY(-3px);
- border-color:#3b82f6;
- box-shadow:0 12px 35px rgba(0,0,0,.35);
-}
-
-.card.out{
- opacity:.55;
- filter:grayscale(.7);
-}
-
-.badge{
- position:absolute;
- top:10px;
- right:10px;
- padding:4px 7px;
- border-radius:7px;
- background:var(--red);
- color:white;
- font-size:10px;
- font-weight:900;
-}
-
-.category{
- margin-top:25px;
- color:var(--muted);
- font-size:10px;
- text-transform:uppercase;
- font-weight:900;
- letter-spacing:.7px;
-}
-
-.card h3{
- font-size:15px;
- line-height:1.35;
- margin:8px 0 10px;
- min-height:41px;
-}
-
-.price-old{
- color:#64748b;
- text-decoration:line-through;
- font-size:12px;
-}
-
-.price{
- color:var(--primary);
- font-size:20px;
- font-weight:900;
- margin-bottom:12px;
-}
-
-.btn{
- width:100%;
- min-height:42px;
- border:0;
- border-radius:10px;
- padding:10px 12px;
- background:var(--primary);
- color:#001018;
- font-weight:900;
- font-size:13px;
- transition:.18s;
-}
-
-.btn:hover{
- background:var(--primary2);
-}
-
-.btn:active{
- transform:scale(.97);
-}
-
-.btn:disabled{
- background:#334155;
- color:#94a3b8;
- cursor:not-allowed;
-}
-
-.btn-outline{
- background:transparent;
- border:1px solid var(--primary);
- color:var(--primary);
-}
-
-.btn-green{
- background:var(--whatsapp);
- color:white;
-}
-
-.banner{
- margin-top:25px;
- padding:20px;
- border-radius:17px;
- background:linear-gradient(135deg,#12251c,#111827);
- border:1px solid #24533a;
- text-align:center;
-}
-
-.banner p{
- color:var(--muted);
- margin-bottom:12px;
- font-size:14px;
-}
-
-.panel{
- display:none;
- margin-top:20px;
- padding:20px;
- border-radius:17px;
- background:var(--card);
- border:1px solid var(--border);
- box-shadow:0 12px 35px rgba(0,0,0,.3);
-}
-
-.panel.open{display:block}
-
-.panel h3{
- color:var(--primary);
- margin-bottom:15px;
-}
-
-.auth{
- max-width:430px;
- margin:20px auto;
-}
-
-.auth .btn{
- margin-top:3px;
-}
-
-.admin-grid{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:10px;
- margin-bottom:10px;
-}
-
-.table-wrap{
- overflow:auto;
- border:1px solid var(--border);
- border-radius:10px;
- margin-top:15px;
-}
-
-table{
- width:100%;
- border-collapse:collapse;
- min-width:650px;
- font-size:12px;
-}
-
-th,td{
- padding:10px;
- border-bottom:1px solid var(--border);
- text-align:left;
-}
-
-th{
- color:var(--primary);
- background:#0b1220;
-}
-
-.empty{
- grid-column:1/-1;
- text-align:center;
- padding:45px 15px;
- color:var(--muted);
-}
-
-.footer{
- text-align:center;
- margin-top:35px;
-}
-
-.footer button{
- background:none;
- border:0;
- color:var(--muted);
- text-decoration:underline;
- font-size:12px;
-}
-
-.toast{
- position:fixed;
- left:50%;
- bottom:20px;
- z-index:5000;
- max-width:90%;
- padding:13px 17px;
- border-radius:12px;
- background:#020617;
- border:1px solid var(--border);
- box-shadow:0 10px 35px rgba(0,0,0,.5);
- transform:translate(-50%,120px);
- opacity:0;
- transition:.25s;
- text-align:center;
-}
-
-.toast.show{
- transform:translate(-50%,0);
- opacity:1;
-}
-
-.small{
- color:var(--muted);
- font-size:12px;
- line-height:1.5;
- margin-top:10px;
-}
-
-@media(max-width:700px){
- .nav{padding:11px}
- .logo{font-size:17px}
- .user-info{font-size:11px}
- .catalog{
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px;
- }
- .card{
-  min-height:205px;
-  padding:12px;
- }
- .card h3{font-size:13px}
- .price{font-size:17px}
- .admin-grid{grid-template-columns:1fr}
-}
-
-@media(max-width:380px){
- .catalog{grid-template-columns:1fr}
-}
+.filter{white-space:nowrap;border:1px solid var(--border);background:var(--card);color:var(--muted);padding:9px 15px;border-radius:30px;font-size:13px;font-weight:800}
+.filter.active{background:var(--primary);border-color:var(--primary);color:#001018}
+.catalog{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.card{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;min-height:205px;padding:16px;border-radius:17px;background:linear-gradient(145deg,var(--card2),var(--card));border:1px solid var(--border);box-shadow:0 8px 25px rgba(0,0,0,.22);transition:.2s}
+.card:hover{transform:translateY(-3px);border-color:#3b82f6;box-shadow:0 12px 35px rgba(0,0,0,.35)}
+.card.out{opacity:.55;filter:grayscale(.7)}
+.badge{position:absolute;top:10px;right:10px;padding:4px 7px;border-radius:7px;background:var(--red);color:white;font-size:10px;font-weight:900}
+.category{margin-top:25px;color:var(--muted);font-size:10px;text-transform:uppercase;font-weight:900;letter-spacing:.7px}
+.card h3{font-size:15px;line-height:1.35;margin:8px 0 10px;min-height:41px}
+.price{color:var(--primary);font-size:20px;font-weight:900;margin-bottom:12px}
+.btn{width:100%;min-height:42px;border:0;border-radius:10px;padding:10px 12px;background:var(--primary);color:#001018;font-weight:900;font-size:13px;transition:.18s}
+.btn:hover{background:var(--primary2)} .btn:active{transform:scale(.97)}
+.btn:disabled{background:#334155;color:#94a3b8;cursor:not-allowed}
+.btn-outline{background:transparent;border:1px solid var(--primary);color:var(--primary)}
+.btn-green{background:var(--whatsapp);color:white}
+.banner{margin-top:25px;padding:20px;border-radius:17px;background:linear-gradient(135deg,#12251c,#111827);border:1px solid #24533a;text-align:center}
+.banner p{color:var(--muted);margin-bottom:12px;font-size:14px}
+.panel{display:none;margin-top:20px;padding:20px;border-radius:17px;background:var(--card);border:1px solid var(--border);box-shadow:0 12px 35px rgba(0,0,0,.3)}
+.panel.open{display:block}.panel h3{color:var(--primary);margin-bottom:15px}
+.auth{max-width:430px;margin:20px auto}.auth .btn{margin-top:3px}
+.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:10px;margin-top:15px}
+table{width:100%;border-collapse:collapse;min-width:650px;font-size:12px}
+th,td{padding:10px;border-bottom:1px solid var(--border);text-align:left}
+th{color:var(--primary);background:#0b1220}
+.empty{grid-column:1/-1;text-align:center;padding:45px 15px;color:var(--muted)}
+.footer{text-align:center;margin-top:35px}.footer button{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:12px}
+.toast{position:fixed;left:50%;bottom:20px;z-index:5000;max-width:90%;padding:13px 17px;border-radius:12px;background:#020617;border:1px solid var(--border);box-shadow:0 10px 35px rgba(0,0,0,.5);transform:translate(-50%,120px);opacity:0;transition:.25s;text-align:center}
+.toast.show{transform:translate(-50%,0);opacity:1}
+.small{color:var(--muted);font-size:12px;line-height:1.5;margin-top:10px}
+@media(max-width:700px){.nav{padding:11px}.logo{font-size:17px}.user-info{font-size:11px}.catalog{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card{min-height:205px;padding:12px}.card h3{font-size:13px}.price{font-size:17px}.admin-grid{grid-template-columns:1fr}}
+@media(max-width:380px){.catalog{grid-template-columns:1fr}}
 </style>
 </head>
 
 <body>
-
 <nav class="nav">
  <div class="logo">ZRRO / ST</div>
-
  <div class="user-info">
-  <div>
-   <span id="nav-user">Invitado</span>
-   · Saldo: $<span id="user-balance">0</span>
-  </div>
-
-  <button type="button"
-          class="btn"
-          id="account-btn"
-          style="width:auto;min-height:34px;padding:6px 10px">
-   Cuenta
-  </button>
+  <div><span id="nav-user">Invitado</span> · Saldo: $<span id="user-balance">0</span></div>
+  <button type="button" class="btn" id="account-btn" style="width:auto;min-height:34px;padding:6px 10px">Cuenta</button>
  </div>
 </nav>
 
 <main class="container">
-
-<section class="hero">
- <h2>Servicios Digitales</h2>
- <p>Streaming · IPTV · Música · Herramientas</p>
-</section>
+<section class="hero"><h2>Servicios Digitales</h2><p>Streaming · IPTV · Música · Herramientas</p></section>
 
 <section class="controls">
-
- <input id="search"
-        type="search"
-        placeholder="🔎 Buscar servicio..."
-        autocomplete="off">
-
+ <input id="search" type="search" placeholder="🔎 Buscar servicio..." autocomplete="off">
  <div class="filters">
-
-  <button type="button" class="filter active" data-cat="Todos">
-   Todos
-  </button>
-
-  <button type="button" class="filter" data-cat="Streaming">
-   Streaming
-  </button>
-
-  <button type="button" class="filter" data-cat="IPTV">
-   IPTV
-  </button>
-
-  <button type="button" class="filter" data-cat="Musica">
-   Música
-  </button>
-
-  <button type="button" class="filter" data-cat="Herramientas">
-   Herramientas
-  </button>
-
-  <button type="button" class="filter" data-cat="Adulto">
-   +18
-  </button>
-
-  <button type="button" class="filter" data-cat="Distribuidores">
-   Distribuidores
-  </button>
-
+  <button type="button" class="filter active" data-cat="Todos">Todos</button>
+  <button type="button" class="filter" data-cat="Streaming">Streaming</button>
+  <button type="button" class="filter" data-cat="IPTV">IPTV</button>
+  <button type="button" class="filter" data-cat="Musica">Música</button>
+  <button type="button" class="filter" data-cat="Herramientas">Herramientas</button>
+  <button type="button" class="filter" data-cat="Adulto">+18</button>
+  <button type="button" class="filter" data-cat="Distribuidores">Distribuidores</button>
  </div>
 </section>
 
@@ -477,960 +97,489 @@ th{
 
 <section class="banner">
  <p>¿Necesitas saldo para comprar?</p>
-
- <button type="button"
-         id="whatsapp-btn"
-         class="btn btn-green">
-  💬 Recargar saldo por WhatsApp
- </button>
+ <button type="button" id="whatsapp-btn" class="btn btn-green">💬 Recargar saldo por WhatsApp</button>
 </section>
-
-<!-- CUENTA -->
 
 <section id="auth-panel" class="panel auth">
-
  <h3>👤 Mi cuenta</h3>
-
- <input id="auth-email"
-        type="email"
-        placeholder="Correo electrónico"
-        autocomplete="email">
-
- <input id="auth-pass"
-        type="password"
-        placeholder="Contraseña"
-        autocomplete="current-password">
-
- <button type="button" class="btn" id="auth-btn">
-  Ingresar / Registrarse
- </button>
-
- <button type="button"
-         class="btn btn-outline"
-         id="forgot-btn">
-  Olvidé mi contraseña
- </button>
-
- <button type="button"
-         class="btn btn-outline"
-         id="close-auth">
-  Cerrar
- </button>
-
- <p class="small">
-  Si el correo no existe se crea una cuenta nueva.
- </p>
-
+ <input id="auth-email" type="email" placeholder="Correo electrónico" autocomplete="email">
+ <input id="auth-pass" type="password" placeholder="Contraseña" autocomplete="current-password">
+ <button type="button" class="btn" id="auth-btn">Ingresar / Registrarse</button>
+ <button type="button" class="btn btn-outline" id="forgot-btn">Olvidé mi contraseña</button>
+ <button type="button" class="btn btn-outline" id="close-auth">Cerrar</button>
+ <p class="small">Las cuentas y contraseñas se gestionan mediante Supabase.</p>
 </section>
 
-<!-- ADMIN -->
-
 <div style="text-align:center;margin-top:25px">
-
- <button type="button"
-         class="btn btn-outline"
-         id="admin-btn"
-         style="max-width:230px">
-  🔐 Panel Administrador
- </button>
-
+ <button type="button" class="btn btn-outline" id="admin-btn" style="max-width:230px">🔐 Panel Administrador</button>
 </div>
 
 <section id="admin-panel" class="panel">
-
  <h3>⚙️ Administración</h3>
-
- <p class="small">
-  Administra usuarios, saldos y disponibilidad de los servicios.
- </p>
-
+ <p class="small">Administra usuarios, saldos y disponibilidad de los servicios.</p>
  <div class="admin-grid">
-
-  <input id="admin-email"
-         type="email"
-         placeholder="Correo del usuario">
-
-  <input id="admin-balance"
-         type="number"
-         min="0"
-         placeholder="Nuevo saldo">
-
+  <input id="admin-email" type="email" placeholder="Correo del usuario">
+  <input id="admin-balance" type="number" min="0" placeholder="Nuevo saldo">
  </div>
-
- <button type="button"
-         class="btn"
-         id="update-balance">
-  💰 Actualizar saldo
- </button>
-
- <h3 style="margin-top:25px">
-  📦 Inventario
- </h3>
-
+ <button type="button" class="btn" id="update-balance">💰 Actualizar saldo</button>
+ <h3 style="margin-top:25px">📦 Inventario</h3>
  <div class="table-wrap">
-
   <table>
-
-   <thead>
-    <tr>
-     <th>Servicio</th>
-     <th>Precio</th>
-     <th>Estado</th>
-     <th>Acción</th>
-    </tr>
-   </thead>
-
+   <thead><tr><th>Servicio</th><th>Precio</th><th>Estado</th><th>Acción</th></tr></thead>
    <tbody id="inventory-table"></tbody>
-
   </table>
-
  </div>
-
- <button type="button"
-         class="btn btn-outline"
-         id="close-admin"
-         style="margin-top:15px">
-  Cerrar administrador
- </button>
-
+ <button type="button" class="btn btn-outline" id="close-admin" style="margin-top:15px">Cerrar administrador</button>
 </section>
 
-<footer class="footer">
- <button type="button" id="logout">
-  Cerrar sesión
- </button>
-</footer>
-
+<footer class="footer"><button type="button" id="logout">Cerrar sesión</button></footer>
 </main>
 
 <div id="toast" class="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+/* =====================================================
+   SUPABASE
+===================================================== */
+const SUPABASE_URL="https://dzlwzjmynormvvuwhvyy.supabase.co";
+const SUPABASE_ANON_KEY="sb_publishable_l9m1uxsdtOu0KPL_Vb5HFA_2M2E4mSP";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
 /* =====================================================
    CONFIGURACIÓN
 ===================================================== */
-
-const CONFIG = {
+const CONFIG={
  whatsapp:"573122521685",
-
- adminEmails:[
-  "fabian1590medina@gmail.com",
-  "fabian5109medina@gmail.com"
- ],
-
- /*
-  Contraseña del panel administrativo.
-  Puedes cambiarla aquí.
- */
- adminPassword:"ZRRO_ADMIN_2026"
+ adminEmails:["fabian1590medina@gmail.com","fabian5109medina@gmail.com"]
 };
 
-
 /* =====================================================
-   CLAVES DE ALMACENAMIENTO
+   SERVICIOS
 ===================================================== */
-
-const KEY_USERS="zrro_users_v3";
-const KEY_SESSION="zrro_session_v3";
-const KEY_STOCK="zrro_stock_v3";
-const KEY_PURCHASES="zrro_purchases_v3";
-
-
-/* =====================================================
-   SERVICIOS Y PRECIOS
-===================================================== */
-
 const products=[
-
- {id:1,name:"Netflix Pantalla Normal",cat:"Streaming",price:14000,available:true},
- {id:2,name:"Netflix Pantalla Standard",cat:"Streaming",price:12000,available:true},
- {id:3,name:"Netflix Pantalla Genérica",cat:"Streaming",price:12000,available:true},
- {id:4,name:"Netflix Pantalla Internacional Genérica",cat:"Streaming",price:14000,available:true},
-
- {id:5,name:"Netflix Cuenta Completa Normal",cat:"Streaming",price:52000,available:true},
- {id:6,name:"Netflix Cuenta Completa Standard",cat:"Streaming",price:45000,available:true},
- {id:7,name:"Netflix Cuenta Completa Genérica",cat:"Streaming",price:45000,available:true},
-
- {id:8,name:"Disney+ Premium Pantalla",cat:"Streaming",price:9000,available:true},
- {id:9,name:"Disney+ Standard Pantalla",cat:"Streaming",price:6000,available:true},
- {id:10,name:"Max (HBO) Pantalla",cat:"Streaming",price:8000,available:true},
- {id:11,name:"Max (HBO) Platino Pantalla",cat:"Streaming",price:8000,available:true},
- {id:12,name:"Amazon Prime Pantalla",cat:"Streaming",price:5000,available:true},
- {id:13,name:"Amazon Prime Original Pantalla",cat:"Streaming",price:8000,available:true},
- {id:14,name:"Crunchyroll Pantalla",cat:"Streaming",price:5000,available:true},
- {id:15,name:"Crunchyroll Pantalla Original",cat:"Streaming",price:8500,available:true},
- {id:16,name:"Paramount+ Pantalla",cat:"Streaming",price:6000,available:true},
- {id:17,name:"Paramount+ Pantalla Original",cat:"Streaming",price:10000,available:true},
- {id:18,name:"ViX+",cat:"Streaming",price:5000,available:true},
- {id:19,name:"Universal+ Pantalla",cat:"Streaming",price:7000,available:true},
- {id:20,name:"Plex Pantalla Original",cat:"Streaming",price:6000,available:true},
- {id:21,name:"MUBI Pantalla",cat:"Streaming",price:6000,available:true},
- {id:22,name:"Viki Rakuten Pantalla (Dramas)",cat:"Streaming",price:6000,available:true},
- {id:23,name:"DirecTV GO Plan Oro (1 Disp.)",cat:"Streaming",price:14000,available:true},
-
- {id:24,name:"Disney+ Premium Completa",cat:"Streaming",price:38000,available:true},
- {id:25,name:"Disney+ Standard Completa",cat:"Streaming",price:18000,available:true},
- {id:26,name:"Max (HBO) Completa",cat:"Streaming",price:18000,available:true},
- {id:27,name:"Max (HBO) Platino Completa",cat:"Streaming",price:16000,available:true},
- {id:28,name:"Amazon Prime Completa",cat:"Streaming",price:10000,available:true},
- {id:29,name:"Amazon Prime Original Completa",cat:"Streaming",price:20000,available:true},
- {id:30,name:"Crunchyroll Completa",cat:"Streaming",price:14000,available:true},
- {id:31,name:"Paramount+ Completa",cat:"Streaming",price:18000,available:true},
- {id:32,name:"Universal+ Completa",cat:"Streaming",price:16000,available:true},
- {id:33,name:"ViX+ Completa",cat:"Streaming",price:8000,available:true},
- {id:34,name:"Plex Completa",cat:"Streaming",price:13000,available:true},
- {id:35,name:"MUBI Completa",cat:"Streaming",price:10000,available:true},
- {id:36,name:"Viki Rakuten Completa",cat:"Streaming",price:13000,available:true},
- {id:37,name:"Hot Go Premium Completa (+18)",cat:"Adulto",price:18000,available:true},
- {id:38,name:"DirecTV GO Plan Oro Completa (2 Disp.)",cat:"Streaming",price:22000,available:true},
-
- {id:39,name:"IPTV Pantalla Original",cat:"IPTV",price:10000,available:true},
- {id:40,name:"IPTV Premium Completa (1 Mes - 3 Disp.)",cat:"IPTV",price:12000,available:true},
- {id:41,name:"IPTV Plan 3 Meses Completa",cat:"IPTV",price:25000,available:true},
- {id:42,name:"IPTV Plan 6 Meses Completa",cat:"IPTV",price:45000,available:true},
- {id:43,name:"IPTV Plan 1 Año Completo",cat:"IPTV",price:80000,available:true},
- {id:44,name:"Flujo TV / Magis (3 Meses)",cat:"IPTV",price:55000,available:true},
- {id:45,name:"Flujo TV / Magis (7 Meses)",cat:"IPTV",price:95000,available:true},
- {id:46,name:"Flujo TV / Magis (14 Meses)",cat:"IPTV",price:170000,available:true},
-
- {id:47,name:"Spotify Premium Original (1 Mes)",cat:"Musica",price:12000,available:true},
- {id:48,name:"Spotify Premium Original (2 Meses)",cat:"Musica",price:18000,available:true},
- {id:49,name:"YouTube Premium / A Dominio (1 Mes)",cat:"Musica",price:12000,available:true},
- {id:50,name:"Deezer Original (1 Mes)",cat:"Musica",price:5000,available:true},
- {id:51,name:"Tidal Premium (1 Mes)",cat:"Musica",price:6000,available:true},
-
- {id:52,name:"Canva Pro (1 Mes)",cat:"Herramientas",price:6000,available:true},
- {id:53,name:"Canva Pro a tu Dominio (1 Mes)",cat:"Herramientas",price:6000,available:true},
- {id:54,name:"Canva Pro (1 Año)",cat:"Herramientas",price:25000,available:true},
- {id:55,name:"Canva Pro a tu Dominio (1 Año)",cat:"Herramientas",price:22000,available:true},
- {id:56,name:"CapCut Pro Individual (1 Mes)",cat:"Herramientas",price:18000,available:true},
- {id:57,name:"CapCut Pro Completa 3 Disp. (1 Mes)",cat:"Herramientas",price:32000,available:true},
- {id:58,name:"Office 365 Licencia 1 Año (1 PC)",cat:"Herramientas",price:25000,available:true},
- {id:59,name:"Office 365 Licencia 1 Año (5 Disp.)",cat:"Herramientas",price:65000,available:true},
- {id:60,name:"Duolingo Pro (1 Mes)",cat:"Herramientas",price:5000,available:true},
- {id:61,name:"Duolingo Pro Premium (1 Año)",cat:"Herramientas",price:20000,available:true},
-
- {id:62,name:"Hot Go Premium Pantalla",cat:"Adulto",price:7000,available:true},
- {id:63,name:"Pornhub Pantalla (1 Año)",cat:"Adulto",price:12000,available:true},
- {id:64,name:"Pornhub Cuenta Completa (1 Año)",cat:"Adulto",price:22000,available:true},
-
- {id:65,name:"Panel IPTV (10 Créditos + Demos)",cat:"Distribuidores",price:65000,available:true},
- {id:66,name:"Panel IPTV (50 Créditos + Demos)",cat:"Distribuidores",price:150000,available:true},
- {id:67,name:"Panel IPTV PRO (100 Créditos + Demos)",cat:"Distribuidores",price:230000,available:true}
-
+{id:1,name:"Netflix Pantalla Normal",cat:"Streaming",price:14000,available:true},
+{id:2,name:"Netflix Pantalla Standard",cat:"Streaming",price:12000,available:true},
+{id:3,name:"Netflix Pantalla Genérica",cat:"Streaming",price:12000,available:true},
+{id:4,name:"Netflix Pantalla Internacional Genérica",cat:"Streaming",price:14000,available:true},
+{id:5,name:"Netflix Cuenta Completa Normal",cat:"Streaming",price:52000,available:true},
+{id:6,name:"Netflix Cuenta Completa Standard",cat:"Streaming",price:45000,available:true},
+{id:7,name:"Netflix Cuenta Completa Genérica",cat:"Streaming",price:45000,available:true},
+{id:8,name:"Disney+ Premium Pantalla",cat:"Streaming",price:9000,available:true},
+{id:9,name:"Disney+ Standard Pantalla",cat:"Streaming",price:6000,available:true},
+{id:10,name:"Max (HBO) Pantalla",cat:"Streaming",price:8000,available:true},
+{id:11,name:"Max (HBO) Platino Pantalla",cat:"Streaming",price:8000,available:true},
+{id:12,name:"Amazon Prime Pantalla",cat:"Streaming",price:5000,available:true},
+{id:13,name:"Amazon Prime Original Pantalla",cat:"Streaming",price:8000,available:true},
+{id:14,name:"Crunchyroll Pantalla",cat:"Streaming",price:5000,available:true},
+{id:15,name:"Crunchyroll Pantalla Original",cat:"Streaming",price:8500,available:true},
+{id:16,name:"Paramount+ Pantalla",cat:"Streaming",price:6000,available:true},
+{id:17,name:"Paramount+ Pantalla Original",cat:"Streaming",price:10000,available:true},
+{id:18,name:"ViX+",cat:"Streaming",price:5000,available:true},
+{id:19,name:"Universal+ Pantalla",cat:"Streaming",price:7000,available:true},
+{id:20,name:"Plex Pantalla Original",cat:"Streaming",price:6000,available:true},
+{id:21,name:"MUBI Pantalla",cat:"Streaming",price:6000,available:true},
+{id:22,name:"Viki Rakuten Pantalla (Dramas)",cat:"Streaming",price:6000,available:true},
+{id:23,name:"DirecTV GO Plan Oro (1 Disp.)",cat:"Streaming",price:14000,available:true},
+{id:24,name:"Disney+ Premium Completa",cat:"Streaming",price:38000,available:true},
+{id:25,name:"Disney+ Standard Completa",cat:"Streaming",price:18000,available:true},
+{id:26,name:"Max (HBO) Completa",cat:"Streaming",price:18000,available:true},
+{id:27,name:"Max (HBO) Platino Completa",cat:"Streaming",price:16000,available:true},
+{id:28,name:"Amazon Prime Completa",cat:"Streaming",price:10000,available:true},
+{id:29,name:"Amazon Prime Original Completa",cat:"Streaming",price:20000,available:true},
+{id:30,name:"Crunchyroll Completa",cat:"Streaming",price:14000,available:true},
+{id:31,name:"Paramount+ Completa",cat:"Streaming",price:18000,available:true},
+{id:32,name:"Universal+ Completa",cat:"Streaming",price:16000,available:true},
+{id:33,name:"ViX+ Completa",cat:"Streaming",price:8000,available:true},
+{id:34,name:"Plex Completa",cat:"Streaming",price:13000,available:true},
+{id:35,name:"MUBI Completa",cat:"Streaming",price:10000,available:true},
+{id:36,name:"Viki Rakuten Completa",cat:"Streaming",price:13000,available:true},
+{id:37,name:"Hot Go Premium Completa (+18)",cat:"Adulto",price:18000,available:true},
+{id:38,name:"DirecTV GO Plan Oro Completa (2 Disp.)",cat:"Streaming",price:22000,available:true},
+{id:39,name:"IPTV Pantalla Original",cat:"IPTV",price:10000,available:true},
+{id:40,name:"IPTV Premium Completa (1 Mes - 3 Disp.)",cat:"IPTV",price:12000,available:true},
+{id:41,name:"IPTV Plan 3 Meses Completa",cat:"IPTV",price:25000,available:true},
+{id:42,name:"IPTV Plan 6 Meses Completa",cat:"IPTV",price:45000,available:true},
+{id:43,name:"IPTV Plan 1 Año Completo",cat:"IPTV",price:80000,available:true},
+{id:44,name:"Flujo TV / Magis (3 Meses)",cat:"IPTV",price:55000,available:true},
+{id:45,name:"Flujo TV / Magis (7 Meses)",cat:"IPTV",price:95000,available:true},
+{id:46,name:"Flujo TV / Magis (14 Meses)",cat:"IPTV",price:170000,available:true},
+{id:47,name:"Spotify Premium Original (1 Mes)",cat:"Musica",price:12000,available:true},
+{id:48,name:"Spotify Premium Original (2 Meses)",cat:"Musica",price:18000,available:true},
+{id:49,name:"YouTube Premium / A Dominio (1 Mes)",cat:"Musica",price:12000,available:true},
+{id:50,name:"Deezer Original (1 Mes)",cat:"Musica",price:5000,available:true},
+{id:51,name:"Tidal Premium (1 Mes)",cat:"Musica",price:6000,available:true},
+{id:52,name:"Canva Pro (1 Mes)",cat:"Herramientas",price:6000,available:true},
+{id:53,name:"Canva Pro a tu Dominio (1 Mes)",cat:"Herramientas",price:6000,available:true},
+{id:54,name:"Canva Pro (1 Año)",cat:"Herramientas",price:25000,available:true},
+{id:55,name:"Canva Pro a tu Dominio (1 Año)",cat:"Herramientas",price:22000,available:true},
+{id:56,name:"CapCut Pro Individual (1 Mes)",cat:"Herramientas",price:18000,available:true},
+{id:57,name:"CapCut Pro Completa 3 Disp. (1 Mes)",cat:"Herramientas",price:32000,available:true},
+{id:58,name:"Office 365 Licencia 1 Año (1 PC)",cat:"Herramientas",price:25000,available:true},
+{id:59,name:"Office 365 Licencia 1 Año (5 Disp.)",cat:"Herramientas",price:65000,available:true},
+{id:60,name:"Duolingo Pro (1 Mes)",cat:"Herramientas",price:5000,available:true},
+{id:61,name:"Duolingo Pro Premium (1 Año)",cat:"Herramientas",price:20000,available:true},
+{id:62,name:"Hot Go Premium Pantalla",cat:"Adulto",price:7000,available:true},
+{id:63,name:"Pornhub Pantalla (1 Año)",cat:"Adulto",price:12000,available:true},
+{id:64,name:"Pornhub Cuenta Completa (1 Año)",cat:"Adulto",price:22000,available:true},
+{id:65,name:"Panel IPTV (10 Créditos + Demos)",cat:"Distribuidores",price:65000,available:true},
+{id:66,name:"Panel IPTV (50 Créditos + Demos)",cat:"Distribuidores",price:150000,available:true},
+{id:67,name:"Panel IPTV PRO (100 Créditos + Demos)",cat:"Distribuidores",price:230000,available:true}
 ];
 
+/* =====================================================
+   ESTADO
+===================================================== */
+let currentUser=null;
+let category="Todos";
+let adminSupabaseUser=null;
 
 /* =====================================================
-   FUNCIONES DE DATOS
+   UTILIDADES
 ===================================================== */
-
-function load(key,fallback){
- try{
-  const value=localStorage.getItem(key);
-  return value===null?fallback:JSON.parse(value);
- }catch(e){
-  return fallback;
- }
-}
-
-function save(key,value){
- try{
-  localStorage.setItem(key,JSON.stringify(value));
-  return true;
- }catch(e){
-  console.error(e);
-  return false;
- }
-}
-
-function money(n){
- return Number(n||0).toLocaleString("es-CO");
-}
-
+function money(n){return Number(n||0).toLocaleString("es-CO")}
 function toast(text){
  const el=document.getElementById("toast");
- el.textContent=text;
- el.classList.add("show");
-
+ el.textContent=text;el.classList.add("show");
  clearTimeout(window.toastTimer);
-
- window.toastTimer=setTimeout(()=>{
-  el.classList.remove("show");
- },2800);
+ window.toastTimer=setTimeout(()=>el.classList.remove("show"),2800);
 }
-
-function esc(text){
- return String(text).replace(/[&<>"']/g,c=>({
-  "&":"&amp;",
-  "<":"&lt;",
-  ">":"&gt;",
-  '"':"&quot;",
-  "'":"&#039;"
- }[c]));
-}
-
+function esc(text){return String(text).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+function isAdminEmail(email){return CONFIG.adminEmails.includes(String(email||"").toLowerCase())}
 
 /* =====================================================
-   INVENTARIO
+   STOCK VISUAL LOCAL
+   (No afecta la seguridad del saldo)
 ===================================================== */
-
-const storedStock=load(KEY_STOCK,{});
-
+const STOCK_KEY="zrro_stock_v4";
+const storedStock=JSON.parse(localStorage.getItem(STOCK_KEY)||"{}");
 products.forEach(p=>{
- if(Object.prototype.hasOwnProperty.call(storedStock,p.id)){
-  p.available=Boolean(storedStock[p.id]);
- }
+ if(Object.prototype.hasOwnProperty.call(storedStock,p.id))p.available=Boolean(storedStock[p.id]);
 });
-
 function saveStock(){
- const stock={};
-
- products.forEach(p=>{
-  stock[p.id]=p.available;
- });
-
- save(KEY_STOCK,stock);
+ const stock={};products.forEach(p=>stock[p.id]=p.available);
+ localStorage.setItem(STOCK_KEY,JSON.stringify(stock));
 }
-
 
 /* =====================================================
-   SESIÓN
+   SESIÓN SUPABASE
 ===================================================== */
-
-let currentUser=load(KEY_SESSION,null);
-let category="Todos";
-
-
-function isAdminEmail(email){
- return CONFIG.adminEmails.includes(
-  String(email||"").toLowerCase()
- );
+async function loadProfile(user){
+ if(!user)return null;
+ const {data,error}=await supabaseClient
+   .from("usuarios")
+   .select("id,email,rol,saldo")
+   .eq("id",user.id)
+   .single();
+ if(error)return null;
+ return data;
 }
 
-function getUsers(){
- return load(KEY_USERS,{});
+async function refreshCurrentUser(){
+ const {data:{user},error}=await supabaseClient.auth.getUser();
+ if(error||!user){currentUser=null;adminSupabaseUser=null;updateUI();return}
+ const profile=await loadProfile(user);
+ if(!profile){currentUser=null;adminSupabaseUser=null;updateUI();return}
+ currentUser=profile;
+ adminSupabaseUser=user;
+ updateUI();
 }
 
 function updateUI(){
-
  const userEl=document.getElementById("nav-user");
  const balanceEl=document.getElementById("user-balance");
-
  if(!currentUser){
-  userEl.textContent="Invitado";
-  balanceEl.textContent="0";
-  return;
+  userEl.textContent="Invitado";balanceEl.textContent="0";return;
  }
-
- const users=getUsers();
- const user=users[currentUser.email];
-
- if(!user){
-  currentUser=null;
-  localStorage.removeItem(KEY_SESSION);
-  userEl.textContent="Invitado";
-  balanceEl.textContent="0";
-  return;
- }
-
- currentUser.balance=Number(user.balance||0);
- currentUser.admin=isAdminEmail(currentUser.email);
-
- save(KEY_SESSION,currentUser);
-
- userEl.textContent=currentUser.email.split("@")[0];
- balanceEl.textContent=money(currentUser.balance);
+ userEl.textContent=String(currentUser.email||"").split("@")[0];
+ balanceEl.textContent=money(currentUser.saldo);
 }
-
 
 /* =====================================================
    CATÁLOGO
 ===================================================== */
-
 function render(){
-
- const search=document.getElementById("search")
-  .value.trim().toLowerCase();
-
+ const search=document.getElementById("search").value.trim().toLowerCase();
  const list=products.filter(p=>{
-
-  const categoryOK=
-   category==="Todos" ||
-   p.cat===category;
-
-  const searchOK=
-   p.name.toLowerCase().includes(search);
-
-  return categoryOK && searchOK;
-
+  const categoryOK=category==="Todos"||p.cat===category;
+  return categoryOK&&p.name.toLowerCase().includes(search);
  });
-
  const catalog=document.getElementById("catalog");
-
- if(!list.length){
-  catalog.innerHTML=
-   `<div class="empty">No se encontraron servicios.</div>`;
-  return;
- }
-
+ if(!list.length){catalog.innerHTML='<div class="empty">No se encontraron servicios.</div>';return}
  catalog.innerHTML=list.map(p=>`
-
   <article class="card ${p.available?"":"out"}">
-
-   <div class="badge">
-    ${p.available?"DISPONIBLE":"AGOTADO"}
-   </div>
-
+   <div class="badge">${p.available?"DISPONIBLE":"AGOTADO"}</div>
    <div>
-
-    <div class="category">
-     ${esc(p.cat)}
-    </div>
-
-    <h3>
-     ${esc(p.name)}
-    </h3>
-
-    <div class="price">
-     $${money(p.price)}
-    </div>
-
+    <div class="category">${esc(p.cat)}</div>
+    <h3>${esc(p.name)}</h3>
+    <div class="price">$${money(p.price)}</div>
    </div>
-
-   <button type="button"
-           class="btn buy"
-           data-id="${p.id}"
-           ${p.available?"":"disabled"}>
+   <button type="button" class="btn buy" data-id="${p.id}" ${p.available?"":"disabled"}>
     ${p.available?"🛒 Comprar":"Agotado"}
    </button>
-
   </article>
-
  `).join("");
 }
 
-
 /* =====================================================
-   CUENTA
+   CUENTA SUPABASE AUTH
 ===================================================== */
-
 function openAuth(){
  document.getElementById("auth-panel").classList.add("open");
- document.getElementById("auth-panel")
-  .scrollIntoView({behavior:"smooth",block:"center"});
+ document.getElementById("auth-panel").scrollIntoView({behavior:"smooth",block:"center"});
 }
+function closeAuth(){document.getElementById("auth-panel").classList.remove("open")}
 
-function closeAuth(){
- document.getElementById("auth-panel").classList.remove("open");
-}
-
-function auth(){
-
- const email=document.getElementById("auth-email")
-  .value.trim().toLowerCase();
-
+async function auth(){
+ const email=document.getElementById("auth-email").value.trim().toLowerCase();
  const password=document.getElementById("auth-pass").value;
+ if(!email||!password){toast("Completa correo y contraseña.");return}
+ if(!email.includes("@")){toast("Correo no válido.");return}
+ if(password.length<6){toast("La contraseña debe tener mínimo 6 caracteres.");return}
 
- if(!email || !password){
-  toast("Completa correo y contraseña.");
-  return;
- }
+ let {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
 
- if(!email.includes("@")){
-  toast("Correo no válido.");
-  return;
- }
-
- if(password.length<4){
-  toast("La contraseña debe tener mínimo 4 caracteres.");
-  return;
- }
-
- const users=getUsers();
-
- if(!users[email]){
-
-  users[email]={
-   password:password,
-   balance:0,
-   createdAt:new Date().toISOString()
-  };
-
-  save(KEY_USERS,users);
-
-  toast("Cuenta creada correctamente.");
-
- }else{
-
-  if(users[email].password!==password){
-   toast("Contraseña incorrecta.");
+ if(error){
+  const sign=await supabaseClient.auth.signUp({email,password});
+  if(sign.error){toast("No se pudo ingresar: "+sign.error.message);return}
+  if(!sign.data.session){
+   toast("Cuenta creada. Revisa tu correo para confirmar la cuenta.");
    return;
   }
-
+  data=sign.data;
  }
 
- currentUser={
-  email:email,
-  balance:Number(users[email].balance||0),
-  admin:isAdminEmail(email)
- };
+ const user=data.user;
+ if(!user){toast("No se pudo obtener la cuenta.");return}
 
- save(KEY_SESSION,currentUser);
+ let profile=await loadProfile(user);
+
+ if(!profile){
+  const {data:newProfile,error:profileError}=await supabaseClient
+    .from("usuarios")
+    .insert({id:user.id,email:user.email,rol:"user",saldo:0})
+    .select("id,email,rol,saldo")
+    .single();
+
+  if(profileError){
+   await supabaseClient.auth.signOut();
+   toast("No se pudo crear el perfil: "+profileError.message);
+   return;
+  }
+  profile=newProfile;
+ }
+
+ currentUser=profile;
+ adminSupabaseUser=user;
  updateUI();
  closeAuth();
-
  document.getElementById("auth-pass").value="";
-
- toast(
-  currentUser.admin
-   ?"Sesión de administrador iniciada."
-   :"Sesión iniciada correctamente."
- );
+ toast(isAdminEmail(profile.email)&&profile.rol==="admin"?"Sesión iniciada.":"Sesión iniciada correctamente.");
 }
 
-
-function forgot(){
-
- const email=document.getElementById("auth-email")
-  .value.trim().toLowerCase();
-
- if(!email){
-  toast("Escribe tu correo primero.");
-  return;
- }
-
- const users=getUsers();
-
- if(!users[email]){
-  toast("Ese correo no está registrado.");
-  return;
- }
-
- /*
-  En esta versión local no existe servidor
-  para enviar correos de recuperación.
- */
- alert(
-  "Tu contraseña guardada localmente es:\n\n"+
-  users[email].password
- );
+async function forgot(){
+ const email=document.getElementById("auth-email").value.trim().toLowerCase();
+ if(!email){toast("Escribe tu correo primero.");return}
+ const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{
+  redirectTo:window.location.origin+window.location.pathname
+ });
+ if(error)toast("No se pudo enviar el correo: "+error.message);
+ else toast("Revisa tu correo para restablecer la contraseña.");
 }
 
-
-function logout(){
-
- currentUser=null;
- localStorage.removeItem(KEY_SESSION);
- updateUI();
- toast("Sesión cerrada.");
+async function logout(){
+ await supabaseClient.auth.signOut();
+ currentUser=null;adminSupabaseUser=null;updateUI();closeAdmin();toast("Sesión cerrada.");
 }
-
 
 /* =====================================================
-   COMPRA
+   COMPRA SEGURA
+   El navegador NO calcula ni actualiza el saldo.
+   Supabase hace la comprobación y el descuento.
 ===================================================== */
-
-function buy(id){
-
- if(!currentUser){
-  toast("Inicia sesión para comprar.");
-  openAuth();
-  return;
- }
-
+async function buy(id){
+ if(!currentUser){toast("Inicia sesión para comprar.");openAuth();return}
  const product=products.find(p=>p.id===Number(id));
+ if(!product||!product.available){toast("Este servicio no está disponible.");return}
 
- if(!product || !product.available){
-  toast("Este servicio no está disponible.");
-  return;
- }
-
- const users=getUsers();
- const user=users[currentUser.email];
-
- if(!user){
-  logout();
-  return;
- }
-
- const balance=Number(user.balance||0);
-
- if(balance<product.price){
-
-  alert(
-   "Saldo insuficiente.\n\n"+
-   "Saldo actual: $"+money(balance)+
-   "\nPrecio: $"+money(product.price)
-  );
-
-  return;
- }
-
- const ok=confirm(
-  "Confirmar compra\n\n"+
-  product.name+
-  "\n\nPrecio: $"+money(product.price)
- );
-
+ const ok=confirm("Confirmar compra\n\n"+product.name+"\n\nPrecio: $"+money(product.price));
  if(!ok)return;
 
- user.balance=balance-product.price;
- users[currentUser.email]=user;
+ const {data,error}=await supabaseClient.rpc("purchase_service",{product_id:product.id});
+ if(error){
+  toast(error.message==="Saldo insuficiente"?"Saldo insuficiente.":"No se pudo completar la compra: "+error.message);
+  await refreshCurrentUser();
+  return;
+ }
 
- save(KEY_USERS,users);
+ const result=Array.isArray(data)?data[0]:data;
+ if(!result){toast("La compra no devolvió un resultado válido.");return}
 
- currentUser.balance=user.balance;
- save(KEY_SESSION,currentUser);
-
- const purchases=load(KEY_PURCHASES,[]);
-
- purchases.push({
-  id:Date.now(),
-  email:currentUser.email,
-  productId:product.id,
-  product:product.name,
-  price:product.price,
-  date:new Date().toISOString()
- });
-
- save(KEY_PURCHASES,purchases);
-
+ currentUser.saldo=Number(result.new_balance);
  updateUI();
 
  alert(
   "¡Compra realizada!\n\n"+
   product.name+
   "\nValor: $"+money(product.price)+
-  "\n\nSaldo restante: $"+money(user.balance)+
-  "\n\nIMPORTANTE:\nLas credenciales se podrán entregar automáticamente cuando conectemos la base de datos/stock."
+  "\n\nSaldo restante: $"+money(currentUser.saldo)
  );
-
 }
 
-
 /* =====================================================
-   WHATSAPP
+   WHATSAPP RECARGA MANUAL
 ===================================================== */
-
 function whatsapp(){
-
- const email=currentUser
-  ?currentUser.email
-  :"Sin cuenta";
-
- const text=
-  "Hola ZRRO / ST, quiero recargar saldo.%0A"+
-  "Correo: "+email;
-
- const url=
-  "https://wa.me/"+CONFIG.whatsapp+
-  "?text="+encodeURIComponent(
-   "Hola ZRRO / ST, quiero recargar saldo.\n"+
-   "Correo: "+email
-  );
-
+ const email=currentUser?currentUser.email:"Sin cuenta";
+ const url="https://wa.me/"+CONFIG.whatsapp+"?text="+encodeURIComponent(
+  "Hola ZRRO / ST, quiero recargar saldo.\nCorreo: "+email
+ );
  window.open(url,"_blank");
 }
 
-
 /* =====================================================
-   ADMIN
+   ADMIN SUPABASE
 ===================================================== */
-
-function adminAccess(){
-
- if(currentUser && isAdminEmail(currentUser.email)){
-  openAdmin();
-  return;
- }
-
- const email=prompt(
-  "Correo de administrador:"
- );
-
+async function adminAccess(){
+ if(currentUser&&currentUser.rol==="admin"){openAdmin();return}
+ const email=prompt("Correo de administrador:");
  if(!email)return;
-
  const normalized=email.trim().toLowerCase();
+ if(!isAdminEmail(normalized)){alert("Ese correo no está autorizado como administrador.");return}
+ const password=prompt("Contraseña de tu cuenta de Supabase:");
+ if(!password)return;
 
- if(!isAdminEmail(normalized)){
-  alert("Ese correo no es administrador.");
+ const {data,error}=await supabaseClient.auth.signInWithPassword({email:normalized,password});
+ if(error){alert("No se pudo iniciar sesión: "+error.message);return}
+
+ const profile=await loadProfile(data.user);
+ if(!profile||profile.rol!=="admin"){
+  await supabaseClient.auth.signOut();
+  alert("La cuenta no tiene rol de administrador en Supabase.");
   return;
  }
 
- const password=prompt(
-  "Contraseña de administrador:"
- );
-
- if(password!==CONFIG.adminPassword){
-  alert("Contraseña de administrador incorrecta.");
-  return;
- }
-
- const users=getUsers();
-
- if(!users[normalized]){
-  users[normalized]={
-   password:password,
-   balance:0,
-   createdAt:new Date().toISOString()
-  };
-  save(KEY_USERS,users);
- }
-
- currentUser={
-  email:normalized,
-  balance:Number(users[normalized].balance||0),
-  admin:true
- };
-
- save(KEY_SESSION,currentUser);
- updateUI();
- openAdmin();
+ currentUser=profile;adminSupabaseUser=data.user;updateUI();openAdmin();
 }
-
 
 function openAdmin(){
-
- if(!currentUser || !isAdminEmail(currentUser.email)){
-  toast("No tienes permisos de administrador.");
-  return;
- }
-
- document.getElementById("admin-panel")
-  .classList.add("open");
-
+ if(!currentUser||currentUser.rol!=="admin"){toast("No tienes permisos de administrador.");return}
+ document.getElementById("admin-panel").classList.add("open");
  renderInventory();
-
- document.getElementById("admin-panel")
-  .scrollIntoView({
-   behavior:"smooth",
-   block:"start"
-  });
+ document.getElementById("admin-panel").scrollIntoView({behavior:"smooth",block:"start"});
 }
+function closeAdmin(){document.getElementById("admin-panel").classList.remove("open")}
 
+async function updateBalance(){
+ if(!currentUser||currentUser.rol!=="admin"){toast("Acceso no autorizado.");return}
 
-function closeAdmin(){
- document.getElementById("admin-panel")
-  .classList.remove("open");
-}
+ const email=document.getElementById("admin-email").value.trim().toLowerCase();
+ const value=Number(document.getElementById("admin-balance").value);
 
+ if(!email){toast("Escribe el correo del usuario.");return}
+ if(!Number.isFinite(value)||value<0){toast("Saldo inválido.");return}
 
-function updateBalance(){
+ const {data,error}=await supabaseClient.rpc("admin_update_balance",{
+  target_email:email,
+  new_balance:Math.floor(value)
+ });
 
- if(!currentUser || !isAdminEmail(currentUser.email)){
-  toast("Acceso no autorizado.");
+ if(error){
+  toast("No autorizado o error: "+error.message);
   return;
  }
 
- const email=document.getElementById("admin-email")
-  .value.trim().toLowerCase();
+ const updated=Array.isArray(data)?data[0]:data;
+ if(!updated){toast("Supabase no devolvió el usuario actualizado.");return}
 
- const value=Number(
-  document.getElementById("admin-balance").value
- );
-
- if(!email){
-  toast("Escribe el correo del usuario.");
-  return;
- }
-
- if(!Number.isFinite(value)||value<0){
-  toast("Saldo inválido.");
-  return;
- }
-
- const users=getUsers();
-
- if(!users[email]){
-  toast("Ese usuario todavía no existe.");
-  return;
- }
-
- users[email].balance=Math.floor(value);
-
- save(KEY_USERS,users);
-
- if(currentUser.email===email){
-  currentUser.balance=Math.floor(value);
-  save(KEY_SESSION,currentUser);
+ if(currentUser.email.toLowerCase()===email){
+  currentUser.saldo=Number(updated.saldo);
   updateUI();
  }
 
  document.getElementById("admin-email").value="";
  document.getElementById("admin-balance").value="";
-
- toast("Saldo actualizado.");
+ toast("Saldo actualizado en Supabase.");
 }
 
-
 function renderInventory(){
-
  const tbody=document.getElementById("inventory-table");
-
  tbody.innerHTML=products.map(p=>`
-
   <tr>
-
    <td>${esc(p.name)}</td>
-
    <td>$${money(p.price)}</td>
-
-   <td>
-    ${p.available?"Disponible":"Agotado"}
-   </td>
-
-   <td>
-
-    <button type="button"
-            class="btn btn-outline stock"
-            data-id="${p.id}"
-            style="width:auto;min-height:34px;padding:6px 9px">
-     Cambiar
-    </button>
-
-   </td>
-
+   <td>${p.available?"Disponible":"Agotado"}</td>
+   <td><button type="button" class="btn btn-outline stock" data-id="${p.id}" style="width:auto;min-height:34px;padding:6px 9px">Cambiar</button></td>
   </tr>
-
  `).join("");
 }
 
-
 function toggleStock(id){
-
- if(!currentUser || !isAdminEmail(currentUser.email)){
-  toast("No autorizado.");
-  return;
- }
-
+ if(!currentUser||currentUser.rol!=="admin"){toast("No autorizado.");return}
  const p=products.find(x=>x.id===Number(id));
-
  if(!p)return;
-
- p.available=!p.available;
-
- saveStock();
- render();
- renderInventory();
-
- toast(
-  p.available
-   ?"Servicio habilitado."
-   :"Servicio marcado como agotado."
- );
+ p.available=!p.available;saveStock();render();renderInventory();
+ toast(p.available?"Servicio habilitado.":"Servicio marcado como agotado.");
 }
-
 
 /* =====================================================
    EVENTOS
 ===================================================== */
+document.getElementById("account-btn").addEventListener("click",()=>{
+ const panel=document.getElementById("auth-panel");
+ panel.classList.contains("open")?closeAuth():openAuth();
+});
+document.getElementById("close-auth").addEventListener("click",closeAuth);
+document.getElementById("auth-btn").addEventListener("click",auth);
+document.getElementById("forgot-btn").addEventListener("click",forgot);
+document.getElementById("logout").addEventListener("click",logout);
+document.getElementById("whatsapp-btn").addEventListener("click",whatsapp);
+document.getElementById("admin-btn").addEventListener("click",adminAccess);
+document.getElementById("close-admin").addEventListener("click",closeAdmin);
+document.getElementById("update-balance").addEventListener("click",updateBalance);
+document.getElementById("search").addEventListener("input",render);
 
-document.getElementById("account-btn")
- .addEventListener("click",()=>{
-  const panel=document.getElementById("auth-panel");
-
-  if(panel.classList.contains("open"))
-   closeAuth();
-  else
-   openAuth();
+document.querySelectorAll(".filter").forEach(btn=>{
+ btn.addEventListener("click",()=>{
+  category=btn.dataset.cat;
+  document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));
+  btn.classList.add("active");render();
  });
+});
 
-document.getElementById("close-auth")
- .addEventListener("click",closeAuth);
+document.getElementById("catalog").addEventListener("click",event=>{
+ const btn=event.target.closest(".buy");
+ if(btn)buy(Number(btn.dataset.id));
+});
 
-document.getElementById("auth-btn")
- .addEventListener("click",auth);
+document.getElementById("inventory-table").addEventListener("click",event=>{
+ const btn=event.target.closest(".stock");
+ if(btn)toggleStock(Number(btn.dataset.id));
+});
 
-document.getElementById("forgot-btn")
- .addEventListener("click",forgot);
-
-document.getElementById("logout")
- .addEventListener("click",logout);
-
-document.getElementById("whatsapp-btn")
- .addEventListener("click",whatsapp);
-
-document.getElementById("admin-btn")
- .addEventListener("click",adminAccess);
-
-document.getElementById("close-admin")
- .addEventListener("click",closeAdmin);
-
-document.getElementById("update-balance")
- .addEventListener("click",updateBalance);
-
-document.getElementById("search")
- .addEventListener("input",render);
-
-document.querySelectorAll(".filter")
- .forEach(btn=>{
-  btn.addEventListener("click",()=>{
-
-   category=btn.dataset.cat;
-
-   document.querySelectorAll(".filter")
-    .forEach(x=>x.classList.remove("active"));
-
-   btn.classList.add("active");
-
-   render();
-  });
- });
-
-document.getElementById("catalog")
- .addEventListener("click",event=>{
-
-  const btn=event.target.closest(".buy");
-
-  if(btn){
-   buy(Number(btn.dataset.id));
-  }
- });
-
-document.getElementById("inventory-table")
- .addEventListener("click",event=>{
-
-  const btn=event.target.closest(".stock");
-
-  if(btn){
-   toggleStock(Number(btn.dataset.id));
-  }
- });
-
-document.getElementById("auth-pass")
- .addEventListener("keydown",event=>{
-  if(event.key==="Enter"){
-   auth();
-  }
- });
-
+document.getElementById("auth-pass").addEventListener("keydown",event=>{
+ if(event.key==="Enter")auth();
+});
 
 /* =====================================================
    INICIO
 ===================================================== */
-
-function init(){
-
- if(currentUser){
-
-  const users=getUsers();
-
-  if(!users[currentUser.email]){
-   currentUser=null;
-   localStorage.removeItem(KEY_SESSION);
-  }
- }
-
- updateUI();
+async function init(){
  render();
  renderInventory();
+
+ supabaseClient.auth.onAuthStateChange(async (_event,session)=>{
+  if(session){
+   setTimeout(refreshCurrentUser,0);
+  }else{
+   currentUser=null;adminSupabaseUser=null;updateUI();
+  }
+ });
+
+ await refreshCurrentUser();
 }
 
 init();
-
 </script>
-
 </body>
 </html>
