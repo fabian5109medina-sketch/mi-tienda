@@ -3,143 +3,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZRRO DIGITAL | Panel Automatizado</title>
+    <title>ZRRO DIGITAL | Tienda</title>
     <style>
-        :root { --bg-color: #0b0e14; --card-bg: #161b22; --accent-green: #22c55e; --text-light: #ffffff; --text-muted: #8b949e; --discount-red: #ef4444; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); color: var(--text-light); margin: 0; padding: 10px; }
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #30363d; margin-bottom: 20px; }
-        .logo { font-weight: bold; font-size: 1.2em; color: #38bdf8; }
-        .balance { background: #1c2128; padding: 5px 15px; border-radius: 20px; font-size: 0.9em; border: 1px solid #30363d; }
-        .search-box { width: 100%; padding: 12px; background: #161b22; border: 1px solid #30363d; color: white; border-radius: 8px; margin-bottom: 20px; box-sizing: border-box; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .card { background: var(--card-bg); border-radius: 12px; padding: 12px; position: relative; border: 1px solid #30363d; display: flex; flex-direction: column; justify-content: space-between; }
-        .card h3 { margin: 5px 0; font-size: 0.8em; line-height: 1.2em; min-height: 2.4em; }
-        .price { font-size: 1em; font-weight: bold; margin: 8px 0; display: block; color: #38bdf8; }
-        .btn { width: 100%; background: var(--accent-green); color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.8em; }
+        :root { --bg-color: #121212; --card-bg: #1e1e1e; --accent-color: #38bdf8; --text-light: #ffffff; --text-muted: #9ca3af; --discount-red: #ef4444; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-light); margin: 0; padding: 0; }
+        
+        /* Header Superior */
+        .header { display: flex; justify-content: space-between; align-items: center; background: #18181b; padding: 12px 16px; border-bottom: 1px solid #27272a; }
+        .logo-area { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 1.1em; color: var(--accent-color); }
+        .nav-icons { display: flex; gap: 15px; font-size: 1.2em; color: #d1d5db; cursor: pointer; }
+
+        /* Banner Cargar Saldo */
+        .banner { background: linear-gradient(135deg, #1e3a8a, #0f172a); margin: 12px; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #3b82f6; }
+        .banner h2 { margin: 0 0 10px 0; font-size: 1.1em; letter-spacing: 1px; color: #fff; }
+        .btn-saldo { background: #ffffff; color: #000; border: none; padding: 8px 20px; font-weight: bold; border-radius: 20px; cursor: pointer; font-size: 0.9em; }
+
+        /* Barra de Filtros estilo WooCommerce */
+        .filter-bar { display: flex; gap: 8px; padding: 0 12px 12px 12px; overflow-x: auto; }
+        .filter-btn, .select-box { background: #27272a; color: #fff; border: 1px solid #3f3f46; padding: 8px 12px; border-radius: 4px; font-size: 0.8em; white-space: nowrap; }
+        .search-container { padding: 0 12px 15px 12px; }
+        .search-box { width: 100%; padding: 10px 12px; background: #18181b; border: 1px solid #3f3f46; color: white; border-radius: 6px; box-sizing: border-box; font-size: 0.9em; }
+
+        /* Cuadrícula de Productos (2 columnas) */
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 10px; }
+        .product-card { background: var(--card-bg); border-radius: 8px; overflow: hidden; border: 1px solid #27272a; display: flex; flex-direction: column; position: relative; }
+        
+        .product-image-container { position: relative; width: 100%; aspect-ratio: 1; background: #000; display: flex; align-items: center; justify-content: center; }
+        .product-image-container img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .badge-discount { position: absolute; top: 8px; left: 8px; background: var(--discount-red); color: white; font-size: 0.7em; font-weight: bold; padding: 3px 6px; border-radius: 4px; }
+        
+        .product-content { padding: 10px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
+        .category { font-size: 0.65em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 2px; }
+        .product-title { font-size: 0.8em; font-weight: 600; color: #fff; margin: 0 0 6px 0; line-height: 1.25em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        
+        .stars { color: #d1d5db; font-size: 0.7em; margin-bottom: 6px; }
+        
+        .price-box { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+        .old-price { font-size: 0.75em; color: var(--text-muted); text-decoration: line-through; }
+        .current-price { font-size: 0.9em; font-weight: bold; color: var(--text-light); }
+
+        /* Paginación Inferior */
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 20px 0; }
+        .page-item { background: #27272a; border: 1px solid #3f3f46; color: #fff; padding: 6px 10px; border-radius: 4px; font-size: 0.8em; cursor: pointer; }
+        .page-item.active { background: #fff; color: #000; font-weight: bold; }
+
+        .footer-text { text-align: center; font-size: 0.7em; color: var(--text-muted); padding-bottom: 20px; }
     </style>
 </head>
 <body>
+
+    <!-- Header -->
     <div class="header">
-        <div class="logo">⚡ ZRRO DIGITAL</div>
-        <div class="balance">Saldo: $0</div>
-    </div>
-    <input type="text" id="buscador" class="search-box" placeholder="Buscar entre los 72 servicios..." onkeyup="filtrarServicios()">
-    
-    <div class="grid" id="catalogo">
-        <!-- 1 a 7 -->
-        <div class="card"><h3>Netflix Pantalla Normal</h3><span class="price">$14.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Netflix Pantalla Standard</h3><span class="price">$12.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Netflix Pantalla Genérica</h3><span class="price">$12.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Netflix Pantalla Internacional Genérica</h3><span class="price">$14.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Netflix Cuenta Completa Normal</h3><span class="price">$52.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Netflix Cuenta Completa Standard</h3><span class="price">$45.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Netflix Cuenta Completa Genérica</h3><span class="price">$45.000</span><button class="btn">Comprar</button></div>
-
-        <!-- 8 a 23 -->
-        <div class="card"><h3>Disney+ Premium Pantalla</h3><span class="price">$9.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Disney+ Standard Pantalla</h3><span class="price">$6.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Max (HBO) Pantalla</h3><span class="price">$8.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Max (HBO) Platino Pantalla</h3><span class="price">$8.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Amazon Prime Pantalla</h3><span class="price">$5.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Amazon Prime Original Pantalla</h3><span class="price">$8.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Crunchyroll Pantalla</h3><span class="price">$5.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Crunchyroll Pantalla Original</h3><span class="price">$8.500</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Paramount+ Pantalla</h3><span class="price">$6.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Paramount+ Pantalla Original</h3><span class="price">$10.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>ViX+</h3><span class="price">$5.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Universal+ Pantalla</h3><span class="price">$7.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Plex Pantalla Original</h3><span class="price">$6.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>MUBI Pantalla</h3><span class="price">$6.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Viki Rakuten Pantalla (Dramas)</h3><span class="price">$6.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>DirecTV GO Plan Oro (1 Disp.)</h3><span class="price">$14.000</span><button class="btn">Comprar</button></div>
-
-        <!-- 24 a 38 -->
-        <div class="card"><h3>Disney+ Premium Completa</h3><span class="price">$38.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Disney+ Standard Completa</h3><span class="price">$18.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Max (HBO) Completa</h3><span class="price">$18.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Max (HBO) Platino Completa</h3><span class="price">$16.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Amazon Prime Completa</h3><span class="price">$10.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Amazon Prime Original Completa</h3><span class="price">$20.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Crunchyroll Completa</h3><span class="price">$14.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Paramount+ Completa</h3><span class="price">$18.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Universal+ Completa</h3><span class="price">$16.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>ViX+ Completa</h3><span class="price">$8.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Plex Completa</h3><span class="price">$13.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>MUBI Completa</h3><span class="price">$10.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Viki Rakuten Completa</h3><span class="price">$13.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Hot Go Premium Completa (+18)</h3><span class="price">$18.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>DirecTV GO Plan Oro Completa (2 Disp.)</h3><span class="price">$22.000</span><button class="btn">Comprar</button></div>
-
-        <!-- 39 a 46 -->
-        <div class="card"><h3>IPTV Pantalla Original</h3><span class="price">$10.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>IPTV Premium Completa (1 Mes - 3 Disp.)</h3><span class="price">$12.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>IPTV Plan 3 Meses Completa</h3><span class="price">$25.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>IPTV Plan 6 Meses Completa</h3><span class="price">$45.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>IPTV Plan 1 Año Completo</h3><span class="price">$80.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Flujo TV / Magis (3 Meses)</h3><span class="price">$55.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Flujo TV / Magis (7 Meses)</h3><span class="price">$95.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Flujo TV / Magis (14 Meses)</h3><span class="price">$170.000</span><button class="btn">Comprar</button></div>
-
-        <!-- 47 a 51 -->
-        <div class="card"><h3>Spotify Premium Original (1 Mes)</h3><span class="price">$12.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Spotify Premium Original (2 Meses)</h3><span class="price">$18.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>YouTube Premium / A Dominio (1 Mes)</h3><span class="price">$12.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Deezer Original (1 Mes)</h3><span class="price">$5.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Tidal Premium (1 Mes)</h3><span class="price">$6.000</span><button class="btn">Comprar</button></div>
-
-        <!-- 52 a 61 -->
-        <div class="card"><h3>Canva Pro (1 Mes)</h3><span class="price">$6.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Canva Pro a tu Dominio (1 Mes)</h3><span class="price">$6.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Canva Pro (1 Año)</h3><span class="price">$25.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Canva Pro a tu Dominio (1 Año)</h3><span class="price">$22.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>CapCut Pro Individual (1 Mes)</h3><span class="price">$18.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>CapCut Pro Completa 3 Disp. (1 Mes)</h3><span class="price">$32.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Office 365 Licencia 1 Año (1 PC)</h3><span class="price">$25.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Office 365 Licencia 1 Año (5 Disp.)</h3><span class="price">$65.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Duolingo Pro (1 Mes)</h3><span class="price">$5.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Duolingo Pro Premium (1 Año)</h3><span class="price">$20.000</span><button class="btn">Comprar</button></div>
-
-        <!-- 62 a 64 -->
-        <div class="card"><h3>Hot Go Premium Pantalla</h3><span class="price">$7.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Pornhub Pantalla (1 Año)</h3><span class="price">$12.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Pornhub Cuenta Completa (1 Año)</h3><span class="price">$22.000</span><button class="btn">Comprar</button></div>
-
-        <!-- 65 a 67 -->
-        <div class="card"><h3>Panel IPTV (10 Créditos + Demos)</h3><span class="price">$65.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Panel IPTV (50 Créditos + Demos)</h3><span class="price">$150.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Panel IPTV PRO (100 Créditos + Demos)</h3><span class="price">$230.000</span><button class="btn">Comprar</button></div>
-
-        <!-- 68 a 72 -->
-        <div class="card"><h3>Combo Netflix + Crunchyroll</h3><span class="price">$15.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Combo Netflix + Max (HBO)</h3><span class="price">$18.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Combo Netflix + IPTV Premium</h3><span class="price">$18.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Combo Netflix + Disney+</h3><span class="price">$20.000</span><button class="btn">Comprar</button></div>
-        <div class="card"><h3>Combo Netflix + Plex Premium</h3><span class="price">$16.000</span><button class="btn">Comprar</button></div>
+        <div class="logo-area">
+            <span>⚡ ZRRO DIGITAL</span>
+        </div>
+        <div class="nav-icons">
+            <span>🔍</span>
+            <span>☰</span>
+        </div>
     </div>
 
-    <!-- Script de Firebase y Buscador -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        const firebaseConfig = {
-            apiKey: "AIzaSyDrP9303f...",
-            authDomain: "mi-tienda-56ef5.firebaseapp.com",
-            projectId: "mi-tienda-56ef5",
-            storageBucket: "mi-tienda-56ef5.appspot.com",
-            messagingSenderId: "716772431219",
-            appId: "1:716772431219:web:03f3a431c72c17224b6106"
-        };
-        initializeApp(firebaseConfig);
-    </script>
+    <!-- Banner Cargar Saldo -->
+    <div class="banner">
+        <h2>MERCADO DIGITAL</h2>
+        <button class="btn-saldo" onclick="alert('Saldo actual: $0.00')">CARGAR SALDO &gt;</button>
+    </div>
 
+    <!-- Buscador Interno -->
+    <div class="search-container">
+        <input type="text" id="buscador" class="search-box" placeholder="Buscar entre los servicios..." onkeyup="filtrarServicios()">
+    </div>
+
+    <!-- Filtros simulados -->
+    <div class="filter-bar">
+        <button class="filter-btn">⚙️ FILTRAR</button>
+        <select class="select-box"><option>ORDEN PREDETERMINADO</option></select>
+        <select class="select-box"><option>10</option></select>
+    </div>
+
+    <!-- Catálogo de Productos Estilo E-commerce -->
+    <div class="product-grid" id="catalogo">
+        <!-- Producto 1 -->
+        <div class="product-card">
+            <div class="product-image-container">
+                <span class="badge-discount">-52%</span>
+                <img src="https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=300" alt="Netflix">
+            </div>
+            <div class="product-content">
+                <div>
+                    <div class="category">NETFLIX</div>
+                    <div class="product-title">NETFLIX PANTALLA NORMAL</div>
+                    <div class="stars">☆☆☆☆☆</div>
+                </div>
+                <div class="price-box">
+                    <span class="old-price">$28.000</span>
+                    <span class="current-price">$14.000</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Producto 2 -->
+        <div class="product-card">
+            <div class="product-image-container">
+                <span class="badge-discount">-40%</span>
+                <img src="https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=300" alt="Netflix">
+            </div>
+            <div class="product-content">
+                <div>
+                    <div class="category">NETFLIX</div>
+                    <div class="product-title">NETFLIX PANTALLA STANDARD</div>
+                    <div class="stars">☆☆☆☆☆</div>
+                </div>
+                <div class="price-box">
+                    <span class="old-price">$20.000</span>
+                    <span class="current-price">$12.000</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Producto 3 -->
+        <div class="product-card">
+            <div class="product-image-container">
+                <span class="badge-discount">-60%</span>
+                <img src="https://images.unsplash.com/photo-1512070679279-8988d2e16bac?w=300" alt="Disney">
+            </div>
+            <div class="product-content">
+                <div>
+                    <div class="category">DISNEY+</div>
+                    <div class="product-title">DISNEY+ PREMIUM PANTALLA</div>
+                    <div class="stars">☆☆☆☆☆</div>
+                </div>
+                <div class="price-box">
+                    <span class="old-price">$22.000</span>
+                    <span class="current-price">$9.000</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Producto 4 -->
+        <div class="product-card">
+            <div class="product-image-container">
+                <span class="badge-discount">-50%</span>
+                <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300" alt="Max">
+            </div>
+            <div class="product-content">
+                <div>
+                    <div class="category">MAX (HBO)</div>
+                    <div class="product-title">MAX (HBO) PLATINO PANTALLA</div>
+                    <div class="stars">☆☆☆☆☆</div>
+                </div>
+                <div class="price-box">
+                    <span class="old-price">$16.000</span>
+                    <span class="current-price">$8.000</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Producto 5 -->
+        <div class="product-card">
+            <div class="product-image-container">
+                <span class="badge-discount">-74%</span>
+                <img src="https://images.unsplash.com/photo-1616469829941-c7200edec809?w=300" alt="Amazon">
+            </div>
+            <div class="product-content">
+                <div>
+                    <div class="category">AMAZON PRIME</div>
+                    <div class="product-title">AMAZON PRIME COMPLETA</div>
+                    <div class="stars">☆☆☆☆☆</div>
+                </div>
+                <div class="price-box">
+                    <span class="old-price">$38.000</span>
+                    <span class="current-price">$10.000</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Producto 6 -->
+        <div class="product-card">
+            <div class="product-image-container">
+                <span class="badge-discount">-84%</span>
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300" alt="Canva">
+            </div>
+            <div class="product-content">
+                <div>
+                    <div class="category">CANVA PRO</div>
+                    <div class="product-title">CANVA PRO X 1 MES A DOMINIO</div>
+                    <div class="stars">☆☆☆☆☆</div>
+                </div>
+                <div class="price-box">
+                    <span class="old-price">$15.000</span>
+                    <span class="current-price">$2.400</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Paginación -->
+    <div class="pagination">
+        <div class="page-item active">1</div>
+        <div class="page-item">2</div>
+        <div class="page-item">3</div>
+        <div class="page-item">...</div>
+        <div class="page-item">&gt;</div>
+    </div>
+
+    <div class="footer-text">
+        Zrrodigital.co © 2026. Todos los Derechos Reservados
+    </div>
+
+    <!-- Script de búsqueda en tiempo real -->
     <script>
         function filtrarServicios() {
             let input = document.getElementById('buscador').value.toLowerCase();
-            let cards = document.getElementsByClassName('card');
+            let cards = document.getElementsByClassName('product-card');
             for (let i = 0; i < cards.length; i++) {
-                let titulo = cards[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
-                if (titulo.includes(input)) {
+                let titulo = cards[i].getElementsByClassName('product-title')[0].innerText.toLowerCase();
+                let categoria = cards[i].getElementsByClassName('category')[0].innerText.toLowerCase();
+                if (titulo.includes(input) || categoria.includes(input)) {
                     cards[i].style.display = "";
                 } else {
                     cards[i].style.display = "none";
