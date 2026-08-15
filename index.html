@@ -3,160 +3,95 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Catálogo de Servicios & Streaming</title>
+  <title>ZRRO Digital Media | Premium Streaming</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      background-color: #0f172a;
-      color: #ffffff;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    header h1 {
-      font-size: 28px;
-      color: #38bdf8;
-      margin-bottom: 8px;
-    }
-
-    header p {
-      font-size: 14px;
-      color: #94a3b8;
-    }
-
-    /* Grid de plataformas */
-    .catalog-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      width: 100%;
-      max-width: 900px;
-    }
-
-    .card {
-      background-color: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 12px;
-      padding: 20px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: transform 0.2s, border-color 0.2s;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: #38bdf8;
-    }
-
-    .card h3 {
-      font-size: 20px;
-      margin-bottom: 10px;
-    }
-
-    /* Colores para las marcas */
-    .card.netflix h3 { color: #e50914; }
-    .card.disney h3 { color: #113ccf; }
-    .card.max h3 { color: #002be7; }
-    .card.spotify h3 { color: #1db954; }
-
-    .price {
-      font-size: 22px;
-      font-weight: bold;
-      margin: 15px 0;
-      color: #f8fafc;
-    }
-
-    .btn-select {
-      background-color: #0284c7;
-      color: #ffffff;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      width: 100%;
-      transition: background-color 0.2s;
-    }
-
-    .btn-select:hover {
-      background-color: #0369a1;
-    }
+    :root { --primary: #38bdf8; --bg: #0d1117; --card: #161b22; --text: #f0f6fc; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding: 20px; padding-bottom: 120px; }
+    
+    header { text-align: center; margin-bottom: 30px; }
+    h1 { color: var(--primary); font-size: 24px; text-transform: uppercase; letter-spacing: 2px; }
+    
+    .grid { display: grid; gap: 15px; max-width: 500px; margin: 0 auto; }
+    .card { background: var(--card); border: 1px solid #30363d; border-radius: 12px; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+    
+    .info h3 { font-size: 16px; margin-bottom: 4px; }
+    .price { font-weight: bold; color: #fff; }
+    
+    .btn-add { background: var(--primary); border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    
+    /* Cart Bar */
+    #cart-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #1f2937; padding: 15px; border-top: 2px solid var(--primary); text-align: center; }
+    
+    /* Payments */
+    .payments { margin-top: 40px; padding-top: 20px; border-top: 1px solid #30363d; text-align: center; }
+    .payment-item { background: #21262d; padding: 12px; margin: 8px 0; border-radius: 8px; font-size: 14px; border: 1px solid #30363d; }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>Catálogo de Suscripciones</h1>
-    <p>Selecciona tu plataforma preferida</p>
+    <h1>ZRRO DIGITAL MEDIA</h1>
+    <p>Selecciona tus servicios favoritos</p>
   </header>
 
-  <div class="catalog-grid">
-
-    <!-- Tarjeta Netflix -->
-    <div class="card netflix">
-      <div>
-        <h3>Netflix</h3>
-        <p>Pantalla Ultra HD / 4K</p>
-        <div class="price">$15.000 / mes</div>
-      </div>
-      <button class="btn-select" onclick="seleccionarServicio('Netflix')">Solicitar</button>
+  <div class="grid">
+    <div class="card">
+      <div class="info"><h3>🎬 Netflix 4K</h3><div class="price">$15.000</div></div>
+      <button class="btn-add" onclick="updateCart('Netflix', 15000)">+</button>
     </div>
-
-    <!-- Tarjeta Disney+ -->
-    <div class="card disney">
-      <div>
-        <h3>Disney+</h3>
-        <p>Acceso Multidispositivo</p>
-        <div class="price">$12.000 / mes</div>
-      </div>
-      <button class="btn-select" onclick="seleccionarServicio('Disney+')">Solicitar</button>
+    <div class="card">
+      <div class="info"><h3>🐭 Disney+</h3><div class="price">$12.000</div></div>
+      <button class="btn-add" onclick="updateCart('Disney+', 12000)">+</button>
     </div>
-
-    <!-- Tarjeta Max -->
-    <div class="card max">
-      <div>
-        <h3>Max (HBO)</h3>
-        <p>Películas y Deportes en vivo</p>
-        <div class="price">$12.000 / mes</div>
-      </div>
-      <button class="btn-select" onclick="seleccionarServicio('Max')">Solicitar</button>
+    <div class="card">
+      <div class="info"><h3>🎞️ Max</h3><div class="price">$12.000</div></div>
+      <button class="btn-add" onclick="updateCart('Max', 12000)">+</button>
     </div>
-
-    <!-- Tarjeta Spotify -->
-    <div class="card spotify">
-      <div>
-        <h3>Spotify Premium</h3>
-        <p>Música sin anuncios</p>
-        <div class="price">$10.000 / mes</div>
-      </div>
-      <button class="btn-select" onclick="seleccionarServicio('Spotify')">Solicitar</button>
+    <div class="card">
+      <div class="info"><h3>🎵 Spotify</h3><div class="price">$10.000</div></div>
+      <button class="btn-add" onclick="updateCart('Spotify', 10000)">+</button>
     </div>
+  </div>
 
+  <div id="cart-bar">
+    <p id="cart-text">Carrito vacío</p>
+    <button id="checkout-btn" style="display:none; margin-top:10px; padding:10px; width:100%; background:#25d366; color:white; border:none; border-radius:6px; font-weight:bold;" onclick="checkout()">PEDIR POR WHATSAPP</button>
+  </div>
+
+  <div class="payments">
+    <h3>💳 Métodos de Pago</h3>
+    <div class="payment-item">
+        <strong>Nequi:</strong> 3122521685 <br>
+        <small>Llave: @3122521685</small>
+    </div>
+    <div class="payment-item">
+        <strong>Daviplata:</strong> 3122521685 <br>
+        <small>Llave: #</small>
+    </div>
   </div>
 
   <script>
-    function seleccionarServicio(plataforma) {
-      alert('Has seleccionado: ' + plataforma + '. Redirigiendo...');
-      // Puedes cambiar este enlace para redirigir a un chat de atención o a un formulario
-      window.location.href = 'https://everestreamingcom.com/cart/?service=' + encodeURIComponent(plataforma);
+    let cart = {};
+    function updateCart(item, price) {
+      if(!cart[item]) cart[item] = { qty: 0, price: price };
+      cart[item].qty++;
+      renderCart();
+    }
+    function renderCart() {
+      let text = "", total = 0;
+      for(let item in cart) {
+        text += `${item} (${cart[item].qty}) | `;
+        total += (cart[item].qty * cart[item].price);
+      }
+      document.getElementById('cart-text').innerText = text ? `${text} Total: $${total}` : "Carrito vacío";
+      document.getElementById('checkout-btn').style.display = text ? "block" : "none";
+    }
+    function checkout() {
+      let msg = "¡Hola! Vengo de ZRRO Digital Media, quiero este pedido:\n";
+      for(let item in cart) msg += `- ${item}: ${cart[item].qty}\n`;
+      window.location.href = `https://wa.me/573122521685?text=${encodeURIComponent(msg)}`;
     }
   </script>
-
 </body>
 </html>
