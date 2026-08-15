@@ -3,163 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Tienda - Catálogo de Servicios</title>
+    <title>ZRRO DIGITAL | Panel Automatizado</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f9; color: #333; margin: 0; padding: 20px; }
-        h1, h2 { color: #d9534f; }
-        .service-category { background: #fff; padding: 15px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        ul { list-style-type: none; padding: 0; }
-        li { padding: 8px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
-        .price { font-weight: bold; color: #28a745; }
+        :root { --bg-color: #0b0e14; --card-bg: #161b22; --accent-green: #22c55e; --text-light: #ffffff; --text-muted: #8b949e; --discount-red: #ef4444; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); color: var(--text-light); margin: 0; padding: 10px; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #30363d; margin-bottom: 20px; }
+        .logo { font-weight: bold; font-size: 1.2em; color: #38bdf8; }
+        .balance { background: #1c2128; padding: 5px 15px; border-radius: 20px; font-size: 0.9em; border: 1px solid #30363d; }
+        .search-box { width: 100%; padding: 12px; background: #161b22; border: 1px solid #30363d; color: white; border-radius: 8px; margin-bottom: 20px; box-sizing: border-box; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .card { background: var(--card-bg); border-radius: 12px; padding: 15px; position: relative; border: 1px solid #30363d; }
+        .badge { position: absolute; top: 8px; left: 8px; background: var(--discount-red); color: white; font-size: 0.7em; padding: 2px 6px; border-radius: 4px; }
+        .card h3 { margin: 20px 0 5px 0; font-size: 0.9em; }
+        .card p { font-size: 0.75em; color: var(--text-muted); margin-bottom: 10px; }
+        .price { font-size: 1.1em; font-weight: bold; margin-bottom: 10px; display: block; }
+        .btn { width: 100%; background: var(--accent-green); color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
-    <h1>Mi Tienda - Catálogo Completo</h1>
-
-    <div class="service-category">
-        <h2>📺 Netflix</h2>
-        <ul>
-            <li><span>Netflix Pantalla Normal</span> <span class="price">$14.000</span></li>
-            <li><span>Netflix Pantalla Standard</span> <span class="price">$12.000</span></li>
-            <li><span>Netflix Pantalla Genérica</span> <span class="price">$12.000</span></li>
-            <li><span>Netflix Pantalla Internacional Genérica</span> <span class="price">$14.000</span></li>
-            <li><span>Netflix Cuenta Completa Normal</span> <span class="price">$52.000</span></li>
-            <li><span>Netflix Cuenta Completa Standard</span> <span class="price">$45.000</span></li>
-            <li><span>Netflix Cuenta Completa Genérica</span> <span class="price">$45.000</span></li>
-        </ul>
+    <div class="header">
+        <div class="logo">⚡ ZRRO DIGITAL</div>
+        <div class="balance">Saldo: $0</div>
+    </div>
+    <input type="text" class="search-box" placeholder="Buscar servicio (ej: Netflix, Disney)...">
+    <div class="grid" id="catalogo">
+        <!-- Ejemplo de estructura de tarjeta, esto se repite para los 72 items -->
+        <div class="card">
+            <span class="badge">-52%</span>
+            <h3>NETFLIX</h3>
+            <p>1 Pantalla privada Ultra HD con PIN.</p>
+            <span class="price">$14.000</span>
+            <button class="btn">Comprar</button>
+        </div>
+        <div class="card">
+            <span class="badge">-40%</span>
+            <h3>DISNEY+</h3>
+            <p>4K Ultra HD y ESPN en vivo incluido.</p>
+            <span class="price">$9.000</span>
+            <button class="btn">Comprar</button>
+        </div>
     </div>
 
-    <div class="service-category">
-        <h2>📺 Pantallas Streaming (1 Mes)</h2>
-        <ul>
-            <li><span>Disney+ Premium Pantalla</span> <span class="price">$9.000</span></li>
-            <li><span>Disney+ Standard Pantalla</span> <span class="price">$6.000</span></li>
-            <li><span>Max (HBO) Pantalla</span> <span class="price">$8.000</span></li>
-            <li><span>Max (HBO) Platino Pantalla</span> <span class="price">$8.000</span></li>
-            <li><span>Amazon Prime Pantalla</span> <span class="price">$5.000</span></li>
-            <li><span>Amazon Prime Original Pantalla</span> <span class="price">$8.000</span></li>
-            <li><span>Crunchyroll Pantalla</span> <span class="price">$5.000</span></li>
-            <li><span>Crunchyroll Pantalla Original</span> <span class="price">$8.500</span></li>
-            <li><span>Paramount+ Pantalla</span> <span class="price">$6.000</span></li>
-            <li><span>Paramount+ Pantalla Original</span> <span class="price">$10.000</span></li>
-            <li><span>ViX+</span> <span class="price">$5.000</span></li>
-            <li><span>Universal+ Pantalla</span> <span class="price">$7.000</span></li>
-            <li><span>Plex Pantalla Original</span> <span class="price">$6.000</span></li>
-            <li><span>MUBI Pantalla</span> <span class="price">$6.000</span></li>
-            <li><span>Viki Rakuten Pantalla (Dramas)</span> <span class="price">$6.000</span></li>
-            <li><span>DirecTV GO Plan Oro (1 Disp.)</span> <span class="price">$14.000</span></li>
-        </ul>
-    </div>
-
-    <div class="service-category">
-        <h2>👑 Cuentas Completas (1 Mes)</h2>
-        <ul>
-            <li><span>Disney+ Premium Completa</span> <span class="price">$38.000</span></li>
-            <li><span>Disney+ Standard Completa</span> <span class="price">$18.000</span></li>
-            <li><span>Max (HBO) Completa</span> <span class="price">$18.000</span></li>
-            <li><span>Max (HBO) Platino Completa</span> <span class="price">$16.000</span></li>
-            <li><span>Amazon Prime Completa</span> <span class="price">$10.000</span></li>
-            <li><span>Amazon Prime Original Completa</span> <span class="price">$20.000</span></li>
-            <li><span>Crunchyroll Completa</span> <span class="price">$14.000</span></li>
-            <li><span>Paramount+ Completa</span> <span class="price">$18.000</span></li>
-            <li><span>Universal+ Completa</span> <span class="price">$16.000</span></li>
-            <li><span>ViX+ Completa</span> <span class="price">$8.000</span></li>
-            <li><span>Plex Completa</span> <span class="price">$13.000</span></li>
-            <li><span>MUBI Completa</span> <span class="price">$10.000</span></li>
-            <li><span>Viki Rakuten Completa</span> <span class="price">$13.000</span></li>
-            <li><span>Hot Go Premium Completa (+18)</span> <span class="price">$18.000</span></li>
-            <li><span>DirecTV GO Plan Oro Completa (2 Disp.)</span> <span class="price">$22.000</span></li>
-        </ul>
-    </div>
-
-    <div class="service-category">
-        <h2>📡 Televisión en Vivo & IPTV</h2>
-        <ul>
-            <li><span>IPTV Pantalla Original</span> <span class="price">$10.000</span></li>
-            <li><span>IPTV Premium Completa (1 Mes - 3 Disp.)</span> <span class="price">$12.000</span></li>
-            <li><span>IPTV Plan 3 Meses Completa</span> <span class="price">$25.000</span></li>
-            <li><span>IPTV Plan 6 Meses Completa</span> <span class="price">$45.000</span></li>
-            <li><span>IPTV Plan 1 Año Completo</span> <span class="price">$80.000</span></li>
-            <li><span>Flujo TV / Magis (3 Meses)</span> <span class="price">$55.000</span></li>
-            <li><span>Flujo TV / Magis (7 Meses)</span> <span class="price">$95.000</span></li>
-            <li><span>Flujo TV / Magis (14 Meses)</span> <span class="price">$170.000</span></li>
-        </ul>
-    </div>
-
-    <div class="service-category">
-        <h2>🎵 Música y Contenido</h2>
-        <ul>
-            <li><span>Spotify Premium Original (1 Mes)</span> <span class="price">$12.000</span></li>
-            <li><span>Spotify Premium Original (2 Meses)</span> <span class="price">$18.000</span></li>
-            <li><span>YouTube Premium / A Dominio (1 Mes)</span> <span class="price">$12.000</span></li>
-            <li><span>Deezer Original (1 Mes)</span> <span class="price">$5.000</span></li>
-            <li><span>Tidal Premium (1 Mes)</span> <span class="price">$6.000</span></li>
-        </ul>
-    </div>
-
-    <div class="service-category">
-        <h2>💻 Herramientas y Productividad</h2>
-        <ul>
-            <li><span>Canva Pro (1 Mes)</span> <span class="price">$6.000</span></li>
-            <li><span>Canva Pro a tu Dominio (1 Mes)</span> <span class="price">$6.000</span></li>
-            <li><span>Canva Pro (1 Año)</span> <span class="price">$25.000</span></li>
-            <li><span>Canva Pro a tu Dominio (1 Año)</span> <span class="price">$22.000</span></li>
-            <li><span>CapCut Pro Individual (1 Mes)</span> <span class="price">$18.000</span></li>
-            <li><span>CapCut Pro Completa 3 Disp. (1 Mes)</span> <span class="price">$32.000</span></li>
-            <li><span>Office 365 Licencia 1 Año (1 PC)</span> <span class="price">$25.000</span></li>
-            <li><span>Office 365 Licencia 1 Año (5 Disp.)</span> <span class="price">$65.000</span></li>
-            <li><span>Duolingo Pro (1 Mes)</span> <span class="price">$5.000</span></li>
-            <li><span>Duolingo Pro Premium (1 Año)</span> <span class="price">$20.000</span></li>
-        </ul>
-    </div>
-
-    <div class="service-category">
-        <h2>🔞 Contenido Adulto (+18)</h2>
-        <ul>
-            <li><span>Hot Go Premium Pantalla</span> <span class="price">$7.000</span></li>
-            <li><span>Pornhub Pantalla (1 Año)</span> <span class="price">$12.000</span></li>
-            <li><span>Pornhub Cuenta Completa (1 Año)</span> <span class="price">$22.000</span></li>
-        </ul>
-    </div>
-
-    <div class="service-category">
-        <h2>💼 Paneles para Distribuidores (IPTV)</h2>
-        <ul>
-            <li><span>Panel IPTV (10 Créditos + Demos)</span> <span class="price">$65.000</span></li>
-            <li><span>Panel IPTV (50 Créditos + Demos)</span> <span class="price">$150.000</span></li>
-            <li><span>Panel IPTV PRO (100 Créditos + Demos)</span> <span class="price">$230.000</span></li>
-        </ul>
-    </div>
-
-    <div class="service-category">
-        <h2>🔥 Combos en Oferta</h2>
-        <ul>
-            <li><span>Combo Netflix + Crunchyroll</span> <span class="price">$15.000</span></li>
-            <li><span>Combo Netflix + Max (HBO)</span> <span class="price">$18.000</span></li>
-            <li><span>Combo Netflix + IPTV Premium</span> <span class="price">$18.000</span></li>
-            <li><span>Combo Netflix + Disney+</span> <span class="price">$20.000</span></li>
-            <li><span>Combo Netflix + Plex Premium</span> <span class="price">$16.000</span></li>
-        </ul>
-    </div>
-
-    <!-- Configuración de Firebase -->
     <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-      import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-      import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-      const firebaseConfig = {
-        apiKey: "AIzaSyDrP9303f...",
-        authDomain: "mi-tienda-56ef5.firebaseapp.com",
-        projectId: "mi-tienda-56ef5",
-        storageBucket: "mi-tienda-56ef5.appspot.com",
-        messagingSenderId: "716772431219",
-        appId: "1:716772431219:web:03f3a431c72c17224b6106"
-      };
-
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        const firebaseConfig = {
+            apiKey: "AIzaSyDrP9303f...",
+            authDomain: "mi-tienda-56ef5.firebaseapp.com",
+            projectId: "mi-tienda-56ef5",
+            storageBucket: "mi-tienda-56ef5.appspot.com",
+            messagingSenderId: "716772431219",
+            appId: "1:716772431219:web:03f3a431c72c17224b6106"
+        };
+        initializeApp(firebaseConfig);
     </script>
 </body>
 </html>
